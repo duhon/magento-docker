@@ -1,0 +1,16 @@
+version: '2'
+services:
+  jmeter:
+    image: duhon/jmeter:3.1
+    user: '1000'
+    environment:
+      - DISPLAY
+#    command: jmeter -n -t /var/www/magento2-infrastructure/build/core_dev/performance/mpaf/tool/throughputLoop.jmx -Jhost=magento.test -Jadmin_enabled=1 -JadminEditProduct=25 -Jloops=100 -Jadmin_password=123123q -Jadmin_user=admin -Jadmin_path=admin -Jbase_path=/index.php/ -Jusers=2 -Jreport_save_path=/var/www/tmp/
+    command: sh -c 'jmeter -Jhost=magento.test -Jbase_path=/index.php/ -Jfiles_folder=/var/www/magento2-infrastructure/build/core_dev/performance/mpaf/tool/fragments/files/ -Djava.util.prefs.systemRoot=/tmp/ -Djava.util.prefs.userRoot=/tmp/ -j /dev/stdout'
+    volumes:
+      - /var/www:/var/www
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /etc/group:/etc/group:ro
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/shadow:/etc/shadow:ro
+      - /etc/sudoers.d:/etc/sudoers.d:ro

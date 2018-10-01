@@ -1,0 +1,17 @@
+version: '2'
+services:
+  app:
+    extends:
+      file: ./php.yml
+      service: app
+    build:
+      context: ..
+      dockerfile: build/php/perf
+    image: magento_app:perf_${PHP_VERSION}
+    volumes:
+      - ../etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+      - ../etc/php/tideways.ini:/usr/local/etc/php/conf.d/tideways.ini
+      - ../etc/php/profiler.php:/usr/local/lib/php/header.php
+      - ../etc/php/append.ini:/usr/local/etc/php/conf.d/append.ini
+#bin/magento dev:query-log:enable --query-time-threshold=1
+#composer dump-autoload --optimize

@@ -1,0 +1,18 @@
+version: '2'
+services:
+  web:
+    image: nginx:alpine
+    hostname: web
+#   environment:
+#     - NGINX_HOST=magento.test
+#     - NGINX_PORT=8080
+    volumes:
+      - ${MAGENTO_PATH}:/var/www
+      - ../etc/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ../etc/nginx/server.crt:/etc/nginx/server.crt
+      - ../etc/nginx/server.key:/etc/nginx/server.key
+    networks:
+      default:
+        aliases:
+          - magento.test
+#   command: /bin/sh -c "envsubst < /etc/nginx/nginx.conf > /etc/nginx/nginx.conf && nginx-debug -g 'daemon off;'"

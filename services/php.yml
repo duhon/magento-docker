@@ -1,0 +1,16 @@
+version: '2'
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: build/php/simple
+    image: magento_app:simple_${PHP_VERSION}
+    hostname: app
+    volumes:
+      - ${MAGENTO_PATH}:/var/www:z
+      - ../etc/php/tools:/usr/local/bin/magento2:ro
+      - ../etc/php/php.ini:/usr/local/etc/php/php.ini:ro
+      - ../etc/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
+    environment:
+#      MAGE_MODE: "developer"
+      COMPOSER_HOME: /var/www/.composer

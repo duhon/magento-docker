@@ -1,0 +1,10 @@
+#!/bin/bash
+
+var=${1:-'enable'}
+
+if [ $var = 'disable' ]; then
+   mv /usr/local/etc/php/conf.d/*xdebug.ini /tmp/
+else
+   mv /tmp/*xdebug.ini /usr/local/etc/php/conf.d/
+fi
+kill -USR2 1

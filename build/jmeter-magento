@@ -1,0 +1,36 @@
+FROM openjdk
+MAINTAINER Duhon <duhon@rambler.ru>
+
+ENV JMETER_VERSION 3.1
+
+# Install Pre-requisite Packages like wget
+RUN apt-get update && apt-get install -y --no-install-recommends wget unzip && rm -rf /var/lib/apt/lists/*
+
+# Installing jmeter
+RUN mkdir /jmeter \
+    && cd /jmeter/ \
+    && wget https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-$JMETER_VERSION.tgz \
+    && tar -xzf apache-jmeter-$JMETER_VERSION.tgz \
+    && rm apache-jmeter-$JMETER_VERSION.tgz
+
+# Settingt Jmeter Home
+ENV JMETER_HOME /jmeter/apache-jmeter-$JMETER_VERSION/
+
+# Finally Adding Jmeter to the Path
+ENV PATH $JMETER_HOME/bin:$PATH
+
+#RUN wget -qO- -O $JMETER_HOME/lib/ext/jmeter-plugins-manager.jar https://jmeter-plugins.org/get/
+#RUN wget -qO- -O tmp.zip http://jmeter-plugins.org/downloads/file/JMeterPlugins-Standard-1.2.1.zip && unzip -n tmp.zip -d $JMETER_HOME && rm tmp.zip
+#RUN wget -qO- -O tmp.zip http://jmeter-plugins.org/downloads/file/JMeterPlugins-Extras-1.3.0.zip && unzip -n tmp.zip -d $JMETER_HOME && rm tmp.zip
+#RUN wget -qO- -O tmp.zip http://jmeter-plugins.org/downloads/file/JMeterPlugins-ExtrasLibs-1.3.0.zip && unzip -n tmp.zip -d $JMETER_HOME && rm tmp.zip
+RUN wget -qO- -O tmp.zip http://jmeter-plugins.org/files/packages/blazemeter-debugger-0.4.zip && unzip -n tmp.zip -d $JMETER_HOME && rm tmp.zip
+RUN wget -qO- -O tmp.zip http://jmeter-plugins.org/files/packages/jpgc-json-2.6.zip && unzip -n tmp.zip -d $JMETER_HOME && rm tmp.zip
+
+#RUN wget -qO- -O tmp.zip http://jmeter-plugins.org/files/packages/jpgc-perfmon-2.1.zip && unzip -n tmp.zip -d /jmeter/jpgc-perfmon-2.1 && rm tmp.zip
+#RUN wget -qO- -O tmp.zip https://github.com/undera/perfmon-agent/releases/download/2.2.3/ServerAgent-2.2.3.zip && unzip -n tmp.zip -d /srv/ServerAgent && rm tmp.zip
+#RUN chmod +x /srv/ServerAgent/ServerAgent-2.2.3/startAgent.sh
+RUN chmod -R 777 $JMETER_HOME
+
+WORKDIR $JMETER_HOME
+
+CMD jmeter

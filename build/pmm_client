@@ -1,0 +1,13 @@
+FROM ubuntu:14.04
+MAINTAINER Duhon <duhon@rambler.ru>
+
+RUN apt-get update && \
+    apt-get install -y wget && \
+    wget https://repo.percona.com/apt/percona-release_0.1-4.$(lsb_release -sc)_all.deb && \
+    dpkg -i percona-release_0.1-4.$(lsb_release -sc)_all.deb && \
+    apt-get update && \
+    apt-get install -y pmm-client curl
+
+WORKDIR /usr/local/percona/pmm-client
+
+EXPOSE 42000 42002

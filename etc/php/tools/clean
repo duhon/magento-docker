@@ -1,0 +1,4 @@
+#!/bin/bash
+
+rm -vrf var/* pub/static/*
+#git clean -dxf --exclude='.idea' --exclude=vendor

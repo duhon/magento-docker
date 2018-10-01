@@ -1,0 +1,8 @@
+version: '2'
+services:
+  nodejs:
+    image: digitallyseamless/nodejs-bower-grunt
+    hostname: nodejs
+    volumes:
+      - /var/www:/var/www:z
+#    need mv Gruntfile.js.sample Gruntfile.js and package.json.sample to package.json, npm install

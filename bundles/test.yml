@@ -1,0 +1,51 @@
+version: '2'
+services:
+  web:
+    extends:
+      file: ../services/nginx.yml
+      service: web
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - app
+  db:
+    extends:
+      file: ../services/mysql.yml
+      service: db
+    ports:
+      - "3306:3306"
+  app:
+    extends:
+      file: ../services/php_xdebug.yml
+      service: app
+    ports:
+      - "222:22"
+    volumes: #TODO: need configurations for all test, need md5sum validation
+      - ../etc/php/tests/functional/phpunit.xml:/var/www/magento2ce/dev/tests/functional/phpunit.xml:rw
+      - ../etc/php/tests/functional/config.xml:/var/www/magento2ce/dev/tests/functional/etc/config.xml:rw
+      - ../etc/php/tests/acceptance/.env:/var/www/magento2ce/dev/tests/acceptance/.env:rw
+      - ../etc/php/tests/integration/install-config-mysql.php:/var/www/magento2ce/dev/tests/integration/etc/install-config-mysql.php:rw
+      - ../etc/php/tests/api-functional/install-config-mysql.php:/var/www/magento2ce/dev/tests/api-functional/config/install-config-mysql.php:rw
+      - ../etc/php/tests/api-functional/phpunit_rest.xml:/var/www/magento2ce/dev/tests/api-functional/phpunit_rest.xml:rw
+    command: sh -c 'service ssh start; php-fpm -R'
+  mtf:
+    extends:
+      file: ../services/selenium.yml
+      service: test
+    image: selenium/standalone-firefox-debug:2.48.2
+    ports:
+      - "5901:5900"
+  mftf:
+    extends:
+      file: ../services/selenium.yml
+      service: test
+    ports:
+      - "5900:5900"
+  js:
+    extends:
+      file: ../services/nodejs.yml
+      service: nodejs
+networks:
+  default:
+    driver: bridge

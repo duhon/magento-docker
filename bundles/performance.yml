@@ -1,0 +1,48 @@
+version: '2'
+services:
+  web:
+    extends:
+      file: ../services/nginx.yml
+      service: web
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - app
+  db:
+    extends:
+      file: ../services/mysql.yml
+      service: db
+    ports:
+      - "3306:3306"
+    volumes:
+      - ../etc/mysql/my.cnf:/etc/mysql/conf.d/mysql.cnf
+  app:
+    extends:
+      file: ../services/php_perf.yml
+      service: app
+  xhgui:
+    extends:
+      file: ../services/xhgui.yml
+      service: xhgui
+    ports:
+      - "81:80"
+  mongodb:
+    extends:
+      file: ../services/mongo.yml
+      service: mongo
+  pmm:
+    extends:
+      file: ../services/pmm.yml
+      service: pmm
+    ports:
+      - "82:80"
+    depends_on:
+      - db
+  jmeter:
+    extends:
+      file: ../services/jmeter.yml
+      service: jmeter
+networks:
+  default:
+    driver: bridge

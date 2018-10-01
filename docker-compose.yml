@@ -1,0 +1,31 @@
+version: '2'
+services:
+  web:
+    extends:
+      file: services/nginx.yml
+      service: web
+    ports:
+      - "80:80"
+    depends_on:
+      - app
+    volumes:
+      - socket:/var/run
+  db:
+    extends:
+      file: services/mysql.yml
+      service: db
+    ports:
+      - "3306:3306"
+  app:
+    extends:
+      file: services/php_xdebug.yml
+      service: app
+    volumes:
+      - socket:/var/run
+    ports:
+      - "222:22"
+volumes:
+    socket:
+networks:
+  default:
+    driver: bridge

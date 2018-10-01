@@ -1,0 +1,5 @@
+version: '2'
+services:
+  xhgui:
+    image: duhon/xhgui
+    hostname: xhgui

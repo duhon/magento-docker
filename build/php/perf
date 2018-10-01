@@ -1,0 +1,36 @@
+FROM php:7.1-fpm
+MAINTAINER Duhon <duhon@rambler.ru>
+
+RUN apt-get update && apt-get install -y \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libmcrypt-dev \
+    libicu-dev \
+    libxslt-dev \
+    vim \
+    git \
+    mysql-client \
+    openssh-server \
+    libssl-dev \
+    libgringotts-dev \
+    --no-install-recommends && rm -r /var/lib/apt/lists/*
+
+RUN git clone https://github.com/tideways/php-profiler-extension.git /usr/src/php/ext/tideways
+RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-mhash --with-openssl \
+    && docker-php-ext-install -j$(nproc) pcntl gd iconv mbstring opcache bcmath mcrypt soap intl zip xsl pdo_mysql tideways
+RUN pecl install xdebug apcu msgpack && docker-php-ext-enable xdebug apcu msgpack
+
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN ln -sf /var/www/magento2ce/vendor/bin/phpunit /usr/local/bin/phpunit
+
+RUN ln -sf /usr/local/bin/magento2/magento /usr/local/bin/magento
+RUN echo 'alias ll="ls -lA"' >>/root/.bashrc
+RUN usermod -a -G root www-data
+
+RUN echo 'root:root' | chpasswd
+RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+WORKDIR /var/www/magento2ce
+
+EXPOSE 9000 9001
+CMD ["php-fpm", "-R"]

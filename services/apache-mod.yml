@@ -1,0 +1,19 @@
+version: '2'
+services:
+  app:
+    build:
+      context: ../
+      dockerfile: build/php/apache-mod
+    image: apache-mod
+    ports:
+      - "80:80"
+    volumes:
+      - ${MAGENTO_PATH}:/var/www:z
+      - ../etc/php/tools:/usr/local/bin/magento2:ro
+      - ../etc/php/php.ini:/usr/local/etc/php/php.ini:ro
+      - ../etc/apache/virtual_host.conf:/etc/apache2/sites-enabled/000-default.conf:ro
+    environment:
+      APACHE_RUN_USER: "www-data"
+      APACHE_RUN_GROUP: "root"
+      COMPOSER_HOME: /var/www/.composer
+    command: sh -c 'a2enmod rewrite; apache2-foreground'

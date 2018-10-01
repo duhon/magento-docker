@@ -1,0 +1,7 @@
+version: '2'
+services:
+  pmm:
+    image: duhon/pmm
+    hostname: pmm
+    environment:
+      MYSQL_HOST: db

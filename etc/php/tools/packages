@@ -1,0 +1,45 @@
+#!/bin/bash
+
+dir=`basename $(pwd)`
+ver=${1:-'ce'}
+VERSION=${2:-'2.1.0'}
+DB=${3:-$dir}
+HOST=${4:-"$dir.test"}
+HOST_DB=${5:-"db"}
+REPO=${6:-"https://repo.magento.com/"}
+
+mysql -uroot -h$HOST_DB -e "DROP DATABASE IF EXISTS $DB; create database $DB;"
+
+shopt -s extglob
+rm -rf !(.idea|.git|.|..)
+shopt -u extglob
+[ -d .git ] && mv .git ../tmp/
+if [ $ver = 'ee' ]; then
+   composer create-project --repository-url=$REPO magento/project-enterprise-edition=$VERSION .
+else
+   composer create-project --repository-url=$REPO magento/project-community-edition=$VERSION .
+fi
+
+chmod -R ug+x bin
+
+bin/magento setup:install \
+   --cleanup-database \
+   --language=en_US \
+   --timezone=America/Los_Angeles \
+   --currency=USD \
+   --use-secure=0 \
+   --use-secure-admin=0 \
+   --admin-use-security-key=0 \
+   --use-rewrites=0 \
+   --backend-frontname=admin \
+   --admin-lastname=Admin \
+   --admin-firstname=Admin \
+   --admin-email=magento@mailinator.com \
+   --admin-user=admin \
+   --admin-password=123123q \
+   --base-url=http://$HOST/ \
+   --db-name=$DB \
+   --db-host=$HOST_DB
+
+bin/magento deploy:mode:set developer
+mv ../tmp/.git .
