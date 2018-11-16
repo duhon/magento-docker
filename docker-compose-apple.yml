@@ -5,16 +5,16 @@ services:
     hostname: web
     volumes:
       - ${MAGENTO_PATH}:/var/www:${FILE_SYNC}
-      - ./etc/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./etc/nginx/server.crt:/etc/nginx/server.crt
-      - ./etc/nginx/server.key:/etc/nginx/server.key
+      - ${MAGENTO_PATH}/magento-docker/etc/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ${MAGENTO_PATH}/magento-docker/etc/nginx/server.crt:/etc/nginx/server.crt
+      - ${MAGENTO_PATH}/magento-docker/etc/nginx/server.key:/etc/nginx/server.key
 
     networks:
       default:
         aliases:
           - magento.test
     ports:
-      - "80:80"
+      - "${WEB_PORT}:80"
     depends_on:
       - app
   db:
@@ -23,29 +23,36 @@ services:
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: "magento"
-    ports:
-      - "3306:3306"
     volumes:
-      - ./etc/mysql/my.cnf:/etc/mysql/conf.d/mysql.cnf
+      - ${MAGENTO_PATH}/magento-docker/etc/mysql/my.cnf:/etc/mysql/conf.d/mysql.cnf
   app:
     build:
-      context: ./
+      context: ${MAGENTO_PATH}/magento-docker/
       dockerfile: build/php/perf
     image: magento_app:perf_${PHP_VERSION}
     hostname: app
     volumes:
       - ${MAGENTO_PATH}:/var/www:${FILE_SYNC}
-      - ./etc/php/tools:/usr/local/bin/magento2:ro
-      - ./etc/php/php.ini:/usr/local/etc/php/php.ini:ro
-      - ./etc/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
-      - ./etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
-      - ./etc/php/tideways.ini:/usr/local/etc/php/conf.d/tideways.ini
-      - ./etc/php/profiler.php:/usr/local/lib/php/header.php
-      - ./etc/php/append.ini:/usr/local/etc/php/conf.d/append.ini
+      - ${MAGENTO_PATH}/magento-docker/etc/php/tools:/usr/local/bin/magento2:ro
+      - ${MAGENTO_PATH}/magento-docker/etc/php/php.ini:/usr/local/etc/php/php.ini:ro
+      - ${MAGENTO_PATH}/magento-docker/etc/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
+      - ${MAGENTO_PATH}/magento-docker/etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+      - ${MAGENTO_PATH}/magento-docker/etc/php/tideways.ini:/usr/local/etc/php/conf.d/tideways.ini
+      - ${MAGENTO_PATH}/magento-docker/etc/php/profiler.php:/usr/local/lib/php/header.php
+      - ${MAGENTO_PATH}/magento-docker/etc/php/append.ini:/usr/local/etc/php/conf.d/append.ini
     environment:
       COMPOSER_HOME: /var/www/.composer
+  redis:
+    image: redis
+    hostname: redis
     ports:
-      - "222:22"
+      - "6379:6379"
+  mail:
+    image: mailhog/mailhog
+    hostname: mail
+    ports:
+      - "1025:1025"
+      - "8025:8025"
   xhgui:
     image: duhon/xhgui
     hostname: xhgui
@@ -56,17 +63,6 @@ services:
     hostname: mongo
     ports:
       - "27017:27017"
-  elastic:
-    image: elasticsearch:5
-    hostname: elastic
-    ports:
-      - "9200:9200"
-      - "9300:9300"
-    environment:
-      - cluster.name=docker-cluster
-      - bootstrap.memory_lock=true
-      - discovery.type=single-node
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
 networks:
   default:
     driver: bridge

@@ -8,9 +8,6 @@ DB=${2:-'magento'}
 HOST_DB=${3:-'db'}
 HOST=${4:-'magento.test'}
 
-#mysql -uroot -e "DROP DATABASE IF EXISTS $DB; create database $DB;"
-#sudo php5dismod -s cli xdebug
-
 if [ -d .git ]; then
    #TODO: automatically find files to exclude
    git clean -dxf --exclude='.idea' \
@@ -52,5 +49,7 @@ bin/magento setup:install \
    --db-name=$DB \
    --db-host=$HOST_DB \
    --db-prefix=m2_
+
+eval $MAGENTO_INSTALL;
 
 
