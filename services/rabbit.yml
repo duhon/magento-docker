@@ -5,3 +5,4 @@ services:
     hostname: rabbitmq
     ports:
       - "15672:15672"
+#--amqp-host=“<hostname>” --amqp-port=“5672" --amqp-user=“<user_name>” --amqp-password=“<password>” --amqp-virtualhost=“/”

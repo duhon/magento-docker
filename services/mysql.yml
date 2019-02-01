@@ -6,7 +6,6 @@ services:
     # volumes:
        # - /tmp/:/var/lib/mysql
     tmpfs:
-      - /var/lib/mysql
       - /tmp
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"

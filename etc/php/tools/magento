@@ -10,7 +10,7 @@ if [ $# -eq 0 ]; then
 	exit 0
 fi
 
-if [[ $2 == '-h' ]]; then 
+if [[ $2 == '-h' || $2 == '--help' ]]; then
 	cat $sh	
 else
 	shift

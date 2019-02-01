@@ -2,10 +2,6 @@ version: '2'
 services:
   proxy:
     image: million12/varnish
-    depends_on:
-      - web
-    ports:
-      - "80:80"
     volumes:
       - ../etc/varnish/varnish.vcl:/etc/varnish/default.vcl:ro
   web:
@@ -15,3 +11,5 @@ services:
       - "8080"
     volumes:
       - ../etc/varnish/nginx.conf:/etc/nginx/nginx.conf:ro
+#php bin/magento setup:config:set --http-cache-hosts=varnish:80
+#php bin/magento config:set --scope=default --scope-code=0 system/full_page_cache/caching_application 2
