@@ -5,6 +5,7 @@ RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
     libmcrypt-dev \
+    libsodium-dev \
     libicu-dev \
     libxslt-dev \
     vim \
@@ -17,6 +18,7 @@ RUN apt-get update && apt-get install -y \
 
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-mhash --with-openssl\
     && docker-php-ext-install -j$(nproc) gd iconv mcrypt mbstring opcache bcmath soap intl zip xsl pdo_mysql
+RUN pecl install libsodium && docker-php-ext-enable sodium
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN ln -sf /var/www/magento2ce/vendor/bin/phpunit /usr/local/bin/phpunit
@@ -27,5 +29,5 @@ RUN usermod -a -G root www-data
 
 WORKDIR /var/www/magento2ce
 
-EXPOSE 9000 9001
+EXPOSE 9000
 CMD ["php-fpm", "-R"]
