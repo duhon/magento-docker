@@ -50,6 +50,4 @@ bin/magento setup:install \
    --db-host=$HOST_DB \
    --db-prefix=m2_
 
-eval $MAGENTO_INSTALL;
-
 

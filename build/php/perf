@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y \
     openssh-server \
     libssl-dev \
     libgringotts-dev \
-    --no-install-recommends
+    --no-install-recommends && rm -r /var/lib/apt/lists/*
 
 RUN git clone https://github.com/tideways/php-profiler-extension.git /usr/src/php/ext/tideways
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-mhash --with-openssl \

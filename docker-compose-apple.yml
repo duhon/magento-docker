@@ -8,7 +8,6 @@ services:
       - ${MAGENTO_PATH}/magento-docker/etc/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ${MAGENTO_PATH}/magento-docker/etc/nginx/server.crt:/etc/nginx/server.crt
       - ${MAGENTO_PATH}/magento-docker/etc/nginx/server.key:/etc/nginx/server.key
-
     networks:
       default:
         aliases:
@@ -63,6 +62,17 @@ services:
     hostname: mongo
     ports:
       - "27017:27017"
+  elastic:
+    image: elasticsearch:5
+    hostname: elastic
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
 networks:
   default:
     driver: bridge
