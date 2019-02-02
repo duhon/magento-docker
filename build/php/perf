@@ -29,7 +29,7 @@ RUN echo 'alias ll="ls -lA"' >>/root/.bashrc
 RUN usermod -a -G root www-data
 
 RUN echo 'root:root' | chpasswd
-RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 
 WORKDIR /var/www/magento2ce
 
