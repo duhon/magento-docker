@@ -1,5 +1,17 @@
 # magento-docker
 
+### 0. Preconditions with default .env
+
+```
+mkdir ~/www
+cd ~/www
+git clone git@github.com:magento/magento2.git
+git clone git@github.com:duhon/magento-docker.git
+cd magento-docker
+docker-compose -f docker-compose(-apple?).yml up
+```
+
+
 ## Scenarios
 
 ### 1. Run sshd
