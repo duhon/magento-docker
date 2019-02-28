@@ -3,8 +3,8 @@ services:
   app:
     build:
       context: ..
-      dockerfile: build/php/simple
-    image: magento_app:simple_${PHP_VERSION}
+      dockerfile: build/php/test
+    image: duhon/php:${PHP_VERSION}-test
     hostname: app
     volumes:
       - ${MAGENTO_PATH}:/var/www:z

@@ -44,9 +44,9 @@ class XH
     {
         $options = [
             'http' => [
-                'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+                'header'  => "Content-type: application/json\r\n",
                 'method'  => 'POST',
-                'content' => http_build_query($data)
+                'content' => json_encode($data)
             ]
         ];
 

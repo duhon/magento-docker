@@ -1,12 +1,11 @@
 #!/bin/bash
 
-# https://wiki.corp.magento.com/display/MTF/Installation
-cd dev/tests/functional/
-composer install
-php utils/generate.php
+#https://devdocs.magento.com/guides/v2.0/mtf/mtf_installation.html
+composer install -d dev/tests/functional/
+php dev/tests/functional/utils/generate.php
 
-# https://devdocs.magento.com/guides/v2.3/magento-functional-testing-framework/release-2/getting-started.html
-cd ../acceptance/
+#https://devdocs.magento.com/mftf/2.2/getting-started.html
+cd dev/tests/acceptance/
 composer install
 vendor/bin/robo build:project
 vendor/bin/robo generate:tests

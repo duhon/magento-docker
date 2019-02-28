@@ -27,8 +27,8 @@ services:
   app:
     build:
       context: ${MAGENTO_PATH}/magento-docker/
-      dockerfile: build/php/perf
-    image: magento_app:perf_${PHP_VERSION}
+      dockerfile: build/php/test
+    image: duhon/php:${PHP_VERSION}-test
     hostname: app
     volumes:
       - ${MAGENTO_PATH}:/var/www:${FILE_SYNC}
