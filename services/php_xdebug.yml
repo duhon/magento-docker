@@ -6,7 +6,7 @@ services:
       service: app
     build:
       context: ..
-      dockerfile: build/php/perf
-    image: magento_app:perf_${PHP_VERSION}
+      dockerfile: build/php/test
+    image: duhon/php:${PHP_VERSION}-test
     volumes:
       - ../etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
