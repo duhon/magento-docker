@@ -8,3 +8,9 @@ docker commit test duhon/php-magento:${mage}-${type}
 docker rm -f test
 echo "docker push duhon/php:${ver}-${type}"
 echo "docker push duhon/php-magento:${mage}-${type}"
+
+#cd ~/www
+#shopt -s dotglob
+#zip -r0 ../data.zip *
+#docker run --rm -v ~/www/data.zip:/src/data.zip -v www:/data busybox unzip /src/data.zip -d /data
+#docker run --rm  -v www:/var/www/magento2ce busybox ls -la /var/www/magento2ce/
