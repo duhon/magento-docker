@@ -1,10 +1,10 @@
-FROM php:7.2-apache
-MAINTAINER Duhon <duhon@rambler.ru>
+FROM php:7.2-fpm
 
 RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
     libmcrypt-dev \
+    libsodium-dev \
     libicu-dev \
     libxslt-dev \
     vim \
@@ -17,9 +17,10 @@ RUN apt-get update && apt-get install -y \
     --no-install-recommends && rm -r /var/lib/apt/lists/*
 
 RUN git clone https://github.com/tideways/php-profiler-extension.git /usr/src/php/ext/tideways
+RUN ln -sf /usr/local/lib/php/extensions/*/ /usr/local/lib/php/extensions/so
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install -j$(nproc) pcntl gd iconv mbstring opcache bcmath soap intl zip xsl pdo_mysql tideways
-RUN pecl install xdebug apcu msgpack libsodium && docker-php-ext-enable xdebug apcu msgpack sodium
+RUN pecl install -f xdebug apcu msgpack libsodium && docker-php-ext-enable apcu msgpack sodium
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN ln -sf /var/www/magento2ce/vendor/bin/phpunit /usr/local/bin/phpunit
@@ -29,9 +30,9 @@ RUN echo 'alias ll="ls -lA"' >>/root/.bashrc
 RUN usermod -a -G root www-data
 
 RUN echo 'root:root' | chpasswd
-RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 
 WORKDIR /var/www/magento2ce
 
-EXPOSE 80
-CMD ["apache2-foreground"]
+EXPOSE 9000
+CMD ["php-fpm", "-R"]
