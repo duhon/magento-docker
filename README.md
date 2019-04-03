@@ -3,10 +3,8 @@
 ### 0. Preconditions with default .env
 
 ```
-mkdir ~/www
-cd ~/www
-git clone git@github.com:magento/magento2.git
 git clone git@github.com:duhon/magento-docker.git
+git clone git@github.com:magento/magento2.git ~/www/magento2ce
 cd magento-docker
 docker-compose -f docker-compose(-apple?).yml up
 ```
