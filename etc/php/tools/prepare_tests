@@ -1,14 +1,5 @@
 #!/bin/bash
 
-#https://devdocs.magento.com/guides/v2.0/mtf/mtf_installation.html
-composer install -d dev/tests/functional/
-php dev/tests/functional/utils/generate.php
-
-#https://devdocs.magento.com/mftf/2.3/getting-started.html
-vendor/bin/mftf build:project
-#vendor/bin/mftf generate:urn-catalog --force .idea/
-vendor/bin/mftf generate:tests
-
 #Magento 2 instance is installed properly:
 php -r '(new PDO("mysql:host=db;dbname=magento", "root"))->exec("CREATE DATABASE IF NOT EXISTS magento_integration_tests;");'
 #The Admin Account Sharing drop-down menu is set to Yes in the backend (Stores > Configuration > Advanced > Admin > Security);
@@ -19,3 +10,12 @@ php -r '(new PDO("mysql:host=db;dbname=magento", "root"))->exec("INSERT IGNORE I
 php -r '(new PDO("mysql:host=db;dbname=magento", "root"))->exec("INSERT IGNORE INTO magento.m2_core_config_data (scope, scope_id, path, value) VALUES (\"default\", 0, \"cms/wysiwyg/enabled\", \"disabled\")");'
 #TODO: replace magento_url in phpunit.xml
 #TODO: separete to service and save in autoload dir witch uses reinstall script
+
+#https://devdocs.magento.com/mftf/2.3/getting-started.html
+vendor/bin/mftf build:project
+#vendor/bin/mftf generate:urn-catalog --force .idea/
+vendor/bin/mftf generate:tests
+
+#https://devdocs.magento.com/guides/v2.0/mtf/mtf_installation.html
+composer install -d dev/tests/functional/
+php dev/tests/functional/utils/generate.php

@@ -16,6 +16,7 @@ if [ -d .git ]; then
        --exclude=dev/tests/integration/etc/install-config-mysql.php \
        --exclude=dev/tests/api-functional/config/install-config-mysql.php \
        --exclude=dev/tests/api-functional/phpunit_rest.xml \
+       --exclude=dev/tests/api-functional/phpunit_graphql.xml \
        --exclude=dev/tests/acceptance/.env
    git checkout composer.lock composer.json
 fi
