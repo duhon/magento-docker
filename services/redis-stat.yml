@@ -1,0 +1,8 @@
+version: '2'
+services:
+  redis-stat:
+    image: insready/redis-stat
+    hostname: redis-stat
+    ports:
+      - "63790:63790"
+    command: '--server redis'
