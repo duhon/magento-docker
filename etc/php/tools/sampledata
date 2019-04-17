@@ -1,5 +1,6 @@
 #!/bin/bash
 
+#TODO: need update like
 #def or git
 method=${1:-'def'}
 if ! grep -q 'repo.magento.com' composer.json; then

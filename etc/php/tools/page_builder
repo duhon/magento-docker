@@ -2,13 +2,13 @@
 
 if [ -d .git ]; then
     git --work-tree=../magento2-page-builder --git-dir=../magento2-page-builder/.git clean -dfx
-    php ../magento2ee/dev/tools/build-ee.php --command=link --ee-source="../magento2-page-builder" --ce-source="."
+    /usr/local/bin/magento2/link_edition --command=link --source="../magento2-page-builder"
     if [ -f LICENSE_EE.txt ]; then
         git --work-tree=../magento2-page-builder-ee --git-dir=../magento2-page-builder-ee/.git clean -dfx
-        php ../magento2ee/dev/tools/build-ee.php --command=link --ee-source="../magento2-page-builder-ee" --ce-source="."
+        /usr/local/bin/magento2/link_edition --command=link --source="../magento2-page-builder-ee"
     fi
 else
     echo 'TODO not install page-builder from composer'
 fi
 bin/magento setup:upgrade
-
+bin/magento config:set cms/pagebuilder/enabled 1
