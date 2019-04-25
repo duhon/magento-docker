@@ -2,7 +2,10 @@
 
 #TODO: need update like
 #def or git
-method=${1:-'def'}
+method='def'
+if [[ -d .git ]]; then
+    method='git'
+fi
 if ! grep -q 'repo.magento.com' composer.json; then
     composer config repositories.magento composer https://repo.magento.com/
 fi
@@ -10,11 +13,11 @@ fi
 #cp -f ~/.composer/auth.json ./var/composer_home/
 #cp -f ~/.composer/config.json ./var/composer_home/
 
-if [ $method = 'git' ]; then
+if [[ ${method} = 'git' ]]; then
     #git --work-tree=../sample-data --git-dir=../sample-data/.git clean -dfx
     #git --work-tree=../sample-data --git-dir=../sample-data/.git pull
     php -f ../magento2-sample-data-ee/dev/tools/build-sample-data.php -- --command unlink --ce-source "../magento2-sample-data" --sample-data-source "../magento2-sample-data-ee"
-    if [ -f LICENSE_EE.txt ]; then
+    if [[ -f LICENSE_EE.txt ]]; then
         php -f ../magento2-sample-data-ee/dev/tools/build-sample-data.php -- --command link --ce-source "../magento2-sample-data" --sample-data-source "../magento2-sample-data-ee"
     fi
     php -f ../magento2-sample-data/dev/tools/build-sample-data.php -- --ce-source="../magento2ce"
