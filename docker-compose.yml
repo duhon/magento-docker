@@ -1,31 +1,91 @@
-version: '2'
+version: '3.2'
 services:
   web:
-    extends:
-      file: services/nginx.yml
-      service: web
+    image: nginx:alpine
+    hostname: web
+    volumes:
+      - ${MAGENTO_PATH}:/var/www:${FILE_SYNC}
+      - ${MAGENTO_PATH}/magento-docker/etc/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ${MAGENTO_PATH}/magento-docker/etc/nginx/server.crt:/etc/nginx/server.crt
+      - ${MAGENTO_PATH}/magento-docker/etc/nginx/server.key:/etc/nginx/server.key
+    networks:
+      default:
+        aliases:
+          - magento.test
     ports:
-      - "80:80"
+      - "${WEB_PORT}:80"
     depends_on:
       - app
-    volumes:
-      - socket:/var/run
   db:
-    extends:
-      file: services/mysql.yml
-      service: db
-    ports:
-      - "3306:3306"
-  app:
-    extends:
-      file: services/php_xdebug.yml
-      service: app
+    image: mariadb
+    hostname: db
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: "magento"
     volumes:
-      - socket:/var/run
+      - ${MAGENTO_PATH}/magento-docker/etc/mysql/my.cnf:/etc/mysql/conf.d/mysql.cnf
+    ports:
+      - "${DB_PORT}:3306"
+  app:
+    image: duhon/php:7.1-fpm
+    hostname: app
     ports:
       - "222:22"
-volumes:
-    socket:
+    volumes:
+      - ${MAGENTO_PATH}:/var/www:${FILE_SYNC}
+      - ${MAGENTO_PATH}/magento-docker/etc/php/tools:/usr/local/bin/magento2:ro
+      - ${MAGENTO_PATH}/magento-docker/etc/php/php.ini:/usr/local/etc/php/php.ini:ro
+      - ${MAGENTO_PATH}/magento-docker/etc/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
+      - ${MAGENTO_PATH}/magento-docker/etc/php/tests/acceptance/.env:/var/www/magento2ce/dev/tests/acceptance/.env:rw
+      - ${MAGENTO_PATH}/magento-docker/etc/php/tests/integration/install-config-mysql.php:/var/www/magento2ce/dev/tests/integration/etc/install-config-mysql.php:rw
+      - ${MAGENTO_PATH}/magento-docker/etc/php/tests/api-functional/install-config-mysql.php:/var/www/magento2ce/dev/tests/api-functional/config/install-config-mysql.php:rw
+      - ${MAGENTO_PATH}/magento-docker/etc/php/tests/api-functional/phpunit_rest.xml:/var/www/magento2ce/dev/tests/api-functional/phpunit_rest.xml:rw
+      - ${MAGENTO_PATH}/magento-docker/etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+    environment:
+      COMPOSER_HOME: /var/www/.composer
+      PHP_IDE_CONFIG: serverName=magento.test
+    command: sh -c 'service ssh start; php-fpm -R'
+  mftf:
+    image: selenium/standalone-chrome-debug:3.12.0
+    ports:
+      - "5900:5900"
+  # vnc://0.0.0.0:5900 pass:secret
+  mtf:
+    image: selenium/standalone-firefox-debug:2.48.2
+    ports:
+      - "5901:5900"
+  # vnc://0.0.0.0:5901 pass:secret
+  redis:
+    image: redis
+    hostname: redis
+    ports:
+      - "6379:6379"
+  rabbit:
+    image: rabbitmq:management
+    hostname: rabbitmq
+    ports:
+      - "15672:15672"
+  # bin/magento --amqp-host=rabbit --amqp-port=“5672"
+  mail:
+    image: mailhog/mailhog
+    hostname: mail
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+  elastic:
+    image: elasticsearch:6
+    hostname: elastic
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    # bin/magento config:set catalog/search/engine elasticsearch6
+    # bin/magento config:set catalog/search/elasticsearch6_server_hostname elastic
+    # bin/magento indexer:reindex catalogsearch_fulltext
 networks:
   default:
     driver: bridge
