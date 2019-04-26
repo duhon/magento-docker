@@ -55,3 +55,7 @@ bin/magento setup:install \
 bin/magento config:set web/seo/use_rewrites 1
 bin/magento config:set dev/template/allow_symlink 1
 bin/magento config:set admin/security/admin_account_sharing 1
+
+#setup other services
+IFS=$'\n' setup=($(yq read /var/www/magento-docker/docker-compose.yml services.*.x-setup | grep -oP '(?:\-\s)+(?!null)\K.*'))
+for i in ${setup[*]}; do eval ${i}; done

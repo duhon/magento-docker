@@ -1,4 +1,4 @@
-version: '3.2'
+version: '3.7'
 services:
   web:
     image: nginx:alpine
@@ -22,6 +22,7 @@ services:
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: "magento"
+    shm_size: '1gb'
     volumes:
       - ${MAGENTO_PATH}/magento-docker/etc/mysql/my.cnf:/etc/mysql/conf.d/mysql.cnf
     ports:
@@ -31,6 +32,7 @@ services:
     hostname: app
     ports:
       - "222:22"
+    stop_signal: SIGINT
     volumes:
       - ${MAGENTO_PATH}:/var/www:${FILE_SYNC}
       - ${MAGENTO_PATH}/magento-docker/etc/php/tools:/usr/local/bin/magento2:ro
@@ -49,12 +51,14 @@ services:
     image: selenium/standalone-chrome-debug:3.12.0
     ports:
       - "5900:5900"
-  # vnc://0.0.0.0:5900 pass:secret
+    x-hints:
+      - 'vnc://0.0.0.0:5900 pass:secret'
   mtf:
     image: selenium/standalone-firefox-debug:2.48.2
     ports:
       - "5901:5900"
-  # vnc://0.0.0.0:5901 pass:secret
+    x-hints:
+      - 'vnc://0.0.0.0:5901 pass:secret'
   redis:
     image: redis
     hostname: redis
@@ -65,13 +69,8 @@ services:
     hostname: rabbitmq
     ports:
       - "15672:15672"
-  # bin/magento --amqp-host=rabbit --amqp-port=“5672"
-  mail:
-    image: mailhog/mailhog
-    hostname: mail
-    ports:
-      - "1025:1025"
-      - "8025:8025"
+    x-setup:
+#      - bin/magento --amqp-host=rabbit --amqp-port=“5672"
   elastic:
     image: elasticsearch:6.7.1
     hostname: elastic
@@ -83,9 +82,14 @@ services:
       - bootstrap.memory_lock=true
       - discovery.type=single-node
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    # bin/magento config:set catalog/search/engine elasticsearch6
-    # bin/magento config:set catalog/search/elasticsearch6_server_hostname elastic
-    # bin/magento indexer:reindex catalogsearch_fulltext
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    x-setup:
+      - bin/magento config:set catalog/search/engine elasticsearch6
+      - bin/magento config:set catalog/search/elasticsearch6_server_hostname elastic
+      - bin/magento indexer:reindex catalogsearch_fulltext
 networks:
   default:
     driver: bridge
