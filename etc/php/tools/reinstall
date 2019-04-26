@@ -11,15 +11,7 @@ HOST_DB=${3:-'db'}
 HOST=${4:-'magento.test'}
 
 if [[ -d .git ]]; then
-   #TODO: automatically find files to exclude
-   git clean -dxf --exclude='.idea' \
-       --exclude=dev/tests/functional/etc/config.xml \
-       --exclude=dev/tests/functional/phpunit.xml \
-       --exclude=dev/tests/integration/etc/install-config-mysql.php \
-       --exclude=dev/tests/api-functional/config/install-config-mysql.php \
-       --exclude=dev/tests/api-functional/phpunit_rest.xml \
-       --exclude=dev/tests/api-functional/phpunit_graphql.xml \
-       --exclude=dev/tests/acceptance/.env
+   git clean -dfx --exclude='.idea' $(mount | grep -oP '/var/www/magento2ce/\K\S*' | xargs -n 1 echo '-e ')
    git checkout composer.lock composer.json
 fi
 

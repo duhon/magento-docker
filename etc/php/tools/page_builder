@@ -1,11 +1,11 @@
 #!/bin/bash
 
+shopt -s extglob
 if [ -d .git ]; then
-    git --work-tree=../magento2-page-builder --git-dir=../magento2-page-builder/.git clean -dfx
-    /usr/local/bin/magento2/link_edition --command=link --source="../magento2-page-builder"
+    cp -rlf ../magento2-page-builder/!(.git|vendor|..|.) .
     if [ -f LICENSE_EE.txt ]; then
         git --work-tree=../magento2-page-builder-ee --git-dir=../magento2-page-builder-ee/.git clean -dfx
-        /usr/local/bin/magento2/link_edition --command=link --source="../magento2-page-builder-ee"
+        cp -rlf ../magento2-page-builder-ee/!(.git|vendor|..|.) .
     fi
 else
     echo 'TODO not install page-builder from composer'
