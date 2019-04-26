@@ -73,7 +73,7 @@ services:
       - "1025:1025"
       - "8025:8025"
   elastic:
-    image: elasticsearch:6
+    image: elasticsearch:6.7.1
     hostname: elastic
     ports:
       - "9200:9200"
