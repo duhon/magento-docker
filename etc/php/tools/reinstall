@@ -15,11 +15,11 @@ if [[ -d .git ]]; then
    git checkout composer.lock composer.json
 fi
 
-if [ $ver = 'ee' ] || [ $ver = 'b2b' ]; then
+if [[ ${ver} = 'ee' ]] || [[ ${ver} = 'b2b' ]]; then
    cp -rlf ../magento2ee/!(.git|vendor|..|.) .
 fi
 
-if [ $ver = 'b2b' ]; then
+if [[ ${ver} = 'b2b' ]]; then
    cp -rlf ../magento2b2b/!(.git|vendor|..|.) .
 fi
 
@@ -47,6 +47,7 @@ bin/magento setup:install \
 bin/magento config:set web/seo/use_rewrites 1
 bin/magento config:set dev/template/allow_symlink 1
 bin/magento config:set admin/security/admin_account_sharing 1
+bin/magento config:set admin/security/session_lifetime 31536000
 
 #setup other services
 IFS=$'\n' setup=($(yq read /var/www/magento-docker/docker-compose.yml services.*.x-setup | grep -oP '(?:\-\s)+(?!null)\K.*'))
