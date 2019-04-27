@@ -1,6 +1,7 @@
 #!/bin/bash
 
 #TODO: need update like
+shopt -s extglob
 #def or git
 method='def'
 if [[ -d .git ]]; then
@@ -14,13 +15,12 @@ fi
 #cp -f ~/.composer/config.json ./var/composer_home/
 
 if [[ ${method} = 'git' ]]; then
-    #git --work-tree=../sample-data --git-dir=../sample-data/.git clean -dfx
-    #git --work-tree=../sample-data --git-dir=../sample-data/.git pull
-    php -f ../magento2-sample-data-ee/dev/tools/build-sample-data.php -- --command unlink --ce-source "../magento2-sample-data" --sample-data-source "../magento2-sample-data-ee"
+    git --work-tree=../magento2-sample-data --git-dir=../magento2-sample-data/.git clean -dfx
+    cp -rlf ../magento2-sample-data/!(.git|vendor|..|.) .
     if [[ -f LICENSE_EE.txt ]]; then
-        php -f ../magento2-sample-data-ee/dev/tools/build-sample-data.php -- --command link --ce-source "../magento2-sample-data" --sample-data-source "../magento2-sample-data-ee"
+        git --work-tree=../magento2-sample-data-ee --git-dir=../magento2-sample-data-ee/.git clean -dfx
+        cp -rlf ../magento2-sample-data-ee/!(.git|vendor|..|.) .
     fi
-    php -f ../magento2-sample-data/dev/tools/build-sample-data.php -- --ce-source="../magento2ce"
 else
     bin/magento sampledata:deploy
 fi
