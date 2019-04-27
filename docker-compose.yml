@@ -62,18 +62,6 @@ services:
       - "5901:5900"
     x-hints:
       - 'vnc://0.0.0.0:5901 pass:secret'
-  redis:
-    image: redis
-    hostname: redis
-    ports:
-      - "6379:6379"
-  rabbit:
-    image: rabbitmq:management
-    hostname: rabbitmq
-    ports:
-      - "15672:15672"
-    x-setup:
-#      - bin/magento --amqp-host=rabbit --amqp-port=“5672"
   elastic:
     image: elasticsearch:6.7.1
     hostname: elastic
@@ -93,6 +81,26 @@ services:
       - bin/magento config:set catalog/search/engine elasticsearch6
       - bin/magento config:set catalog/search/elasticsearch6_server_hostname elastic
       - bin/magento indexer:reindex catalogsearch_fulltext
+  redis:
+    image: redis
+    hostname: redis
+    ports:
+      - "6379:6379"
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 20000
+        hard: 40000
+    x-setup:
+      - bin/magento setup:config:set --cache-backend=redis --cache-backend-redis-server=redis
+      - bin/magento setup:config:set --session-save=redis --session-save-redis-host=redis
+  rabbit:
+    image: rabbitmq:management
+    hostname: rabbitmq
+    ports:
+      - "15672:15672"
+    x-setup:
+      - bin/magento setup:config:set --amqp-host=rabbit --amqp-user=guest --amqp-password=guest
 networks:
   default:
     driver: bridge
