@@ -7,7 +7,7 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="config.xsd">
     <server>
-        <item name="selenium" type="default" browser="Mozilla Firefox" browserName="firefox" host="mtf" port="4444" seleniumServerRequestsTimeout="10" sessionStrategy="shared">
+        <item name="selenium" type="default" browser="Mozilla Firefox" browserName="firefox" host="mtf" port="4444" seleniumServerRequestsTimeout="1000" sessionStrategy="shared">
             <desiredCapabilities>
                 <platform>ANY</platform>
             </desiredCapabilities>
@@ -28,10 +28,9 @@
         <test>none</test>
     </isolation>
     <install>
-        <host>magento.test</host>
+        <host>db</host>
         <user>root</user>
-        <password>123123q</password>
-        <dbName>default</dbName>
+        <dbName>magento</dbName>
         <baseUrl>http://magento.test/</baseUrl>
         <backendName>backend</backendName>
     </install>
