@@ -8,13 +8,6 @@ backend default {
     .host = "web";
     .port = "80";
     .first_byte_timeout = 600s;
-    .probe = {
-        .url = "health_check.php";
-        .timeout = 2s;
-        .interval = 50s;
-        .window = 10;
-        .threshold = 5;
-   }
 }
 
 acl purge {
@@ -63,7 +56,7 @@ sub vcl_recv {
     }
 
     # Bypass health check requests
-    if (req.url ~ "/pub/health_check.php") {
+    if (req.url ~ "/health_check.php") {
         return (pass);
     }
 
@@ -190,15 +183,11 @@ sub vcl_backend_response {
 }
 
 sub vcl_deliver {
-    if (resp.http.X-Magento-Debug) {
-        if (resp.http.x-varnish ~ " ") {
-            set resp.http.X-Magento-Cache-Debug = "HIT";
-            set resp.http.Grace = req.http.grace;
-        } else {
-            set resp.http.X-Magento-Cache-Debug = "MISS";
-        }
+    if (resp.http.x-varnish ~ " ") {
+        set resp.http.X-Magento-Cache-Debug = "HIT";
+        set resp.http.Grace = req.http.grace;
     } else {
-        unset resp.http.Age;
+        set resp.http.X-Magento-Cache-Debug = "MISS";
     }
 
     # Not letting browser to cache non-static files.
@@ -220,20 +209,6 @@ sub vcl_deliver {
 sub vcl_hit {
     if (obj.ttl >= 0s) {
         # Hit within TTL period
-        return (deliver);
-    }
-    if (std.healthy(req.backend_hint)) {
-        if (obj.ttl > 0s) {
-            # Hit after TTL expiration, but within grace period
-            set req.http.grace = "normal (healthy server)";
-            return (deliver);
-        } else {
-            # Hit after TTL and grace expiration
-            return (fetch);
-        }
-    } else {
-        # server is not healthy, retrieve from cache
-        set req.http.grace = "unlimited (unhealthy server)";
         return (deliver);
     }
 }
