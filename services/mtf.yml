@@ -1,0 +1,8 @@
+version: '3.7'
+  services:
+    mtf:
+      image: selenium/standalone-firefox-debug:2.48.2
+      ports:
+        - "5901:5900"
+      x-hints:
+        - 'vnc://0.0.0.0:5901 pass:secret'

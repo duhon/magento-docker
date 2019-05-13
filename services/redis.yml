@@ -1,4 +1,4 @@
-version: '2'
+version: '3.7'
 services:
   redis:
     image: redis
@@ -10,6 +10,7 @@ services:
       nofile:
         soft: 20000
         hard: 40000
-#bin/magento setup:config:set --page-cache=redis --page-cache-redis-server=redis
-#bin/magento setup:config:set --cache-backend=redis --cache-backend-redis-server=redis
-#bin/magento setup:config:set --session-save=redis --session-save-redis-host=redis
+    x-setup:
+      - bin/magento setup:config:set --page-cache=redis --page-cache-redis-server=redis
+      - bin/magento setup:config:set --session-save=redis --session-save-redis-host=redis
+      - bin/magento setup:config:set --cache-backend=redis --cache-backend-redis-server=redis

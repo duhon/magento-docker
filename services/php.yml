@@ -4,7 +4,7 @@ services:
     build:
       context: ..
       dockerfile: build/php/test
-    image: duhon/php:${PHP_VERSION}-test
+    image: duhon/php:7.1-fpm
     hostname: app
     volumes:
       - ${MAGENTO_PATH}:/var/www:z

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#don't use it
+exit 1
+
 dir=`basename $(pwd)`
 ver=${1:-'ce'}
 VERSION=${2:-'2.1.0'}

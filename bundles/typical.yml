@@ -32,7 +32,7 @@ services:
     image: duhon/php:7.1-fpm
     hostname: app
     ports:
-      - "222:22"
+      - "${SSH_PORT}:22"
     stop_signal: SIGKILL
     volumes:
       - ${MAGENTO_PATH}:/var/www:${FILE_SYNC}
@@ -57,18 +57,12 @@ services:
       - bin/magento config:set admin/security/session_lifetime 31536000
       - bin/magento dev:query-log:enable --query-time-threshold=1
     command: sh -c 'service ssh start; php-fpm -R'
-  mftf:
-    image: selenium/standalone-chrome-debug:3.12.0
-    ports:
-      - "5900:5900"
-    x-hints:
-      - 'vnc://0.0.0.0:5900 pass:secret'
   varnish:
     image: million12/varnish
     depends_on:
       - web
     ports:
-      - "8080:80"
+      - "${VARNISH_PORT}:80"
     volumes:
       - ${MAGENTO_PATH}/magento-docker/etc/varnish/varnish.vcl:/etc/varnish/default.vcl:ro
     x-setup:
@@ -77,6 +71,12 @@ services:
       - bin/magento -v config:set system/full_page_cache/varnish/backend_port 80
       - bin/magento -v config:set system/full_page_cache/caching_application 2
       - bin/magento -v setup:config:set --http-cache-hosts=varnish:80
+  mftf:
+    image: selenium/standalone-chrome-debug:3.12.0
+    ports:
+      - "5900:5900"
+    x-hints:
+      - 'vnc://0.0.0.0:5900 pass:secret'
   elastic:
     image: elasticsearch:6.7.1
     hostname: elastic

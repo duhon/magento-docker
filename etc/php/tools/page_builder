@@ -8,7 +8,7 @@ if [ -d .git ]; then
         cp -rlf ../magento2-page-builder-ee/!(.git|vendor|..|.) .
     fi
 else
-    echo 'TODO not install page-builder from composer'
+    echo 'TODO install page-builder from composer'
 fi
 bin/magento setup:upgrade
 bin/magento config:set cms/pagebuilder/enabled 1
