@@ -8,6 +8,7 @@ ver=${1:-'ce'}
 DB=${2:-'magento'}
 #TODO: remove
 HOST_DB=${3:-'db'}
+#TODO: all args from env
 HOST=${4:-'magento.test'}
 
 if [[ -d .git ]]; then
@@ -47,3 +48,5 @@ bin/magento setup:install \
 #setup other services
 IFS=$'\n' setup=($(yq read /var/www/magento-docker/docker-compose.yml services.*.x-setup | grep -oP '(?:\-\s)+(?!null)\K.*'))
 for i in ${setup[*]}; do eval ${i}; done
+
+composer dump-autoload --optimize

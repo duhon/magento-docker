@@ -8,9 +8,9 @@ services:
     hostname: app
     volumes:
       - ${MAGENTO_PATH}:/var/www:z
-      - ../etc/php/tools:/usr/local/bin/magento2:ro
-      - ../etc/php/php.ini:/usr/local/etc/php/php.ini:ro
-      - ../etc/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
+      - ${MAGENTO_PATH}/magento-docker/etc/php/tools:/usr/local/bin/magento2:ro
+      - ${MAGENTO_PATH}/magento-docker/etc/php/php.ini:/usr/local/etc/php/php.ini:ro
+      - ${MAGENTO_PATH}/magento-docker/etc/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
     environment:
 #      MAGE_MODE: "developer"
       COMPOSER_HOME: /var/www/.composer
