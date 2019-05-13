@@ -1,8 +1,14 @@
-version: '2'
+version: '3.7'
 services:
   nodejs:
     image: digitallyseamless/nodejs-bower-grunt
     hostname: nodejs
     volumes:
-      - /var/www:/var/www:z
-#    need mv Gruntfile.js.sample Gruntfile.js and package.json.sample to package.json, npm install
+      - ${MAGENTO_PATH}/magento2ce:/data:${FILE_SYNC}
+    tty: true
+    command: sh -c 'cp Gruntfile.js.sample Gruntfile.js && cp package.json.sample package.json && npm install && bash'
+    x-hints:
+      - https://devdocs.magento.com/guides/v2.3/test/js/jasmine.html
+      - grunt spec
+    x-setup:
+      - bin/magento setup:static-content:deploy -f
