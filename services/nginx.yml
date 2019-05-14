@@ -8,9 +8,9 @@ services:
 #     - NGINX_PORT=8080
     volumes:
       - ${MAGENTO_PATH}:/var/www
-      - ../etc/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ../etc/nginx/server.crt:/etc/nginx/server.crt
-      - ../etc/nginx/server.key:/etc/nginx/server.key
+      - ${MAGENTO_PATH}/docker-magento/etc/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ${MAGENTO_PATH}/docker-magento/etc/nginx/server.crt:/etc/nginx/server.crt
+      - ${MAGENTO_PATH}/docker-magento/etc/nginx/server.key:/etc/nginx/server.key
     networks:
       default:
         aliases:

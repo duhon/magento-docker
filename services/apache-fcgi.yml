@@ -5,4 +5,4 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ../etc/apache/httpd.conf:/usr/local/apache2/conf/httpd.conf
+      - ${MAGENTO_PATH}/docker-magento/etc/apache/httpd.conf:/usr/local/apache2/conf/httpd.conf

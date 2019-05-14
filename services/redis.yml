@@ -5,12 +5,18 @@ services:
     hostname: redis
     ports:
       - "6379:6379"
+    sysctls:
+      net.core.somaxconn: 1024
     ulimits:
       nproc: 65535
       nofile:
         soft: 20000
         hard: 40000
+    x-hints:
+      - redis-cli monitor
+      - telnet localhost 6379
     x-setup:
       - bin/magento setup:config:set --page-cache=redis --page-cache-redis-server=redis
       - bin/magento setup:config:set --session-save=redis --session-save-redis-host=redis
       - bin/magento setup:config:set --cache-backend=redis --cache-backend-redis-server=redis
+    x-info: https://devdocs.magento.com/guides/v2.3/config-guide/redis/config-redis.html

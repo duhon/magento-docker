@@ -16,7 +16,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ../etc/mysql/my.cnf:/etc/mysql/conf.d/mysql.cnf
+      - ${MAGENTO_PATH}/docker-magento/etc/mysql/my.cnf:/etc/mysql/conf.d/mysql.cnf
   app:
     extends:
       file: ../services/php_perf.yml

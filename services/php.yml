@@ -2,12 +2,12 @@ version: '2'
 services:
   app:
     build:
-      context: ..
+      context: ${MAGENTO_PATH}/docker-magento
       dockerfile: build/php/test
     image: duhon/php:7.1-fpm
     hostname: app
     volumes:
-      - ${MAGENTO_PATH}:/var/www:z
+      - ${MAGENTO_PATH}:/var/www:${FILE_SYNC}
       - ${MAGENTO_PATH}/magento-docker/etc/php/tools:/usr/local/bin/magento2:ro
       - ${MAGENTO_PATH}/magento-docker/etc/php/php.ini:/usr/local/etc/php/php.ini:ro
       - ${MAGENTO_PATH}/magento-docker/etc/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
