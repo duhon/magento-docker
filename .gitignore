@@ -1,3 +1,2 @@
-.hg/
-.hgignore
-.hgtags
+.env
+docker-compose.yml
