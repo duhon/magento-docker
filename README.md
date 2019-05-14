@@ -38,3 +38,10 @@ Done.
 ### TODO list
 
 1. It is impossible to run multiple instances of the same service, problem in the ports
+2. Redis optimization 
+    ```
+    docker run -it --rm --privileged ubuntu /bin/bash
+    echo never | tee /sys/kernel/mm/transparent_hugepage/enabled
+    echo never | tee /sys/kernel/mm/transparent_hugepage/defrag
+    ```
+3. Optimization for MacOS https://gist.github.com/tombigel/d503800a282fcadbee14b537735d202c

@@ -60,6 +60,7 @@ services:
       - magento reinstall
       - magento sample_data
       - magento page_builder
+      - docker-compose scale app=0 && docker-compose scale app=1
     x-setup:
       - bin/magento config:set web/seo/use_rewrites 1
       - bin/magento config:set dev/template/allow_symlink 1
