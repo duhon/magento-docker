@@ -4,12 +4,6 @@ shopt -s extglob
 dir=$(basename $(pwd))
 
 ver=${1:-'ce'}
-#TODO: remove
-DB=${2:-'magento'}
-#TODO: remove
-HOST_DB=${3:-'db'}
-#TODO: all args from env
-HOST=${4:-'magento.test'}
 
 if [[ -d .git ]]; then
    git clean -dfx --exclude='.idea' $(mount | grep -oP '/var/www/magento2ce/\K\S*' | xargs -rn 1 echo '-e ')
@@ -40,9 +34,8 @@ bin/magento setup:install \
    --admin-email=magento@mailinator.com \
    --admin-user=admin \
    --admin-password=123123q \
-   --base-url=http://$HOST/ \
-   --db-name=$DB \
-   --db-host=$HOST_DB \
+   --db-name=magento \
+   --db-host=db \
    --db-prefix=m2_
 
 #setup other services
