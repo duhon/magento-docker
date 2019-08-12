@@ -1,4 +1,4 @@
-FROM php:7.1-fpm
+FROM php:7.1-fpm-buster
 
 RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
     libxslt-dev \
     vim \
     git \
-    mysql-client \
+    default-mysql-client \
     openssh-server \
     libssl-dev \
     libgringotts-dev \

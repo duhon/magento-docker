@@ -1,5 +1,4 @@
 FROM php:7.2-apache
-MAINTAINER Duhon <duhon@rambler.ru>
 
 RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
