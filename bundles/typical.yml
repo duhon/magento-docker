@@ -44,6 +44,9 @@ services:
       - ${MAGENTO_PATH}:/var/www:${FILE_SYNC}
 #      - ${MAGENTO_PATH}/magento-docker/etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
       - ${MAGENTO_PATH}/magento-docker/etc/php/tools:/usr/local/bin/magento2:ro
+      - ${MAGENTO_PATH}/magento-docker/etc/php/tideways.ini:/usr/local/etc/php/conf.d/tideways.ini
+      - ${MAGENTO_PATH}/magento-docker/etc/php/profiler.php:/usr/local/lib/php/header.php
+      - ${MAGENTO_PATH}/magento-docker/etc/php/append.ini:/usr/local/etc/php/conf.d/append.ini
       - ${MAGENTO_PATH}/magento-docker/etc/php/php.ini:/usr/local/etc/php/php.ini:ro
       - ${MAGENTO_PATH}/magento-docker/etc/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
       - ${MAGENTO_PATH}/magento-docker/etc/php/tests/functional/phpunit.xml:/var/www/magento2ce/dev/tests/functional/phpunit.xml:rw
