@@ -1,6 +1,6 @@
 version: '3.7'
 services:
-  redis:
+  redis-master:
     image: redis
     hostname: redis
     ports:
@@ -16,7 +16,21 @@ services:
       - redis-cli monitor
       - telnet localhost 6379
     x-setup:
-      - bin/magento setup:config:set --page-cache=redis --page-cache-redis-server=redis
-      - bin/magento setup:config:set --session-save=redis --session-save-redis-host=redis
-      - bin/magento setup:config:set --cache-backend=redis --cache-backend-redis-server=redis
+      - bin/magento setup:config:set --page-cache=redis --page-cache-redis-server=redis-master
+      - bin/magento setup:config:set --session-save=redis --session-save-redis-host=redis-master
+      - bin/magento setup:config:set --cache-backend=redis --cache-backend-redis-server=redis-master
     x-info: https://devdocs.magento.com/guides/v2.3/config-guide/redis/config-redis.html
+  redis-slave:
+    image: redis
+    command: redis-server --slaveof redis-master 6379
+  redis-sentinel:
+    image: redis
+    volumes:
+      - ${MAGENTO_PATH}/docker-magento/etc/redis/sentinel.conf:/etc/redis/sentinel.conf
+    command: redis-server /etc/redis/sentinel.conf --sentinel
+  redis-stat:
+    image: insready/redis-stat
+    hostname: redis-stat
+    ports:
+      - "63790:63790"
+    command: '--server redis'
