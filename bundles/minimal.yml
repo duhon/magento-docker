@@ -6,6 +6,8 @@ services:
     volumes:
       - ${MAGENTO_PATH}:/var/www:${FILE_SYNC}
       - ${MAGENTO_PATH}/magento-docker/etc/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ${MAGENTO_PATH}/magento-docker/etc/nginx/server.crt:/etc/nginx/server.crt
+      - ${MAGENTO_PATH}/magento-docker/etc/nginx/server.key:/etc/nginx/server.key
     ports:
       - "${WEB_PORT}:80"
     depends_on:
