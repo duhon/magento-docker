@@ -1,0 +1,18 @@
+#!/bin/bash
+#https://github.com/clawrock/magento2-debug
+
+! composer show nathanjosiah/magento2-layout-debugger >/dev/null 2>&1
+isset=$?
+
+if [[ ${isset} != 1 ]]; then
+    composer require --dev clawrock/magento2-debug
+    bin/magento setup:upgrade
+    bin/magento setup:di:compile
+fi
+
+set +e
+bin/magento config:show dev/debug/layout_debugger_comments_enabled_frontend >/dev/null 2>&1
+enable=$?
+set -e
+
+bin/magento config:set dev/debug/layout_debugger_comments_enabled_frontend ${enable}
