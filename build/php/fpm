@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y \
     libssl-dev \
     libgringotts-dev \
     unzip \
+    wget \
     --no-install-recommends && rm -r /var/lib/apt/lists/*
 
 RUN git clone https://github.com/tideways/php-profiler-extension.git /usr/src/php/ext/tideways \
@@ -21,6 +22,12 @@ RUN git clone https://github.com/tideways/php-profiler-extension.git /usr/src/ph
     && docker-php-ext-install -j$(nproc) pcntl gd iconv mbstring mcrypt opcache bcmath soap intl zip xsl pdo_mysql tideways sockets \
     && pecl install -f xdebug-2.6.0 swoole apcu msgpack libsodium \
     && docker-php-ext-enable swoole apcu msgpack sodium
+
+RUN wget -q -O - https://packages.blackfire.io/gpg.key | sudo apt-key add - \
+    && echo "deb http://packages.blackfire.io/debian any main" | tee /etc/apt/sources.list.d/blackfire.list \
+    && apt-get update \
+    && apt-get install blackfire-agent \
+    && blackfire-agent -register
 
 ADD https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 /usr/local/bin/yq
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
