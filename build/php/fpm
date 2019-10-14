@@ -23,12 +23,6 @@ RUN git clone https://github.com/tideways/php-profiler-extension.git /usr/src/ph
     && pecl install -f xdebug-2.6.0 swoole apcu msgpack libsodium \
     && docker-php-ext-enable swoole apcu msgpack sodium
 
-RUN wget -q -O - https://packages.blackfire.io/gpg.key | sudo apt-key add - \
-    && echo "deb http://packages.blackfire.io/debian any main" | tee /etc/apt/sources.list.d/blackfire.list \
-    && apt-get update \
-    && apt-get install blackfire-agent \
-    && blackfire-agent -register
-
 ADD https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 /usr/local/bin/yq
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && ln -sf /usr/local/bin/magento2/magento /usr/local/bin/magento \
