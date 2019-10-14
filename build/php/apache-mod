@@ -1,14 +1,15 @@
-FROM php:7.2-apache
+FROM php:7.1-apache-buster
 
 RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
     libmcrypt-dev \
+    libsodium-dev \
     libicu-dev \
     libxslt-dev \
     vim \
     git \
-    mysql-client \
+    default-mysql-client \
     openssh-server \
     libssl-dev \
     libgringotts-dev \
