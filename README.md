@@ -1,42 +1,44 @@
 # magento-docker
 
-### 0. Preconditions with default .env
+### 0. Preconditions
 
-```
-mkdir ~/www
-cd ~/www
-git clone git@github.com:magento/magento2.git
-git clone git@github.com:duhon/magento-docker.git
-cd magento-docker
-docker-compose -f docker-compose(-apple?).yml up
-```
-
+- see install.sh
+- cp magento-docker/bundles/typical.yml magento-docker/docker-compose.yml
+- cp magento-docker/.env.dist magento-docker/.env 
 
 ## Scenarios
 
-### 1. Run sshd
- 
-1. docker-compose exec app /usr/sbin/sshd
-2. ssh root@magento.test -p 222
-3. Password - root
+### 1. Run tests
 
-Done.
+0. docker-compose exec app magento prepare_tests
+1. docker-compose exec app bin/magento dev:tests:run (unit, integration)
+2. docker-compose exec app bash
+3. cd dev/tests/acceptance/ and vendor/bin/codecept run (mftf)
+4. cd dev/tests/functional/ and vendor/bin/phpunit run (mtf)
+5. vnc://localhost:5900 pass:secret (mftf or mtf)
 
-### 2. Run MFTF
+### 2. Xdebug
 
-1. docker-compose -f bundles/test.yml up
-2. docker-compose exec app magento reinstall (ee|ce|b2b) - need installed M2 (see Instalation M2).
-3. docker-compose exec app magento prepare_tests
-4. docker-compose exec app bash
-5. cd dev/tests/acceptance/
-6. vendor/bin/codecept run
-
-Done.
+1. Uncomment the line in the docker-compose.yml which is the debugger
 
 ### 3. (Re)-Installation M2
 
 1. docker-compose exec app magento reinstall (ee|ce|b2b)
 
+### 4. Optimization host
+
+1. Redis optimization 
+    ```
+    docker run -it --rm --privileged ubuntu /bin/bash
+    echo never | tee /sys/kernel/mm/transparent_hugepage/enabled
+    echo never | tee /sys/kernel/mm/transparent_hugepage/defrag
+    ```
+2. Optimization for MacOS https://gist.github.com/tombigel/d503800a282fcadbee14b537735d202c
+
+
 ### TODO list
 
-1. It is impossible to run multiple instances of the same service, problem in the ports
+1. To create a cross platform installer that will check for dependencies, create a folder with the project and 
+download the Magento (see install.sh)
+2. The default creation of the project for phpstorm (see etc/phpstorm)
+3. A single point of running tests with the preparation (magento prepare_tests) of Magento

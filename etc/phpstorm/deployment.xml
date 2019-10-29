@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" serverName="magento" deleteMissingItems="true" createEmptyFolders="true" exclude=".svn;.cvs;.idea;.DS_Store;.hg;*.hprof;*.pyc;.git" autoUploadExternalChanges="true">
+    <serverData>
+      <paths name="magento">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/var/www/magento2ce" local="$PROJECT_DIR$/../www/magento2ce" web="/" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath path="/var/www/magento2ce/pub/media" />
+            <excludedPath path="/var/www/magento2ce/pub/static" />
+          </excludedPaths>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>

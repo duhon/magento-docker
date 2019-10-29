@@ -1,8 +1,9 @@
-version: '2'
+version: '3.7'
 services:
   rabbit:
     image: rabbitmq:management
     hostname: rabbitmq
     ports:
       - "15672:15672"
-#--amqp-host=“<hostname>” --amqp-port=“5672" --amqp-user=“<user_name>” --amqp-password=“<password>” --amqp-virtualhost=“/”
+    x-setup:
+      - bin/magento setup:config:set --amqp-host=rabbit --amqp-user=guest --amqp-password=guest

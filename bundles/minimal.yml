@@ -1,0 +1,56 @@
+version: '3.7'
+services:
+  web:
+    image: nginx:alpine
+    hostname: web
+    volumes:
+      - ${MAGENTO_PATH}:/var/www:${FILE_SYNC}
+      - ${MAGENTO_PATH}/magento-docker/etc/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ${MAGENTO_PATH}/magento-docker/etc/nginx/server.crt:/etc/nginx/server.crt
+      - ${MAGENTO_PATH}/magento-docker/etc/nginx/server.key:/etc/nginx/server.key
+    ports:
+      - "${WEB_PORT}:80"
+    depends_on:
+      - app
+    x-hint: uncomment the line above and change error_log in nginx.conf
+    x-info: https://devdocs.magento.com/guides/v2.3/install-gde/prereq/nginx.html
+  db:
+    image: mariadb
+    hostname: db
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: "magento"
+    shm_size: '1gb'
+    volumes:
+      - ${MAGENTO_PATH}/magento-docker/etc/mysql/my.cnf:/etc/mysql/conf.d/mysql.cnf
+    ports:
+      - "${DB_PORT}:3306"
+    x-hits:
+      - bin/magento dev:query-log:enable and watch var/debug/db.log
+    x-info: https://devdocs.magento.com/guides/v2.3/install-gde/prereq/mysql.html
+  app:
+    image: duhon/php:7.2-fpm
+    hostname: app
+    volumes:
+      - ${MAGENTO_PATH}:/var/www:${FILE_SYNC}
+#      - ${MAGENTO_PATH}/magento-docker/etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+      - ${MAGENTO_PATH}/magento-docker/etc/php/tools:/usr/local/bin/magento2:ro
+      - ${MAGENTO_PATH}/magento-docker/etc/php/php.ini:/usr/local/etc/php/php.ini:ro
+      - ${MAGENTO_PATH}/magento-docker/etc/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
+    environment:
+      COMPOSER_HOME: /var/www/.composer
+      PHP_IDE_CONFIG: serverName=magento.test
+    command: sh -c 'service ssh start; php-fpm -R'
+    x-hints:
+      - magento reinstall
+      - magento sample_data
+      - magento page_builder
+      - docker-compose scale app=0 && docker-compose scale app=1
+    x-setup:
+      - bin/magento config:set web/seo/use_rewrites 1
+      - bin/magento config:set admin/security/admin_account_sharing 1
+      - bin/magento config:set admin/security/session_lifetime 31536000
+    x-info: https://devdocs.magento.com/
+networks:
+  default:
+    driver: bridge

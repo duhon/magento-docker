@@ -1,7 +1,7 @@
-version: '2'
+version: '3.7'
 services:
   elastic:
-    image: elasticsearch:2.4.6
+    image: elasticsearch:6.7.1
     hostname: elastic
     ports:
       - "9200:9200"
@@ -11,6 +11,11 @@ services:
       - bootstrap.memory_lock=true
       - discovery.type=single-node
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-#bin/magento config:set catalog/search/engine elasticsearch5
-#bin/magento config:set catalog/search/elasticsearch5_server_hostname elastic
-#bin/magento indexer:reindex catalogsearch_fulltext
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    x-setup:
+      - bin/magento config:set catalog/search/engine elasticsearch6
+      - bin/magento config:set catalog/search/elasticsearch6_server_hostname elastic
+      - bin/magento indexer:reindex catalogsearch_fulltext

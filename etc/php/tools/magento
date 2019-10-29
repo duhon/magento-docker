@@ -2,10 +2,10 @@
 
 script_name=$1
 dir=$(dirname $0)/magento2
-sh=$dir/$script_name
+sh=${dir}/${script_name}
 
 umask 002
-if [ $# -eq 0 ]; then 
+if [[ $# -eq 0 ]]; then
 	ls -1 $dir
 	exit 0
 fi

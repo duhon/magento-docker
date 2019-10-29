@@ -1,4 +1,4 @@
-FROM php:7.1-fpm
+FROM php:7.3-fpm-buster
 
 RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
@@ -9,28 +9,29 @@ RUN apt-get update && apt-get install -y \
     libxslt-dev \
     vim \
     git \
-    mysql-client \
+    default-mysql-client \
     openssh-server \
     libssl-dev \
     libgringotts-dev \
     unzip \
+    libzip-dev \
     --no-install-recommends && rm -r /var/lib/apt/lists/*
 
-RUN git clone https://github.com/tideways/php-profiler-extension.git /usr/src/php/ext/tideways
-RUN ln -sf /usr/local/lib/php/extensions/*/ /usr/local/lib/php/extensions/so
-RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-install -j$(nproc) pcntl gd iconv mbstring opcache bcmath mcrypt soap intl zip xsl pdo_mysql tideways
-RUN pecl install xdebug apcu msgpack libsodium && docker-php-ext-enable apcu msgpack sodium
+RUN git clone -b 'v4.1.7' --depth=1 --single-branch https://github.com/tideways/php-xhprof-extension.git /usr/src/php/ext/tideways \
+    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+    && docker-php-ext-install -j$(nproc) pcntl gd opcache bcmath soap intl zip xsl pdo_mysql tideways sockets \
+    && pecl install -f xdebug apcu msgpack libsodium \
+    && docker-php-ext-enable apcu msgpack
 
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-RUN ln -sf /var/www/magento2ce/vendor/bin/phpunit /usr/local/bin/phpunit
+ADD https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 /usr/local/bin/yq
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+    && ln -sf /usr/local/bin/magento2/magento /usr/local/bin/magento \
+    && echo 'alias ll="ls -lA"' >>/root/.bashrc \
+    && usermod -a -G root www-data \
+    && chmod +x /usr/local/bin/yq
 
-RUN ln -sf /usr/local/bin/magento2/magento /usr/local/bin/magento
-RUN echo 'alias ll="ls -lA"' >>/root/.bashrc
-RUN usermod -a -G root www-data
-
-RUN echo 'root:root' | chpasswd
-RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN echo 'root:root' | chpasswd \
+    && sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 
 WORKDIR /var/www/magento2ce
 

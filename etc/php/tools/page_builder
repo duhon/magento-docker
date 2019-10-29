@@ -1,0 +1,14 @@
+#!/bin/bash
+
+shopt -s extglob
+if [ -d .git ]; then
+    cp -rlf ../magento2-page-builder/!(.git|vendor|..|.) .
+    if [ -f LICENSE_EE.txt ]; then
+        git --work-tree=../magento2-page-builder-ee --git-dir=../magento2-page-builder-ee/.git clean -dfx
+        cp -rlf ../magento2-page-builder-ee/!(.git|vendor|..|.) .
+    fi
+else
+    echo 'TODO install page-builder from composer'
+fi
+bin/magento setup:upgrade
+bin/magento config:set cms/pagebuilder/enabled 1

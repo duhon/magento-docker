@@ -1,0 +1,36 @@
+Index: lib/internal/Magento/Framework/Filesystem/Directory/ReadFactory.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- lib/internal/Magento/Framework/Filesystem/Directory/ReadFactory.php	(revision Local Version)
++++ lib/internal/Magento/Framework/Filesystem/Directory/ReadFactory.php	(revision Shelved Version)
+@@ -43,8 +43,7 @@
+         return new Read(
+             $factory,
+             $driver,
+-            $path,
+-            new PathValidator($driver)
++            $path
+         );
+     }
+ }
+Index: lib/internal/Magento/Framework/View/Element/Template/File/Validator.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- lib/internal/Magento/Framework/View/Element/Template/File/Validator.php	(revision Local Version)
++++ lib/internal/Magento/Framework/View/Element/Template/File/Validator.php	(revision Shelved Version)
+@@ -117,8 +117,9 @@
+                 ($this->isPathInDirectories($filename, $this->_compiledDir)
+                     || $this->isPathInDirectories($filename, $this->moduleDirs)
+                     || $this->isPathInDirectories($filename, $this->_themesDir)
+-                    || $this->_isAllowSymlinks)
+-                && $this->getRootDirectory()->isFile($this->getRootDirectory()->getRelativePath($filename));
++                )
++                && $this->getRootDirectory()->isFile($this->getRootDirectory()->getRelativePath($filename))
++                || $this->_isAllowSymlinks;
+         }
+         return $this->_templatesValidationResults[$filename];
+     }

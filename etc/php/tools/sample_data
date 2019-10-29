@@ -1,0 +1,28 @@
+#!/bin/bash
+
+#TODO: need update like
+shopt -s extglob
+#def or git
+method='def'
+if [[ -d .git ]]; then
+    method='git'
+fi
+if ! grep -q 'repo.magento.com' composer.json; then
+    composer config repositories.magento composer https://repo.magento.com/
+fi
+#mkdir -p ./var/composer_home/
+#cp -f ~/.composer/auth.json ./var/composer_home/
+#cp -f ~/.composer/config.json ./var/composer_home/
+
+if [[ ${method} = 'git' ]]; then
+    git --work-tree=../magento2-sample-data --git-dir=../magento2-sample-data/.git clean -dfx
+    cp -rlf ../magento2-sample-data/!(.git|vendor|..|.) .
+    if [[ -f LICENSE_EE.txt ]]; then
+        git --work-tree=../magento2-sample-data-ee --git-dir=../magento2-sample-data-ee/.git clean -dfx
+        cp -rlf ../magento2-sample-data-ee/!(.git|vendor|..|.) .
+    fi
+else
+    bin/magento sampledata:deploy
+fi
+bin/magento setup:upgrade
+
