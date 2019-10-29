@@ -1,4 +1,4 @@
-FROM php:7.1-fpm-buster
+FROM php:7.3-fpm-buster
 
 RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
@@ -14,14 +14,14 @@ RUN apt-get update && apt-get install -y \
     libssl-dev \
     libgringotts-dev \
     unzip \
-    wget \
+    libzip-dev \
     --no-install-recommends && rm -r /var/lib/apt/lists/*
 
-RUN git clone https://github.com/tideways/php-profiler-extension.git /usr/src/php/ext/tideways \
+RUN git clone -b 'v4.1.7' --depth=1 --single-branch https://github.com/tideways/php-xhprof-extension.git /usr/src/php/ext/tideways \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-install -j$(nproc) pcntl gd iconv mbstring mcrypt opcache bcmath soap intl zip xsl pdo_mysql tideways sockets \
-    && pecl install -f xdebug-2.6.0 swoole apcu msgpack libsodium \
-    && docker-php-ext-enable swoole apcu msgpack sodium
+    && docker-php-ext-install -j$(nproc) pcntl gd opcache bcmath soap intl zip xsl pdo_mysql tideways sockets \
+    && pecl install -f xdebug apcu msgpack libsodium \
+    && docker-php-ext-enable apcu msgpack
 
 ADD https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 /usr/local/bin/yq
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
@@ -35,5 +35,5 @@ RUN echo 'root:root' | chpasswd \
 
 WORKDIR /var/www/magento2ce
 
-EXPOSE 9000 9501
+EXPOSE 9000
 CMD ["php-fpm", "-R"]

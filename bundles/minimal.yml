@@ -29,7 +29,7 @@ services:
       - bin/magento dev:query-log:enable and watch var/debug/db.log
     x-info: https://devdocs.magento.com/guides/v2.3/install-gde/prereq/mysql.html
   app:
-    image: duhon/php:7.1-fpm
+    image: duhon/php:7.2-fpm
     hostname: app
     volumes:
       - ${MAGENTO_PATH}:/var/www:${FILE_SYNC}
