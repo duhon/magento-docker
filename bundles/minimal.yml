@@ -8,6 +8,7 @@ services:
       - ${MAGENTO_PATH}/magento-docker/etc/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ${MAGENTO_PATH}/magento-docker/etc/nginx/server.crt:/etc/nginx/server.crt
       - ${MAGENTO_PATH}/magento-docker/etc/nginx/server.key:/etc/nginx/server.key
+      - ${MAGENTO_PATH}/magento-docker/etc/nginx/fetch_env.js:/etc/nginx/fetch_env.js
     ports:
       - "${WEB_PORT}:80"
     depends_on:
@@ -29,7 +30,7 @@ services:
       - bin/magento dev:query-log:enable and watch var/debug/db.log
     x-info: https://devdocs.magento.com/guides/v2.3/install-gde/prereq/mysql.html
   app:
-    image: duhon/php:7.2-fpm
+    image: duhon/php:7.3-fpm
     hostname: app
     volumes:
       - ${MAGENTO_PATH}:/var/www:${FILE_SYNC}
