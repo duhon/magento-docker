@@ -1,33 +1,22 @@
 #!/bin/bash
 
 shopt -s extglob
-dir=$(basename $(pwd))
-
-ver=${1:-'ce'}
+#set -- ${1:-'ce'}
 
 if [[ -d .git ]]; then
    git clean -dfx --exclude='.idea' $(mount | grep -oP '/var/www/magento2ce/\K\S*' | xargs -rn 1 echo '-e ')
    git checkout composer.lock composer.json
 fi
 
-if [[ ${ver} = 'ee' ]] || [[ ${ver} = 'b2b' ]]; then
-   cp -rlf ../magento2ee/!(.git|vendor|..|.) .
-fi
-
-if [[ ${ver} = 'b2b' ]]; then
-   cp -rlf ../magento2b2b/!(.git|vendor|..|.) .
-fi
+for edition in "$@"
+do
+    cp -rlf ../magento2${edition}/!(.git|vendor|..|.) .
+done
 
 composer install
 
 bin/magento setup:install \
    --cleanup-database \
-   --language=en_US \
-   --timezone=Europe/Kiev \
-   --currency=USD \
-   --use-secure=0 \
-   --use-secure-admin=0 \
-   --admin-use-security-key=0 \
    --backend-frontname=admin \
    --admin-lastname=Admin \
    --admin-firstname=Admin \
