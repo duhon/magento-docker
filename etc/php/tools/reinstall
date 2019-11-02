@@ -1,20 +1,22 @@
 #!/bin/bash
-
 shopt -s extglob
-#set -- ${1:-'ce'}
 
+#clean project dir
 if [[ -d .git ]]; then
-   git clean -dfx --exclude='.idea' $(mount | grep -oP '/var/www/magento2ce/\K\S*' | xargs -rn 1 echo '-e ')
+   git clean -dfx --exclude='.idea' $(mount | grep -oP '/var/www/magento2ce/\K\S*' | xargs -rn 1 echo '--exclude=')
    git checkout composer.lock composer.json
 fi
 
-for edition in "$@"
-do
-    cp -rlf ../magento2${edition}/!(.git|vendor|..|.) .
+#apply edition
+for edition in "$@"; do
+   if ! [[ -d ../${edition} ]]; then
+      edition=magento2${edition}
+   fi
+   cp -rlf ../"${edition}"/!(.git|vendor|..|.) .
 done
 
+#install magento
 composer install
-
 bin/magento setup:install \
    --cleanup-database \
    --backend-frontname=admin \
@@ -27,8 +29,6 @@ bin/magento setup:install \
    --db-host=db \
    --db-prefix=m2_
 
-#setup other services
+#do x-setup lines
 IFS=$'\n' setup=($(yq read /var/www/magento-docker/docker-compose.yml services.*.x-setup | grep -oP '(?:\-\s)+(?!null)\K.*'))
 for i in ${setup[*]}; do eval ${i}; done
-
-composer dump-autoload --optimize
