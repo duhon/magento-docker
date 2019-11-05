@@ -1,0 +1,164 @@
+version: '3.7'
+services:
+  web:
+    image: nginx:alpine
+    hostname: web
+    volumes:
+      - ${MAGENTO_PATH}:/var/www:${FILE_SYNC}
+      - ${MAGENTO_PATH}/magento-docker/etc/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ${MAGENTO_PATH}/magento-docker/etc/nginx/server.crt:/etc/nginx/server.crt
+      - ${MAGENTO_PATH}/magento-docker/etc/nginx/server.key:/etc/nginx/server.key
+      - ${MAGENTO_PATH}/magento-docker/etc/nginx/fetch_env.js:/etc/nginx/fetch_env.js
+      - nginx_access_log:/var/log/nginx/
+    ports:
+      - "${WEB_PORT}:80"
+      - "${WEBS_PORT}:443"
+    depends_on:
+      - app
+    x-hint: uncomment the line above and change error_log in nginx.conf
+    x-info: https://devdocs.magento.com/guides/v2.3/install-gde/prereq/nginx.html
+  db:
+    image: mariadb
+    hostname: db
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: "magento"
+    shm_size: '1gb'
+    volumes:
+      - ${MAGENTO_PATH}/magento-docker/etc/mysql/my.cnf:/etc/mysql/conf.d/mysql.cnf
+    ports:
+      - "${DB_PORT}:3306"
+    x-hits:
+      - bin/magento dev:query-log:enable and watch var/debug/db.log
+    x-info: https://devdocs.magento.com/guides/v2.3/install-gde/prereq/mysql.html
+  app:
+    image: duhon/php:7.3-fpm
+    hostname: app
+    volumes:
+      - ${MAGENTO_PATH}:/var/www:${FILE_SYNC}
+      - ${MAGENTO_PATH}/magento-docker/etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+      - ${MAGENTO_PATH}/magento-docker/etc/php/tools:/usr/local/bin/magento2:ro
+      - ${MAGENTO_PATH}/magento-docker/etc/php/php.ini:/usr/local/etc/php/php.ini:ro
+      - ${MAGENTO_PATH}/magento-docker/etc/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
+    environment:
+      COMPOSER_HOME: /var/www/.composer
+      PHP_IDE_CONFIG: serverName=magento.test
+    command: sh -c 'service ssh start; php-fpm -R'
+    x-hints:
+      - magento reinstall
+      - magento sample_data
+      - magento page_builder
+      - docker-compose scale app=0 && docker-compose scale app=1
+    x-setup:
+      - bin/magento config:set web/unsecure/base_url http://magento.test/
+      - bin/magento config:set web/secure/base_url https://magento.test/
+      - bin/magento config:set web/secure/use_in_frontend 0
+      - bin/magento config:set web/secure/use_in_adminhtml 0
+      - bin/magento config:set web/seo/use_rewrites 1
+      - bin/magento config:set web/cookie/cookie_httponly 0
+      - bin/magento config:set admin/security/use_form_key 0
+      - bin/magento config:set admin/security/admin_account_sharing 1
+      - bin/magento config:set admin/security/session_lifetime 31536000
+      - bin/magento cache:clean config
+#      - composer dump-autoload --optimize
+    x-info: https://devdocs.magento.com/
+  redis:
+    image: redis
+    hostname: redis
+    ports:
+      - "6379:6379"
+    sysctls:
+      net.core.somaxconn: 1024
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 20000
+        hard: 40000
+    x-hints:
+      - redis-cli monitor
+      - telnet localhost 6379
+    x-setup:
+#      - bin/magento setup:config:set --page-cache=redis --page-cache-redis-server=redis
+      - bin/magento setup:config:set -n --session-save=redis --session-save-redis-host=redis
+#      - bin/magento setup:config:set -n --cache-backend=redis --cache-backend-redis-server=redis
+    x-info: https://devdocs.magento.com/guides/v2.3/config-guide/redis/config-redis.html
+  grafana:
+    image: grafana/grafana
+    depends_on:
+      - prometheus
+    ports:
+      - 3000:3000
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=123123q
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SERVER_DOMAIN=magento.com
+  redis-exporter:
+    image: oliver006/redis_exporter
+    depends_on:
+      - redis
+    environment:
+      REDIS_ADDR: redis
+    expose:
+      - 9121
+  nginx-exporter:
+    image: fish/nginx-exporter
+    command:
+      - '--nginx.scrape_uri=http://web:8080/nginx_status'
+    expose:
+      - 9113
+  fpm-exporter:
+    image: bakins/php-fpm-exporter:v0.6.1
+    command:
+      - '--addr=0.0.0.0:9099'
+      - '--fastcgi=tcp://app:9000/status'
+    expose:
+      - 9099
+  cadvisor:
+    image: google/cadvisor
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    expose:
+      - 8080
+  mysqld-exporter:
+    image: prom/mysqld-exporter
+    depends_on:
+      - db
+    environment:
+      DATA_SOURCE_NAME: "root@(db:3306)/magento"
+    expose:
+      - 9104
+  node-exporter:
+    image: prom/node-exporter
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
+    expose:
+      - 9100
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - 9090:9090
+    depends_on:
+      - redis-exporter
+      - nginx-exporter
+      - fpm-exporter
+      - cadvisor
+      - mysqld-exporter
+      - node-exporter
+    volumes:
+      - ${MAGENTO_PATH}/magento-docker/etc/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+volumes:
+  nginx_access_log: {}
+networks:
+  default:
+    driver: bridge

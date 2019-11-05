@@ -1,0 +1,9 @@
+global:
+  scrape_interval:     15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: 'magento'
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090','redis-exporter:9121','nginx-exporter:9113','fpm-exporter:9099','cadvisor:8080','mysqld-exporter:9104','node-exporter:9100']
