@@ -9,7 +9,7 @@ services:
       - ${MAGENTO_PATH}/magento-docker/etc/nginx/server.crt:/etc/nginx/server.crt
       - ${MAGENTO_PATH}/magento-docker/etc/nginx/server.key:/etc/nginx/server.key
       - ${MAGENTO_PATH}/magento-docker/etc/nginx/fetch_env.js:/etc/nginx/fetch_env.js
-      - nginx_access_log:/var/log/nginx/
+      - nginx_access_log:/var/log/nginx
     ports:
       - "${WEB_PORT}:80"
       - "${WEBS_PORT}:443"
@@ -60,7 +60,7 @@ services:
       - bin/magento config:set admin/security/admin_account_sharing 1
       - bin/magento config:set admin/security/session_lifetime 31536000
       - bin/magento cache:clean config
-#      - composer dump-autoload --optimize
+    #      - composer dump-autoload --optimize
     x-info: https://devdocs.magento.com/
   redis:
     image: redis
@@ -78,9 +78,9 @@ services:
       - redis-cli monitor
       - telnet localhost 6379
     x-setup:
-#      - bin/magento setup:config:set --page-cache=redis --page-cache-redis-server=redis
+      #      - bin/magento setup:config:set --page-cache=redis --page-cache-redis-server=redis
       - bin/magento setup:config:set -n --session-save=redis --session-save-redis-host=redis
-#      - bin/magento setup:config:set -n --cache-backend=redis --cache-backend-redis-server=redis
+    #      - bin/magento setup:config:set -n --cache-backend=redis --cache-backend-redis-server=redis
     x-info: https://devdocs.magento.com/guides/v2.3/config-guide/redis/config-redis.html
   grafana:
     image: grafana/grafana
@@ -89,9 +89,10 @@ services:
     ports:
       - 3000:3000
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=123123q
-      - GF_USERS_ALLOW_SIGN_UP=false
-      - GF_SERVER_DOMAIN=magento.com
+      GF_SECURITY_ADMIN_PASSWORD: "123123q"
+      GF_ALLOW_SIGN_UP: "false"
+      GF_AUTH_ANONYMOUS: "true"
+      GF_INSTALL_PLUGINS: "percona-percona-app"
   redis-exporter:
     image: oliver006/redis_exporter
     depends_on:
@@ -101,11 +102,16 @@ services:
     expose:
       - 9121
   nginx-exporter:
-    image: fish/nginx-exporter
-    command:
-      - '--nginx.scrape_uri=http://web:8080/nginx_status'
+    image: quay.io/rebuy/nginx-exporter:v1.1.0
+    volumes:
+      - nginx_access_log:/var/log/nginx
+    environment:
+      NGINX_ACCESS_LOGS: /var/log/nginx/mtail.log
+      NGINX_STATUS_URI: http://web:8080/nginx_status
     expose:
       - 9113
+      - 9397
+    x-info: https://github.com/rebuy-de/nginx-exporter
   fpm-exporter:
     image: bakins/php-fpm-exporter:v0.6.1
     command:
@@ -113,6 +119,7 @@ services:
       - '--fastcgi=tcp://app:9000/status'
     expose:
       - 9099
+    x-info: https://github.com/bakins/php-fpm-exporter
   cadvisor:
     image: google/cadvisor
     volumes:
@@ -130,6 +137,8 @@ services:
       DATA_SOURCE_NAME: "root@(db:3306)/magento"
     expose:
       - 9104
+    #command: /bin/mysqld_exporter collect.binlog_size=true collect.info_schema.processlist=true
+    x-info: https://github.com/prometheus/mysqld_exporter
   node-exporter:
     image: prom/node-exporter
     volumes:
@@ -142,6 +151,7 @@ services:
       - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
     expose:
       - 9100
+    x-info: https://hub.docker.com/r/prom/node-exporter
   prometheus:
     image: prom/prometheus
     ports:
