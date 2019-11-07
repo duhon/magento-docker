@@ -1,0 +1,51 @@
+FROM php:7.3-fpm-alpine
+
+RUN apk add --no-cache \
+    shadow \
+    grep \
+    libmcrypt \
+    libsodium \
+    unzip \
+    git \
+    bash \
+    mysql-client \
+    openssh-server \
+    libzip \
+    libxslt \
+    gnu-libiconv \
+    icu-dev \
+    freetype \
+    libwebp \
+    libpng \
+    libxml2 \
+    libjpeg-turbo
+RUN apk add --no-cache --virtual .build-deps \
+    $PHPIZE_DEPS \
+    libzip-dev \
+    libxslt-dev \
+    icu-dev \
+    freetype-dev \
+    libwebp-dev \
+    libpng-dev \
+    libxml2-dev \
+    libjpeg-turbo-dev
+ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
+RUN git clone -b 'v4.1.7' --depth=1 --single-branch https://github.com/tideways/php-xhprof-extension.git /usr/src/php/ext/tideways \
+    && docker-php-ext-configure gd --with-freetype-dir --with-png-dir --with-jpeg-dir --with-webp-dir \
+    && docker-php-ext-install -j$(nproc) pcntl gd opcache bcmath soap intl zip xsl pdo_mysql tideways sockets \
+    && pecl install -f xdebug apcu msgpack \
+    && docker-php-ext-enable apcu msgpack
+
+ADD https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 /usr/local/bin/yq
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+    && ln -sf /usr/local/bin/magento2/magento /usr/local/bin/magento \
+    && usermod -aG root www-data \
+    && chmod +x /usr/local/bin/yq
+RUN echo 'root:root' | chpasswd \
+    && sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config \
+    && apk del .build-deps && rm -rf /tmp/* && rm -rf /usr/src/
+
+WORKDIR /var/www/magento2ce
+
+EXPOSE 9000
+CMD ["php-fpm", "-R"]
