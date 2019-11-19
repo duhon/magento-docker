@@ -3,7 +3,7 @@ shopt -s extglob
 
 #clean project dir
 if [[ -d .git ]]; then
-   git clean -dfx --exclude='.idea' $(mount | grep -oP '/var/www/magento2ce/\K\S*' | xargs -rn 1 echo '-e')
+   git clean -dfx -e '.idea' $(mount | grep -oP '/var/www/magento2ce/\K\S*' | xargs -rn 1 echo '-e ')
    git checkout composer.lock composer.json
 fi
 
