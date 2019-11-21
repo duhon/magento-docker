@@ -17,9 +17,14 @@ jobs:
           git clone https://github.com/magento/magento2.git magento2ce
           cp magento-docker/bundles/typical.yml magento-docker/docker-compose.yml
           cp magento-docker/.env.dist magento-docker/.env
+          pwd
+          ls -la
       - name: Test
         working-directory: /tmp/www/magento-docker
         run: |
+          set -x
+          pwd
+          ls -la
           docker-compose up --exit-code-from app
           docker-compose exec app magento reinstall
           docker-compose exec app bin/magenento test:run unit
