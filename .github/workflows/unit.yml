@@ -22,9 +22,9 @@ jobs:
         working-directory: /home/runner/www/magento-docker
         run: |
           set -x
-          cp magento-docker/bundles/typical.yml magento-docker/docker-compose.yml
-          cp magento-docker/.env.dist magento-docker/.env
-          sed -i 's/3306/33061/' magento-docker/.env
+          cp bundles/typical.yml docker-compose.yml
+          cp .env.dist .env
+          sed -i 's/3306/33061/' .env
       - name: Set up env
         working-directory: /home/runner/www/magento-docker
         run: |
