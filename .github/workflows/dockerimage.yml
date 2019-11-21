@@ -25,5 +25,5 @@ jobs:
           MAGE: 2.3
         run: |
           docker build -f ./php/$TYPE -t duhon/php:$VER-$TYPE --compress --squash --force-rm --pull .
-          docker run --rm --name test -it duhon/php:$VER-$TYPE bash -c 'git clone -b '$MAGE' --depth=1 --single-branch https://github.com/magento/magento2.git /var/www/magento2ce && composer update && php -v && php -m && php -d memory_limit=-1 /var/www/magento2ce/vendor/bin/phpunit -c /var/www/magento2ce/dev/tests/unit/phpunit.xml.dist'
+          docker run --rm --name test duhon/php:$VER-$TYPE bash -c 'git clone -b '$MAGE' --depth=1 --single-branch https://github.com/magento/magento2.git /var/www/magento2ce && composer update && php -v && php -m && php -d memory_limit=-1 /var/www/magento2ce/vendor/bin/phpunit -c /var/www/magento2ce/dev/tests/unit/phpunit.xml.dist'
         working-directory: ./build
