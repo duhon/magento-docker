@@ -11,8 +11,8 @@ jobs:
           cd www
           sudo chown -R $USER:root .
           chmod g+s .
-          git clone git@github.com:duhon/magento-docker.git
-          git clone git@github.com:magento/magento2.git magento2ce
+          git clone https://github.com/duhon/magento-docker.git
+          git clone https://github.com/magento/magento2.git magento2ce
           cp magento-docker/bundles/typical.yml magento-docker/docker-compose.yml
           cp magento-docker/.env.dist magento-docker/.env
       - name: Test
