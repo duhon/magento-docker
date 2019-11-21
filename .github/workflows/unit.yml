@@ -35,7 +35,7 @@ jobs:
         working-directory: /home/runner/www/magento-docker
         run: |
           set -x
-          docker-compose exec -T app bin/magento test:run unit
+          docker-compose exec -T app bin/magento dev:tests:run unit
           docker-compose down
       - name: Tear down env
         working-directory: /home/runner/www/magento-docker
