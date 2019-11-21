@@ -49,7 +49,7 @@ In `.env` file environment variables are declared. Here you can change your `MAG
 ### 4. Enable/disable Xdebug
 
 * To enable xdebug, uncomment `xdebug.ini` line of `app` container in `docker-compose.yml` and run `docker-compose scale app=0 && docker-compose scale app=1`.
-!! Enabled Xdebug may slow your environment. 
+:warning: Enabled Xdebug may slow your environment. 
 
 ### 5. Magento (Re)-Installation
 
