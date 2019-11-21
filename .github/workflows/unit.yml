@@ -7,7 +7,6 @@ jobs:
     steps:
       - name: Install
         run: |
-          sudo echo '127.0.0.1 magento.test' >> /etc/hosts
           mkdir www
           cd www
           sudo chown -R $USER:root .
