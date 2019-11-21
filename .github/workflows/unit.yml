@@ -5,24 +5,41 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Install
+      - name: Prepare
         working-directory: /home/runner
         run: |
           set -x
           mkdir www
-          cd www
           sudo chown -R $USER:root .
           chmod g+s .
+      - name: Clone products
+        working-directory: /home/runner/www
+        run: |
+          set -x
           git clone https://github.com/duhon/magento-docker.git
           git clone https://github.com/magento/magento2.git magento2ce
+      - name: Create config
+        working-directory: /home/runner/www/magento-docker
+        run: |
+          set -x
           cp magento-docker/bundles/typical.yml magento-docker/docker-compose.yml
           cp magento-docker/.env.dist magento-docker/.env
           sed -i 's/3306/33061/' magento-docker/.env
-      - name: Test
+      - name: Set up env
         working-directory: /home/runner/www/magento-docker
         run: |
           set -x
           docker-compose up -d
+          docker-compose exec -T app composer install
+      - name: Test
+        working-directory: /home/runner/www/magento-docker
+        run: |
+          set -x
           docker-compose exec -T app bin/magento test:run unit
+          docker-compose down
+      - name: Tear down env
+        working-directory: /home/runner/www/magento-docker
+        run: |
+          set -x
           docker-compose down
       
