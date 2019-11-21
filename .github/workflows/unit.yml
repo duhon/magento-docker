@@ -23,6 +23,6 @@ jobs:
         run: |
           set -x
           docker-compose up -d
-          docker-compose exec -T app bin/magenento test:run unit
+          docker-compose exec -T app bin/magento test:run unit
           docker-compose down
       
