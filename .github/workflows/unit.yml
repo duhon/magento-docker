@@ -17,6 +17,7 @@ jobs:
           cp magento-docker/bundles/typical.yml magento-docker/docker-compose.yml
           cp magento-docker/.env.dist magento-docker/.env
       - name: Test
+        working-directory: ~/www/magento-docker
         run: |
           docker-compose up --exit-code-from app
           docker-compose exec app magento reinstall
