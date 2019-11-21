@@ -9,27 +9,30 @@
 * [Docker Compose](https://docs.docker.com/compose/install/)
 
 ### How to install
-1. Create your project directory:
+1. Add `magento.test` to `/etc/hosts`: `127.0.0.1 magento.test`.
+2. Create your project directory:
 * `cd ~/`
 * `mkdir www`
 * `cd www`
-2. Clone `magento-docker` into you project directory: `git clone git@github.com:duhon/magento-docker.git`)
-3. Clone `magento` repository into your project directory under `magento2ce` directory name: `git clone git@github.com:magento/magento2.git magento2ce`
-Now your project directory `~/www/magento2_docker` has 2 folders: `magento-docker` & `magento2`
-4. `cp magento-docker/bundles/typical.yml magento-docker/docker-compose.yml`
+* `chown -R $USER:root .`
+* `chmod g+s .`
+3. Clone `magento-docker` into you project directory: `git clone git@github.com:duhon/magento-docker.git`)
+4. Clone `magento` repository into your project directory under `magento2ce` directory name: `git clone git@github.com:magento/magento2.git magento2ce`
+Now your project directory `~/www` has 2 folders: `magento-docker` & `magento2ce`.
+5. `cp magento-docker/bundles/typical.yml magento-docker/docker-compose.yml`
 In `docker-compose.yml` you can choose what containers and what extensions you really need.
-5. `cp magento-docker/.env.dist magento-docker/.env`
-in `.env` file environment variables are declared. Here you can change your `MAGENTO_PATH` into your project correct path or change your service containers ports together with `COMPOSE_PROJECT_NAME`.
-6. Enter your `magento-docker` repository: `cd ~/www/magento2_docker/magento-docker`.
-7. Run `docker-compose up`. As a result all containers should be up. You can check if containers are up by running: `docker-compose ps`
-8.  Check in browser if your magento host is up and running. Enter `http://magento.test:80` in browser. `80` is a default port but you can change it in `.env` file.
-9. Install magento: `docker-compose exec app magento reinstall`. If you want to install ee/b2b run `docker-compose exec app magento reinstall ee|b2b`.
-10. Magento installed.
+6. `cp magento-docker/.env.dist magento-docker/.env`
+In `.env` file environment variables are declared. Here you can change your `MAGENTO_PATH` into your project correct path or change your service containers ports together with `COMPOSE_PROJECT_NAME`.
+7. Enter your `magento-docker` repository: `cd ~/www/magento-docker`.
+8. Run `docker-compose up`. As a result all containers should be up. You can check if containers are up by running: `docker-compose ps`.
+9. Check in browser if your magento host is up and running. Enter `http://magento.test:80` in browser. `80` is a default port but you can change it in `.env` file.
+10. Install magento: `docker-compose exec app magento reinstall`. If you want to install ee/b2b versions run `docker-compose exec app magento reinstall <ee|b2b>`.
+11. Magento installed.
 
 ## Scenarios
 
 ### 1. Enter container
-* Run `docker-compose exec app bash`
+* Run `docker-compose exec app bash`.
 
 ### 2. Relaunch container
 * Run `docker-compose scale <container_name>=0 && docker-compose scale <container_name>=1`. For example: `docker-compose scale app=0 && docker-compose scale app=1`.
@@ -46,6 +49,7 @@ in `.env` file environment variables are declared. Here you can change your `MAG
 ### 4. Enable/disable Xdebug
 
 * To enable xdebug, uncomment `xdebug.ini` line of `app` container in `docker-compose.yml` and run `docker-compose scale app=0 && docker-compose scale app=1`.
+!! Enabled Xdebug may slow your environment. 
 
 ### 5. Magento (Re)-Installation
 
