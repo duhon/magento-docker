@@ -1,0 +1,33 @@
+name: test
+
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+        with:
+          fetch-depth: 2
+      - name: Setup Docker
+        uses: docker-practice/actions-setup-docker@master
+      - name: Setup docker-compose
+        run: |
+          curl -L https://github.com/docker/compose/releases/download/1.25.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+          chmod +x /usr/local/bin/docker-compose
+      - name: Build and test
+        env:
+          TYPE: fpm
+          VER: 7.3
+          MAGE: 2.3
+        run: |
+          docker build -f ./php/$TYPE -t duhon/php:$VER-$TYPE --compress --squash --force-rm --pull .
+          docker run --rm --name test -it duhon/php:$VER-$TYPE bash -c 'git clone -b '$MAGE' --depth=1 --single-branch https://github.com/magento/magento2.git /var/www/magento2ce && composer update && php -v && php -m && php -d memory_limit=-1 /var/www/magento2ce/vendor/bin/phpunit -c /var/www/magento2ce/dev/tests/unit/phpunit.xml.dist'
+        working-directory: ./build
