@@ -6,6 +6,7 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Install
+        working-directory: ~/
         run: |
           set -x
           mkdir www
