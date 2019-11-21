@@ -7,10 +7,10 @@ jobs:
     steps:
       - name: Install
         run: |
-          echo '127.0.0.1 magento.test' >> /etc/hosts
+          sudo echo '127.0.0.1 magento.test' >> /etc/hosts
           mkdir www
           cd www
-          chown -R $USER:root .
+          sudo chown -R $USER:root .
           chmod g+s .
           git clone git@github.com:duhon/magento-docker.git
           git clone git@github.com:magento/magento2.git magento2ce
