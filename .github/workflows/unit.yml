@@ -7,6 +7,7 @@ jobs:
     steps:
       - name: Install
         run: |
+          set -x
           mkdir www
           cd www
           sudo chown -R $USER:root .
