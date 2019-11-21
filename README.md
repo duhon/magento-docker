@@ -31,7 +31,10 @@ in `.env` file environment variables are declared. Here you can change your `MAG
 ### 1. Enter container
 * Run `docker-compose exec app bash`
 
-### 2. Run tests
+### 2. Relaunch container
+* Run `docker-compose scale <container_name>=0 && docker-compose scale <container_name>=1`. For example: `docker-compose scale app=0 && docker-compose scale app=1`.
+
+### 3. Run tests
 
 1. `docker-compose exec app magento prepare_tests`
 2. `docker-compose exec app bin/magento dev:tests:run (unit, integration)`
@@ -40,15 +43,15 @@ in `.env` file environment variables are declared. Here you can change your `MAG
 5. `cd dev/tests/functional/ and vendor/bin/phpunit run (mtf)`
 6. `vnc://localhost:5900 pass:secret (mftf or mtf)`
 
-### 3. Enable/disable Xdebug
+### 4. Enable/disable Xdebug
 
 * To enable xdebug, uncomment `xdebug.ini` line of `app` container in `docker-compose.yml` and run `docker-compose scale app=0 && docker-compose scale app=1`.
 
-### 4. Magento (Re)-Installation
+### 5. Magento (Re)-Installation
 
 * `docker-compose exec app magento reinstall (ee|b2b)`
 
-### 5. Optimization host
+### 6. Optimization host
 
 1. Redis optimization 
     ```
