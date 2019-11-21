@@ -6,7 +6,7 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Install
-        working-directory: /home/$USER
+        working-directory: /home/runner
         run: |
           set -x
           mkdir www
@@ -18,7 +18,7 @@ jobs:
           cp magento-docker/bundles/typical.yml magento-docker/docker-compose.yml
           cp magento-docker/.env.dist magento-docker/.env
       - name: Test
-        working-directory: /home/$USER/www/magento-docker
+        working-directory: /home/runner/www/magento-docker
         run: |
           set -x
           docker-compose up -d
