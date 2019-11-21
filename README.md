@@ -1,31 +1,54 @@
 # magento-docker
 
-### 0. Preconditions
+`magento-docker` is Docker environment for easy to setup, configure, debug Magento2 instance with varnish, elasticsearch, redis, rabbit and mftf tests.
 
-- see install.sh
-- cp magento-docker/bundles/typical.yml magento-docker/docker-compose.yml
-- cp magento-docker/.env.dist magento-docker/.env 
+### Requirements
+
+* [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+* [Docker](https://docs.docker.com/)
+* [Docker Compose](https://docs.docker.com/compose/install/)
+
+### How to install
+1. Create your project directory:
+* `cd ~/`
+* `mkdir www`
+* `cd www`
+2. Clone `magento-docker` into you project directory: `git clone git@github.com:duhon/magento-docker.git`)
+3. Clone `magento` repository into your project directory under `magento2ce` directory name: `git clone git@github.com:magento/magento2.git magento2ce`
+Now your project directory `~/www/magento2_docker` has 2 folders: `magento-docker` & `magento2`
+4. `cp magento-docker/bundles/typical.yml magento-docker/docker-compose.yml`
+In `docker-compose.yml` you can choose what containers and what extensions you really need.
+5. `cp magento-docker/.env.dist magento-docker/.env`
+in `.env` file environment variables are declared. Here you can change your `MAGENTO_PATH` into your project correct path or change your service containers ports together with `COMPOSE_PROJECT_NAME`.
+6. Enter your `magento-docker` repository: `cd ~/www/magento2_docker/magento-docker`.
+7. Run `docker-compose up`. As a result all containers should be up. You can check if containers are up by running: `docker-compose ps`
+8.  Check in browser if your magento host is up and running. Enter `http://magento.test:80` in browser. `80` is a default port but you can change it in `.env` file.
+9. Install magento: `docker-compose exec app magento reinstall`. If you want to install ee/b2b run `docker-compose exec app magento reinstall ee|b2b`.
+10. Magento installed.
 
 ## Scenarios
 
-### 1. Run tests
+### 1. Enter container
+* Run `docker-compose exec app bash`
 
-0. docker-compose exec app magento prepare_tests
-1. docker-compose exec app bin/magento dev:tests:run (unit, integration)
-2. docker-compose exec app bash
-3. cd dev/tests/acceptance/ and vendor/bin/codecept run (mftf)
-4. cd dev/tests/functional/ and vendor/bin/phpunit run (mtf)
-5. vnc://localhost:5900 pass:secret (mftf or mtf)
+### 2. Run tests
 
-### 2. Xdebug
+1. `docker-compose exec app magento prepare_tests`
+2. `docker-compose exec app bin/magento dev:tests:run (unit, integration)`
+3. `docker-compose exec app bash`
+4. `cd dev/tests/acceptance/ and vendor/bin/codecept run (mftf)`
+5. `cd dev/tests/functional/ and vendor/bin/phpunit run (mtf)`
+6. `vnc://localhost:5900 pass:secret (mftf or mtf)`
 
-1. Uncomment the line in the docker-compose.yml which is the debugger
+### 3. Enable/disable Xdebug
 
-### 3. (Re)-Installation M2
+* To enable xdebug, uncomment `xdebug.ini` line of `app` container in `docker-compose.yml` and run `docker-compose scale app=0 && docker-compose scale app=1`.
 
-1. docker-compose exec app magento reinstall (ee|ce|b2b)
+### 4. Magento (Re)-Installation
 
-### 4. Optimization host
+* `docker-compose exec app magento reinstall (ee|b2b)`
+
+### 5. Optimization host
 
 1. Redis optimization 
     ```
@@ -33,8 +56,12 @@
     echo never | tee /sys/kernel/mm/transparent_hugepage/enabled
     echo never | tee /sys/kernel/mm/transparent_hugepage/defrag
     ```
-2. Optimization for MacOS https://gist.github.com/tombigel/d503800a282fcadbee14b537735d202c
+2. [Optimization for MacOS](https://gist.github.com/tombigel/d503800a282fcadbee14b537735d202c)
 
+### FAQ
+1. If docker containers do not go up, check errors in console, run `docker-compose down`, fix issue and run `docker-compose up` again.
+2. If `Overwrite the existing configuration for db-ssl-verify?[Y/n]` prompts in console, type `Y`.
+3. If magento installation fails, run `docker-compose exec app magento reinstall`
 
 ### TODO list
 
