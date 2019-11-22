@@ -16,9 +16,11 @@ jobs:
         with:
           repository: magento/magento2
           path: /home/runner/www/magento2ce
+          clean: false
       - uses: actions/checkout@master
         with:
           path: /home/runner/www/magento-docker
+          clean: false
       - name: Create config
         working-directory: /home/runner/www/magento-docker
         run: |
