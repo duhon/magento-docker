@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y \
     libgringotts-dev \
     unzip \
     libzip-dev \
+    sendmail \
     --no-install-recommends && rm -r /var/lib/apt/lists/*
 
 RUN git clone -b 'v4.1.7' --depth=1 --single-branch https://github.com/tideways/php-xhprof-extension.git /usr/src/php/ext/tideways \
