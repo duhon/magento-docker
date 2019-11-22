@@ -9,7 +9,7 @@ jobs:
         working-directory: /home/runner
         run: |
           set -x
-          mkdir www
+          mkdir -p www/magento2ce www/magento-docker
           sudo chown -R $USER:root .
           chmod g+s .
       - uses: actions/checkout@master
