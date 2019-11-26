@@ -8,10 +8,12 @@ jobs:
       - name: Prepare
         run: |
           set -x
-          mkdir www
-          sudo chown -R $USER:root .
-          chmod g+s .
+          mkdir -p /home/runner/work/www
+          sudo chown -R $USER:root /home/runner/work/www
+          chmod g+s /home/runner/work/www
+          pwd
       - name: make magento2
+        working-directory: /home/runner/work
         run: |
           set -x
           git clone -b 2.3-develop --single-branch https://github.com/magento/magento2.git www/magento2ce
