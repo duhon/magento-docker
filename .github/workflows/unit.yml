@@ -15,10 +15,11 @@ jobs:
       - name: make magento2
         run: |
           set -x
+          git clone https://github.com/magento/magento2.git www/magento2ce
           ls -la
-          git clone magento/magento2 www/magento2ce
       - uses: actions/checkout@master
         with:
+          fetch-depth: 1
           clean: false
       - name: make magento-docker
         run: |
