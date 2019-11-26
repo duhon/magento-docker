@@ -9,18 +9,26 @@ jobs:
         working-directory: /home/runner
         run: |
           set -x
-          mkdir -p www/magento2ce www/magento-docker
+          mkdir www
           sudo chown -R $USER:root .
           chmod g+s .
       - uses: actions/checkout@master
         with:
           repository: magento/magento2
-          path: /home/runner/www/magento2ce
           clean: false
+      - name: make magento2
+        run: |
+          set -x
+          ls -la
+          mv -r magento2 www/magento2ce
       - uses: actions/checkout@master
         with:
-          path: /home/runner/www/magento-docker
           clean: false
+      - name: make magento-docker
+        run: |
+          set -x
+          ls -la
+          mv -r magento-docker www/magento-docker
       - name: Create config
         working-directory: /home/runner/www/magento-docker
         run: |
