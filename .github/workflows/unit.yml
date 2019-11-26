@@ -28,7 +28,7 @@ jobs:
           chmod g+s /home/runner/work/www
           ls -la www/magento-docker
       - name: Create config
-        working-directory: /home/runner/www/magento-docker
+        working-directory: /home/runner/work/www/magento-docker
         run: |
           set -x
           pwd
@@ -37,19 +37,19 @@ jobs:
           cp .env.dist .env
           sed -i 's/3306/33061/' .env
       - name: Set up env
-        working-directory: /home/runner/www/magento-docker
+        working-directory: /home/runner/work/www/magento-docker
         run: |
           set -x
           docker-compose up -d
           docker-compose exec -T app composer install
       - name: Test
-        working-directory: /home/runner/www/magento-docker
+        working-directory: /home/runner/work/www/magento-docker
         run: |
           set -x
           docker-compose exec -T app bin/magento dev:tests:run unit
           docker-compose down
       - name: Tear down env
-        working-directory: /home/runner/www/magento-docker
+        working-directory: /home/runner/work/www/magento-docker
         run: |
           set -x
           docker-compose down
