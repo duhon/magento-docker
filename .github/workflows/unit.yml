@@ -6,7 +6,6 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Prepare
-        working-directory: /home/runner
         run: |
           set -x
           mkdir www
@@ -15,17 +14,20 @@ jobs:
       - name: make magento2
         run: |
           set -x
-          git clone https://github.com/magento/magento2.git www/magento2ce
+          git clone -b 2.3-develop --single-branch https://github.com/magento/magento2.git www/magento2ce
+          pwd
           ls -la
       - uses: actions/checkout@master
         with:
           fetch-depth: 1
           clean: false
       - name: make magento-docker
+        working-directory: /home/runner/work
         run: |
           set -x
+          pwd
           ls -la
-          mv -r magento-docker www/magento-docker
+          mv magento-docker www/magento-docker
       - name: Create config
         working-directory: /home/runner/www/magento-docker
         run: |
