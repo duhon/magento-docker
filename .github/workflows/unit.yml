@@ -31,7 +31,7 @@ jobs:
         working-directory: /home/runner/work/www/magento-docker
         run: |
           set -x
-          cp bundles/typical.yml docker-compose.yml
+          cp bundles/minimal.yml docker-compose.yml
           cp .env.dist .env
           sed -i 's/3306/33061/' .env
       - name: Set up env
@@ -44,7 +44,7 @@ jobs:
         working-directory: /home/runner/work/www/magento-docker
         run: |
           set -x
-          docker-compose exec -T app bin/magento dev:tests:run --help
+          docker-compose exec -T app bin/magento list
           docker-compose exec -T app bin/magento dev:tests:run unit
       - name: Tear down env
         working-directory: /home/runner/work/www/magento-docker
