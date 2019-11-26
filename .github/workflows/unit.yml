@@ -29,7 +29,8 @@ jobs:
           set -x
           pwd
           ls -la
-          mv magento-docker www/magento-docker
+          mv magento-docker/magento-docker www/magento-docker
+          ls -la www
       - name: Create config
         working-directory: /home/runner/www/magento-docker
         run: |
