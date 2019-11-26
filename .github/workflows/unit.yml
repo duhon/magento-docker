@@ -12,15 +12,11 @@ jobs:
           mkdir www
           sudo chown -R $USER:root .
           chmod g+s .
-      - uses: actions/checkout@master
-        with:
-          repository: magento/magento2
-          clean: false
       - name: make magento2
         run: |
           set -x
           ls -la
-          mv -r magento2 www/magento2ce
+          git clone magento/magento2 www/magento2ce
       - uses: actions/checkout@master
         with:
           clean: false
