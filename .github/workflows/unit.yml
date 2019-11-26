@@ -25,14 +25,12 @@ jobs:
           set -x
           mv magento-docker/magento-docker www/magento-docker
           sudo chown -R $USER:root /home/runner/work/www
-          chmod g+s /home/runner/work/www
+          chmod -R g+s /home/runner/work/www
           ls -la www/magento-docker
       - name: Create config
         working-directory: /home/runner/work/www/magento-docker
         run: |
           set -x
-          pwd
-          ls -la
           cp bundles/typical.yml docker-compose.yml
           cp .env.dist .env
           sed -i 's/3306/33061/' .env
