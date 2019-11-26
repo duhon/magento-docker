@@ -10,7 +10,7 @@ jobs:
           set -x
           mkdir -p /home/runner/work/www
           sudo chown -R $USER:root /home/runner/work/www
-          chmod g+s /home/runner/work/www
+          chmod -R g+s /home/runner/work/www
       - name: make magento2
         working-directory: /home/runner/work
         run: |
