@@ -24,6 +24,8 @@ jobs:
         run: |
           set -x
           mv magento-docker/magento-docker www/magento-docker
+          sudo chown -R $USER:root /home/runner/work/www
+          chmod g+s /home/runner/work/www
           ls -la www/magento-docker
       - name: Create config
         working-directory: /home/runner/www/magento-docker
