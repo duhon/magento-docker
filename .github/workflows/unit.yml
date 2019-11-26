@@ -40,6 +40,7 @@ jobs:
           set -x
           docker-compose up -d
           docker-compose exec -T app composer install
+          docker ps -a
       - name: Test
         working-directory: /home/runner/work/www/magento-docker
         run: |
