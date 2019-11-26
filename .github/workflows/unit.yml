@@ -11,26 +11,20 @@ jobs:
           mkdir -p /home/runner/work/www
           sudo chown -R $USER:root /home/runner/work/www
           chmod g+s /home/runner/work/www
-          pwd
       - name: make magento2
         working-directory: /home/runner/work
         run: |
           set -x
           git clone -b 2.3-develop --single-branch https://github.com/magento/magento2.git www/magento2ce
-          pwd
-          ls -la
       - uses: actions/checkout@master
         with:
           fetch-depth: 1
-          clean: false
       - name: make magento-docker
         working-directory: /home/runner/work
         run: |
           set -x
-          pwd
-          ls -la
           mv magento-docker/magento-docker www/magento-docker
-          ls -la www
+          ls -la www/magento-docker
       - name: Create config
         working-directory: /home/runner/www/magento-docker
         run: |
