@@ -35,6 +35,8 @@ jobs:
         working-directory: /home/runner/www/magento-docker
         run: |
           set -x
+          pwd
+          ls -la
           cp bundles/typical.yml docker-compose.yml
           cp .env.dist .env
           sed -i 's/3306/33061/' .env
