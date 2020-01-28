@@ -5,17 +5,20 @@ php -r '(new PDO("mysql:host=db;dbname=magento", "root"))->exec("CREATE DATABASE
 #TODO: replace magento_url in phpunit.xml
 #TODO: separete to service and save in autoload dir witch uses reinstall script
 
-#https://devdocs.magento.com/mftf/2.3/getting-started.html
+#The Admin Account Sharing drop-down menu is set to Yes in the backend (Stores > Configuration > Advanced > Admin > Security);
+bin/magento config:set admin/security/admin_account_sharing 1
+#The Add Secret Key to URLs drop-down menu is set to No in the backend (Stores > Configuration > Advanced > Admin > Security);
+bin/magento config:set admin/security/use_form_key 0
+#The Enable WYSIWYG Editor drop-down menu is set to Disabled Completely in the backend (Stores > Configuration > General> Content Management > WYSIWYG Options);
+bin/magento config:set cms/wysiwyg/enabled disabled
+#clean cache after change config
+bin/magento cache:flush
+
+#https://devdocs.magento.com/mftf/docs/getting-started.html
 vendor/bin/mftf build:project
 #vendor/bin/mftf generate:urn-catalog --force .idea/
 vendor/bin/mftf generate:tests
 
 #https://devdocs.magento.com/guides/v2.0/mtf/mtf_installation.html
-#The Admin Account Sharing drop-down menu is set to Yes in the backend (Stores > Configuration > Advanced > Admin > Security);
-php -r '(new PDO("mysql:host=db;dbname=magento", "root"))->exec("INSERT IGNORE INTO magento.m2_core_config_data (scope, scope_id, path, value) VALUES (\"default\", 0, \"admin/security/admin_account_sharing\", \"1\")");'
-#The Add Secret Key to URLs drop-down menu is set to No in the backend (Stores > Configuration > Advanced > Admin > Security);
-php -r '(new PDO("mysql:host=db;dbname=magento", "root"))->exec("INSERT IGNORE INTO magento.m2_core_config_data (scope, scope_id, path, value) VALUES (\"default\", 0, \"admin/security/use_form_key\", \"0\")");'
-#The Enable WYSIWYG Editor drop-down menu is set to Disabled Completely in the backend (Stores > Configuration > General> Content Management > WYSIWYG Options);
-php -r '(new PDO("mysql:host=db;dbname=magento", "root"))->exec("INSERT IGNORE INTO magento.m2_core_config_data (scope, scope_id, path, value) VALUES (\"default\", 0, \"cms/wysiwyg/enabled\", \"disabled\")");'
 composer install -d dev/tests/functional/
 php dev/tests/functional/utils/generate.php
