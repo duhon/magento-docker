@@ -29,7 +29,7 @@ services:
       - "81:80"
   mongodb:
     extends:
-      file: ../services/mongo.yml
+      file: ../services/mongodb.yml
       service: mongo
   pmm:
     extends:

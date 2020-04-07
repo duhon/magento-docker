@@ -30,7 +30,7 @@ RUN mkdir -p /tmp/blackfire \
     && mv /tmp/blackfire/blackfire /usr/bin/blackfire \
     && rm -Rf /tmp/blackfire
 
-RUN git clone -b 'v4.1.7' --depth=1 --single-branch https://github.com/tideways/php-xhprof-extension.git /usr/src/php/ext/tideways \
+RUN git clone https://github.com/tideways/php-profiler-extension.git /usr/src/php/ext/tideways \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install -j$(nproc) pcntl gd opcache bcmath soap intl zip xsl pdo_mysql tideways sockets \
     && pecl install -f xdebug apcu msgpack libsodium \

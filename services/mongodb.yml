@@ -1,7 +1,7 @@
 version: '2'
 services:
-  mongo:
+  mongodb:
     image: mongo
-    hostname: mongo
+    hostname: mongodb
     ports:
       - "27017:27017"
