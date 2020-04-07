@@ -15,7 +15,7 @@ jobs:
         working-directory: /home/runner/work
         run: |
           set -x
-          git clone -b 2.3-develop --single-branch https://github.com/magento/magento2.git www/magento2ce
+          git clone -b 2.4-develop --single-branch https://github.com/magento/magento2.git www/magento2ce
       - uses: actions/checkout@master
         with:
           fetch-depth: 1
