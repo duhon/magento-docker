@@ -1,0 +1,10 @@
+#!/bin/bash
+
+shopt -s extglob
+
+cp -rlf ../inventory/!(.git|dev|_metapackage|.github|..|.) ./app/code/Magento/
+cp -rlf ../inventory/dev/tests/!(.git|vendor|..|.) ./dev/tests/
+composer config minimum-stability dev
+#TODO: the batter way https://github.com/magento/inventory/wiki/Metapackage-Installation-Guide
+
+bin/magento setup:upgrade
