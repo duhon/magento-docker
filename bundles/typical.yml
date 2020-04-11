@@ -62,10 +62,10 @@ services:
       PHP_IDE_CONFIG: serverName=magento.test
     command: sh -c 'service ssh start; php-fpm -R'
     x-hints:
-      - magento reinstall
+      - magento reinstall ee b2b
       - magento sample_data
       - magento page_builder
-      - docker-compose scale app=0 && docker-compose scale app=1
+      - docker-compose up --detach --force-recreate app
     x-setup:
       - bin/magento config:set web/seo/use_rewrites 1
       - bin/magento config:set dev/template/allow_symlink 1
