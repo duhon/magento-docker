@@ -23,7 +23,7 @@ jobs:
         working-directory: /home/runner/work
         run: |
           set -x
-          cp magento-docker/magento-docker www/magento-docker
+          cp -r magento-docker/magento-docker www/magento-docker
           sudo chown -R $USER:root /home/runner/work/www
           chmod -R g+s /home/runner/work/www
           ls -la www/magento-docker
