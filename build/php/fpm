@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y \
     libgringotts-dev \
     unzip \
     libzip-dev \
-    sendmail \
+    zlib1g-dev \
     --no-install-recommends && rm -r /var/lib/apt/lists/*
 
 RUN mkdir -p /tmp/blackfire \
@@ -31,10 +31,13 @@ RUN mkdir -p /tmp/blackfire \
     && rm -Rf /tmp/blackfire
 
 RUN git clone -b 'v4.1.7' --depth=1 --single-branch https://github.com/tideways/php-xhprof-extension.git /usr/src/php/ext/tideways \
+    && git clone -b 'master' --depth=1 https://github.com/NoiseByNorthwest/php-spx.git /usr/src/php/ext/spx \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-install -j$(nproc) pcntl gd opcache bcmath soap intl zip xsl pdo_mysql tideways sockets \
+    && docker-php-ext-install -j$(nproc) pcntl gd opcache bcmath soap intl zip xsl pdo_mysql sockets tideways spx \
     && pecl install -f xdebug apcu msgpack libsodium \
-    && docker-php-ext-enable apcu msgpack
+    && docker-php-ext-enable apcu msgpack \
+    && rm $PHP_INI_DIR/conf.d/*tideways.ini \
+    && rm $PHP_INI_DIR/conf.d/*spx.ini
 
 ADD https://github.com/mailhog/mhsendmail/releases/download/v0.2.0/mhsendmail_linux_amd64 /usr/local/bin/mhsendmail
 ADD https://github.com/mikefarah/yq/releases/download/3.2.1/yq_linux_amd64 /usr/local/bin/yq
