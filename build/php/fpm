@@ -1,53 +1,89 @@
-FROM php:7.3-fpm-buster
+ARG PHP_MIN_VERSION=7.3
+ARG PHP_BLACKFIRE_VERSION=73
 
-RUN apt-get update && apt-get install -y \
-    libfreetype6-dev \
-    libjpeg62-turbo-dev \
-    libmcrypt-dev \
-    libsodium-dev \
-    libicu-dev \
-    libxslt-dev \
-    vim \
-    git \
-    gnupg \
-    wget \
-    default-mysql-client \
-    openssh-server \
-    libssl-dev \
-    libgringotts-dev \
-    unzip \
-    libzip-dev \
-    zlib1g-dev \
-    --no-install-recommends && rm -r /var/lib/apt/lists/*
+FROM busybox AS source_tideways
+ARG PHP_MIN_VERSION
+RUN wget -Otideways-php.tar.gz "https://s3-eu-west-1.amazonaws.com/tideways/extension/5.0.64/tideways-php-5.0.64-x86_64.tar.gz" \
+    && tar xzvf tideways-php.tar.gz -C /tmp/ \
+    && mv /tmp/tideways-*/tideways-php-$PHP_MIN_VERSION.so /tideways.so \
+    && wget -Otideways-cli.tar.gz "https://s3-eu-west-1.amazonaws.com/tideways/cli/0.4.2/tideways-cli_0.4.2_linux_amd64.tar.gz" \
+    && tar xzvf tideways-cli.tar.gz -C /tmp/ \
+    && mv /tmp/tideways-*/tideways /tideways
 
-RUN mkdir -p /tmp/blackfire \
-    && version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
-    && curl -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/linux/amd64/$version \
-    && tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp/blackfire \
-    && mv /tmp/blackfire/blackfire-*.so $(php -r "echo ini_get ('extension_dir');")/blackfire.so \
-    && rm -rf /tmp/blackfire/* \
-    && curl -A "Docker" -L https://blackfire.io/api/v1/releases/client/linux_static/amd64 | tar zxp -C /tmp/blackfire \
-    && mv /tmp/blackfire/blackfire /usr/bin/blackfire \
-    && rm -Rf /tmp/blackfire
+FROM busybox AS source_blackfire
+ARG PHP_BLACKFIRE_VERSION
+ADD https://blackfire.io/api/v1/releases/probe/php/linux/amd64/$PHP_BLACKFIRE_VERSION blackfire-probe.tar.gz
+ADD https://blackfire.io/api/v1/releases/client/linux_static/amd64 blackfire.tar.gz
+RUN tar xzvf blackfire-probe.tar.gz -C /tmp/ \
+    && mv /tmp/blackfire-*.so /blackfire.so \
+    && rm -rf /tmp/* \
+    && tar xzvf blackfire.tar.gz -C /tmp/ \
+    && mv /tmp/blackfire /blackfire \
+    && ls -la /tmp
 
-RUN git clone -b 'v4.1.7' --depth=1 --single-branch https://github.com/tideways/php-xhprof-extension.git /usr/src/php/ext/tideways \
-    && git clone -b 'master' --depth=1 https://github.com/NoiseByNorthwest/php-spx.git /usr/src/php/ext/spx \
+FROM alpine/git AS source_git
+RUN git clone -b 'v4.1.7' --depth=1 --single-branch https://github.com/tideways/php-xhprof-extension.git \
+    && git clone -b 'master' --depth=1 https://github.com/NoiseByNorthwest/php-spx.git \
+    && mv * /
+
+FROM php:$PHP_MIN_VERSION AS source_php_ext
+COPY --from=source_git php-xhprof-extension /usr/src/php/ext/tideways
+COPY --from=source_git php-spx /usr/src/php/ext/spx
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        libfreetype6-dev \
+        libjpeg62-turbo-dev \
+        libmcrypt-dev \
+        libsodium-dev \
+        libicu-dev \
+        libxslt-dev \
+        gnupg \
+        libssl-dev \
+        libgringotts-dev \
+        libzip-dev \
+        zlib1g-dev \
+    && rm -r /var/lib/apt/lists/* \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-install -j$(nproc) pcntl gd opcache bcmath soap intl zip xsl pdo_mysql sockets tideways spx \
-    && pecl install -f xdebug apcu msgpack libsodium \
-    && docker-php-ext-enable apcu msgpack \
-    && rm $PHP_INI_DIR/conf.d/*tideways.ini \
-    && rm $PHP_INI_DIR/conf.d/*spx.ini
+    && docker-php-ext-install -j$(nproc) pcntl gd opcache bcmath soap intl zip xsl pdo_mysql sockets tideways spx\
+    && pecl install -f xdebug xhprof apcu msgpack libsodium \
+    && mv $(php-config --extension-dir)/*.so / \
+    && mv /tideways.so /tideways_xhprof.so \
+    && ls -la /usr/local/share/misc/php-spx/assets/web-ui
 
+FROM php:$PHP_MIN_VERSION-fpm-buster
+
+COPY --from=source_blackfire blackfire.so /tmp/ext/
+COPY --from=source_tideways tideways.so /tmp/ext/
+COPY --from=source_php_ext *.so /tmp/ext/
 ADD https://github.com/mailhog/mhsendmail/releases/download/v0.2.0/mhsendmail_linux_amd64 /usr/local/bin/mhsendmail
 ADD https://github.com/mikefarah/yq/releases/download/3.2.1/yq_linux_amd64 /usr/local/bin/yq
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+COPY --from=composer /usr/bin/composer /usr/local/bin/
+COPY --from=source_tideways tideways /usr/local/bin/
+COPY --from=source_blackfire blackfire /usr/local/bin/
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        vim \
+        git \
+        wget \
+        default-mysql-client \
+        openssh-server \
+        unzip \
+        libzip4 \
+        libxslt1.1 \
+        libpng16-16 \
+        libjpeg62-turbo \
+        libfreetype6 \
+    && rm -r /var/lib/apt/lists/*
+RUN mv /tmp/ext/* $(php-config --extension-dir)/ \
+    && ls -la $(php-config --extension-dir)/ \
+    && docker-php-ext-enable apcu bcmath gd intl msgpack opcache pcntl pdo_mysql soap sockets xsl zip \
+    && php -m \
+    && ls -la $PHP_INI_DIR/conf.d/ \
     && echo 'alias ll="ls -lA"' >>/root/.bashrc \
     && usermod -a -G root www-data \
     && chmod +x /usr/local/bin/* \
-    && ln -sf /usr/local/bin/magento2/magento /usr/local/bin/magento
-
-RUN echo 'root:root' | chpasswd \
+    && ln -sf /usr/local/bin/magento2/magento /usr/local/bin/magento echo 'root:root' | chpasswd \
     && sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 
 WORKDIR /var/www/magento2ce
