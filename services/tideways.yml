@@ -1,4 +1,7 @@
 version: '3.7'
 services:
   tideways:
-    image: sroze/tideways
+    image: duhon/tideways
+    hostname: tideways
+    environment:
+      EXTRA_PARAMS: --debug

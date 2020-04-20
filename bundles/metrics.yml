@@ -167,6 +167,15 @@ services:
       - ${MAGENTO_PATH}/magento-docker/etc/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
+  pmm:
+    image: duhon/pmm
+    hostname: pmm
+    ports:
+      - "82:80"
+    depends_on:
+      - db
+    environment:
+      MYSQL_HOST: db
 volumes:
   nginx_access_log: {}
 networks:

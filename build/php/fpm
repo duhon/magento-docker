@@ -1,32 +1,25 @@
-ARG PHP_MIN_VERSION=7.3
-ARG PHP_BLACKFIRE_VERSION=73
-
-FROM busybox AS source_tideways
-ARG PHP_MIN_VERSION
-RUN wget -Otideways-php.tar.gz "https://s3-eu-west-1.amazonaws.com/tideways/extension/5.0.64/tideways-php-5.0.64-x86_64.tar.gz" \
-    && tar xzvf tideways-php.tar.gz -C /tmp/ \
-    && mv /tmp/tideways-*/tideways-php-$PHP_MIN_VERSION.so /tideways.so \
-    && wget -Otideways-cli.tar.gz "https://s3-eu-west-1.amazonaws.com/tideways/cli/0.4.2/tideways-cli_0.4.2_linux_amd64.tar.gz" \
-    && tar xzvf tideways-cli.tar.gz -C /tmp/ \
-    && mv /tmp/tideways-*/tideways /tideways
+ARG MIN_PHP_VERSION=7.3
+ARG BLACKFIRE_PHP_VERSION=73
+ARG NEWRELIC_PHP_VERSION=20180731
 
 FROM busybox AS source_blackfire
-ARG PHP_BLACKFIRE_VERSION
-ADD https://blackfire.io/api/v1/releases/probe/php/linux/amd64/$PHP_BLACKFIRE_VERSION blackfire-probe.tar.gz
-ADD https://blackfire.io/api/v1/releases/client/linux_static/amd64 blackfire.tar.gz
+ARG BLACKFIRE_PHP_VERSION
+ADD https://blackfire.io/api/v1/releases/probe/php/linux/amd64/$BLACKFIRE_PHP_VERSION blackfire-probe.tar.gz
 RUN tar xzvf blackfire-probe.tar.gz -C /tmp/ \
-    && mv /tmp/blackfire-*.so /blackfire.so \
-    && rm -rf /tmp/* \
-    && tar xzvf blackfire.tar.gz -C /tmp/ \
-    && mv /tmp/blackfire /blackfire \
-    && ls -la /tmp
+    && mv /tmp/blackfire-*.so /blackfire.so
+
+FROM busybox AS source_newrelic
+ARG NEWRELIC_PHP_VERSION
+ADD https://download.newrelic.com/php_agent/archive/9.9.0.260/newrelic-php5-9.9.0.260-linux.tar.gz newrelic.tar.gz
+RUN tar xzvf newrelic.tar.gz -C /tmp/ \
+    && mv /tmp/newrelic-php5-9.9.0.260-linux/agent/x64/newrelic-$NEWRELIC_PHP_VERSION.so /newrelic.so
 
 FROM alpine/git AS source_git
 RUN git clone -b 'v4.1.7' --depth=1 --single-branch https://github.com/tideways/php-xhprof-extension.git \
     && git clone -b 'master' --depth=1 https://github.com/NoiseByNorthwest/php-spx.git \
     && mv * /
 
-FROM php:$PHP_MIN_VERSION AS source_php_ext
+FROM php:$MIN_PHP_VERSION AS source_php_ext
 COPY --from=source_git php-xhprof-extension /usr/src/php/ext/tideways
 COPY --from=source_git php-spx /usr/src/php/ext/spx
 RUN apt-get update \
@@ -47,19 +40,20 @@ RUN apt-get update \
     && docker-php-ext-install -j$(nproc) pcntl gd opcache bcmath soap intl zip xsl pdo_mysql sockets tideways spx\
     && pecl install -f xdebug xhprof apcu msgpack libsodium \
     && mv $(php-config --extension-dir)/*.so / \
-    && mv /tideways.so /tideways_xhprof.so \
-    && ls -la /usr/local/share/misc/php-spx/assets/web-ui
+    && mv /tideways.so /tideways_xhprof.so
 
-FROM php:$PHP_MIN_VERSION-fpm-buster
-
+FROM php:$MIN_PHP_VERSION-fpm-buster
+ARG MIN_PHP_VERSION
 COPY --from=source_blackfire blackfire.so /tmp/ext/
-COPY --from=source_tideways tideways.so /tmp/ext/
+COPY --from=source_newrelic newrelic.so /tmp/ext/
+COPY --from=duhon/tideways /usr/lib/tideways/tideways-php-$MIN_PHP_VERSION.so /tmp/ext/tideways.so
 COPY --from=source_php_ext *.so /tmp/ext/
+COPY --from=source_php_ext /usr/local/share/misc/php-spx/assets/web-ui /usr/local/share/misc/php-spx/assets/web-ui
 ADD https://github.com/mailhog/mhsendmail/releases/download/v0.2.0/mhsendmail_linux_amd64 /usr/local/bin/mhsendmail
 ADD https://github.com/mikefarah/yq/releases/download/3.2.1/yq_linux_amd64 /usr/local/bin/yq
 COPY --from=composer /usr/bin/composer /usr/local/bin/
-COPY --from=source_tideways tideways /usr/local/bin/
-COPY --from=source_blackfire blackfire /usr/local/bin/
+COPY --from=duhon/tideways /usr/bin/tideways /usr/local/bin/
+COPY --from=blackfire/blackfire /usr/local/bin/blackfire /usr/local/bin/
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -68,22 +62,21 @@ RUN apt-get update \
         wget \
         default-mysql-client \
         openssh-server \
+        iputils-ping \
         unzip \
         libzip4 \
         libxslt1.1 \
         libpng16-16 \
         libjpeg62-turbo \
         libfreetype6 \
-    && rm -r /var/lib/apt/lists/*
-RUN mv /tmp/ext/* $(php-config --extension-dir)/ \
-    && ls -la $(php-config --extension-dir)/ \
+    && rm -r /var/lib/apt/lists/*\
+    && mv /tmp/ext/* $(php-config --extension-dir)/ \
     && docker-php-ext-enable apcu bcmath gd intl msgpack opcache pcntl pdo_mysql soap sockets xsl zip \
-    && php -m \
-    && ls -la $PHP_INI_DIR/conf.d/ \
     && echo 'alias ll="ls -lA"' >>/root/.bashrc \
     && usermod -a -G root www-data \
     && chmod +x /usr/local/bin/* \
-    && ln -sf /usr/local/bin/magento2/magento /usr/local/bin/magento echo 'root:root' | chpasswd \
+    && ln -sf /usr/local/bin/magento2/magento /usr/local/bin/magento \
+    && echo 'root:root' | chpasswd \
     && sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 
 WORKDIR /var/www/magento2ce

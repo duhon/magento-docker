@@ -1,0 +1,15 @@
+FROM debian:stable-slim
+
+RUN apt-get update \
+    && apt-get install -yq --no-install-recommends gnupg2 curl sudo ca-certificates \
+    && echo 'deb http://s3-eu-west-1.amazonaws.com/tideways/packages debian main' > /etc/apt/sources.list.d/tideways.list \
+    && curl -sS 'https://s3-eu-west-1.amazonaws.com/tideways/packages/EEB5E8F4.gpg' | apt-key add - \
+    && DEBIAN_FRONTEND=noninteractive apt-get update \
+    && apt-get install -yq tideways-daemon tideways-php tideways-cli \
+    && apt-get autoremove --assume-yes \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+EXPOSE 9135 8135
+
+CMD sh -c 'tideways-daemon --address=0.0.0.0:9135 --udp=0.0.0.0:8135 $EXTRA_PARAMS'

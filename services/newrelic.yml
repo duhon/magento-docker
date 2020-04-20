@@ -1,0 +1,4 @@
+version: '3.7'
+services:
+  newrelic:
+    image: newrelic/php-daemon

@@ -6,12 +6,18 @@ class XH
 {
     static function start()
     {
-        if (!extension_loaded('tideways')) {
-            error_log('xhgui - either extension tideways must be loaded');
+        if (empty($_REQUEST['xhprof_enabled']) && !getenv('xhprof_enabled')) {
             return;
         }
-        return;
-        tideways_enable(TIDEWAYS_FLAGS_CPU | TIDEWAYS_FLAGS_MEMORY);
+        if (!extension_loaded('tideways') && !extension_loaded('xhprof')) {
+            error_log('xhgui - either extension tideways_xhprof or xhprof must be loaded');
+            return;
+        }
+        try {
+            tideways_enable(TIDEWAYS_FLAGS_CPU | TIDEWAYS_FLAGS_MEMORY);
+        } catch (Throwable $t) {
+            xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
+        }
         register_shutdown_function(
             function () {
                 \XH::stop();
@@ -23,9 +29,19 @@ class XH
     {
         ignore_user_abort(true);
         flush();
-
+        try {
+            $raw = tideways_disable();
+        } catch (Throwable $t) {
+            $raw = xhprof_disable();
+        }
+        //https://github.com/perftools/xhgui/issues/209
+        $profile = [];
+        foreach($raw as $key => $value) {
+            $profile[strtr($key, ['.' => '_'])] = $value;
+        }
+        $data['profile'] = $profile;
         $data = [
-            'profile' => tideways_disable(),
+            'profile' => $profile,
             'meta' => [
                 'server' => $_SERVER,
                 'get' => $_GET,
