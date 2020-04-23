@@ -2,7 +2,7 @@ version: '3.7'
   services:
     mftf:
       image: selenium/standalone-chrome-debug:3.12.0
-      ports:
-        - "5900:5900"
+      expose:
+        - "5900"
       x-hints:
         - 'vnc://0.0.0.0:5900 pass:secret'

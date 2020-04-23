@@ -3,8 +3,8 @@ services:
   redis-master:
     image: redis
     hostname: redis
-    ports:
-      - "6379:6379"
+    expose:
+      - "6379"
     sysctls:
       net.core.somaxconn: 1024
     ulimits:
@@ -31,6 +31,6 @@ services:
   redis-stat:
     image: insready/redis-stat
     hostname: redis-stat
-    ports:
-      - "63790:63790"
+    expose:
+      - "63790"
     command: '--server redis'

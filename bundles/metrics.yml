@@ -66,7 +66,7 @@ services:
     image: redis
     hostname: redis
     ports:
-      - "6379:6379"
+      - "${REDIS_PORT}:6379"
     sysctls:
       net.core.somaxconn: 1024
     ulimits:
@@ -78,16 +78,16 @@ services:
       - redis-cli monitor
       - telnet localhost 6379
     x-setup:
-      #      - bin/magento setup:config:set --page-cache=redis --page-cache-redis-server=redis
+      - bin/magento setup:config:set --page-cache=redis --page-cache-redis-server=redis
       - bin/magento setup:config:set -n --session-save=redis --session-save-redis-host=redis
-    #      - bin/magento setup:config:set -n --cache-backend=redis --cache-backend-redis-server=redis
+      - bin/magento setup:config:set -n --cache-backend=redis --cache-backend-redis-server=redis
     x-info: https://devdocs.magento.com/guides/v2.3/config-guide/redis/config-redis.html
   grafana:
     image: grafana/grafana
     depends_on:
       - prometheus
     ports:
-      - 3000:3000
+      - "3000:3000"
     environment:
       GF_SECURITY_ADMIN_PASSWORD: "123123q"
       GF_ALLOW_SIGN_UP: "false"
@@ -155,7 +155,7 @@ services:
   prometheus:
     image: prom/prometheus
     ports:
-      - 9090:9090
+      - "${PROMETHEUS_PORT}:9090"
     depends_on:
       - redis-exporter
       - nginx-exporter
@@ -171,7 +171,7 @@ services:
     image: duhon/pmm
     hostname: pmm
     ports:
-      - "82:80"
+      - "${PMM_PORT}:80"
     depends_on:
       - db
     environment:

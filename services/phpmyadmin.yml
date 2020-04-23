@@ -5,5 +5,5 @@ services:
     environment:
       - PMA_HOST=db
       - PMA_USER=root
-    ports:
-      - 8081:80
+    expose:
+      - 80

@@ -5,8 +5,8 @@ services:
       context: ${MAGENTO_PATH}/docker-magento
       dockerfile: build/php/apache-mod
     image: apache-mod
-    ports:
-      - "80:80"
+    expose:
+      - "80"
     volumes:
       - ${MAGENTO_PATH}:/var/www:z
       - ${MAGENTO_PATH}/docker-magento/etc/php/tools:/usr/local/bin/magento2:ro

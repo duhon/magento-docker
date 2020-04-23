@@ -3,9 +3,9 @@ services:
   elastic:
     image: elasticsearch:6.7.1
     hostname: elastic
-    ports:
-      - "9200:9200"
-      - "9300:9300"
+    expose:
+      - "9200"
+      - "9300"
     environment:
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true

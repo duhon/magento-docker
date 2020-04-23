@@ -3,7 +3,7 @@ services:
   rabbit:
     image: rabbitmq:management
     hostname: rabbitmq
-    ports:
-      - "15672:15672"
+    expose:
+      - "15672"
     x-setup:
       - bin/magento setup:config:set --amqp-host=rabbit --amqp-user=guest --amqp-password=guest

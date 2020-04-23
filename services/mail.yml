@@ -3,6 +3,6 @@ services:
   mail:
     image: mailhog/mailhog
     hostname: mail
-    ports:
-      - "1025:1025"
-      - "8025:8025"
+    expose:
+      - "1025"
+      - "8025"

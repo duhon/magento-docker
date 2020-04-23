@@ -3,8 +3,8 @@ services:
   solr:
     image: makuk66/docker-solr:4.10.4
     hostname: solr
-    ports:
-      - "8983:8983"
+    expose:
+      - "8983"
     volumes:
       - ${MAGENTO_PATH}/magento2ee/app/code/Magento/Solr/conf:/opt/magento2/conf
 #   command: solr solr-create -c magento2 -d /opt/magento2/conf

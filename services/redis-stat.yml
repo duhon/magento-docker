@@ -2,6 +2,6 @@ version: '3'
 services:
   redis-stat:
     image: insready/redis-stat
-    ports:
-      - "8080:63790"
+    expose:
+      - "63790"
     command: --server redis
