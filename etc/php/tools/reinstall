@@ -30,5 +30,5 @@ bin/magento setup:install \
    --db-prefix=m2_
 
 #do x-setup lines
-IFS=$'\n' setup=($(yq read /var/www/magento-docker/docker-compose.yml services.*.x-setup | grep -oP '(?:\-\s)+(?!null)\K.*'))
+IFS=$'\n' setup=($(yq read /var/www/magento-docker/docker-compose.yml services.*.x-setup | grep -oP '^(?:\s*\-\s)+(?!null)\K.*'))
 for i in ${setup[*]}; do eval "${i}"; done
