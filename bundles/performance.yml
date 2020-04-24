@@ -155,9 +155,9 @@ services:
       - redis-cli monitor
       - telnet localhost 6379
     x-setup:
-      #      - bin/magento setup:config:set --page-cache=redis --page-cache-redis-server=redis
-      - bin/magento setup:config:set --session-save=redis --session-save-redis-host=redis --cache-backend-redis-db=0
-      - bin/magento setup:config:set --cache-backend=redis --cache-backend-redis-server=redis --cache-backend-redis-db=1
+      #      - bin/magento setup:config:set -n --page-cache=redis --page-cache-redis-server=redis --cache-backend-redis-db=3
+      - bin/magento setup:config:set -n --session-save=redis --session-save-redis-host=redis --cache-backend-redis-db=0
+      - bin/magento setup:config:set -n --cache-backend=redis --cache-backend-redis-server=redis --cache-backend-redis-db=1
     x-info: https://devdocs.magento.com/guides/v2.3/config-guide/redis/config-redis.html
   rabbit:
     image: rabbitmq:management
@@ -169,7 +169,7 @@ services:
       - bin/magento queue:consumers:start
       - "http://localhost:15672/ user:guest pass:guest"
     x-setup:
-      - bin/magento setup:config:set --amqp-host=rabbit --amqp-user=guest --amqp-password=guest
+      - bin/magento setup:config:set -n --amqp-host=rabbit --amqp-user=guest --amqp-password=guest
     x-info: https://devdocs.magento.com/guides/v2.3/config-guide/mq/manage-message-queues.html
   jmeter:
     image: duhon/jmeter:3.1
