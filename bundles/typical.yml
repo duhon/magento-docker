@@ -84,7 +84,7 @@ services:
       - vendor/bin/mftf run:test
     x-info: https://devdocs.magento.com/mftf/docs/introduction.html
   elastic:
-    image: elasticsearch:6.7.1
+    image: elasticsearch:7.1.0
     hostname: elastic
     ports:
       - "${ELASTIC_PORT}:9200"
@@ -99,10 +99,6 @@ services:
         hard: -1
     x-hits:
       - curl -i http://localhost:9200/_cluster/health
-    x-setup:
-      - bin/magento config:set catalog/search/engine elasticsearch6
-      - bin/magento config:set catalog/search/elasticsearch6_server_hostname elastic
-      - bin/magento indexer:reindex catalogsearch_fulltext
     x-info: https://devdocs.magento.com/guides/v2.3/config-guide/elasticsearch/es-overview.html
   redis:
     image: redis
