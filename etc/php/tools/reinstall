@@ -28,7 +28,7 @@ bin/magento setup:install \
    --db-name=magento \
    --db-host=db \
    --search-engine=elasticsearch7 \
-   --elasticsearch-host=db \
+   --elasticsearch-host=elastic \
    --elasticsearch-port=9200 \
    --db-prefix=m2_
 
