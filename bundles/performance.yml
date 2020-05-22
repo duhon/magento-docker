@@ -88,7 +88,7 @@ services:
     volumes:
       - ${MAGENTO_PATH}/magento-docker/etc/mongo:/docker-entrypoint-initdb.d
     ports:
-      - "MONGO:27017"
+      - "${MONGO_PORT}:27017"
   blackfire:
     image: blackfire/blackfire
     environment:
