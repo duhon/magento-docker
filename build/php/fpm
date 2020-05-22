@@ -1,6 +1,6 @@
-ARG MIN_PHP_VERSION=7.3
-ARG BLACKFIRE_PHP_VERSION=73
-ARG NEWRELIC_PHP_VERSION=20180731
+ARG MIN_PHP_VERSION=7.4
+ARG BLACKFIRE_PHP_VERSION=74
+ARG NEWRELIC_PHP_VERSION=20190902
 
 FROM busybox AS source_blackfire
 ARG BLACKFIRE_PHP_VERSION
@@ -15,12 +15,10 @@ RUN tar xzvf newrelic.tar.gz -C /tmp/ \
     && mv /tmp/newrelic-php5-9.9.0.260-linux/agent/x64/newrelic-$NEWRELIC_PHP_VERSION.so /newrelic.so
 
 FROM alpine/git AS source_git
-RUN git clone -b 'v4.1.7' --depth=1 --single-branch https://github.com/tideways/php-xhprof-extension.git \
-    && git clone -b 'master' --depth=1 https://github.com/NoiseByNorthwest/php-spx.git \
+RUN git clone -b 'master' --depth=1 https://github.com/NoiseByNorthwest/php-spx.git \
     && mv * /
 
 FROM php:$MIN_PHP_VERSION AS source_php_ext
-COPY --from=source_git php-xhprof-extension /usr/src/php/ext/tideways
 COPY --from=source_git php-spx /usr/src/php/ext/spx
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -36,11 +34,10 @@ RUN apt-get update \
         libzip-dev \
         zlib1g-dev \
     && rm -r /var/lib/apt/lists/* \
-    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-install -j$(nproc) pcntl gd opcache bcmath soap intl zip xsl pdo_mysql sockets tideways spx\
-    && pecl install -f xdebug xhprof apcu msgpack libsodium \
-    && mv $(php-config --extension-dir)/*.so / \
-    && mv /tideways.so /tideways_xhprof.so
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) pcntl gd opcache bcmath soap intl zip xsl pdo_mysql sockets spx\
+    && pecl install -f xdebug xhprof apcu msgpack libsodium runkit7 \
+    && mv $(php-config --extension-dir)/*.so /
 
 FROM php:$MIN_PHP_VERSION-fpm-buster
 ARG MIN_PHP_VERSION
