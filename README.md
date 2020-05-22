@@ -71,8 +71,4 @@ In `.env` file environment variables are declared. Here you can change your `MAG
 3. If magento installation fails, run `docker-compose exec app magento reinstall`
 
 ### TODO list
-
-1. To create a cross platform installer that will check for dependencies, create a folder with the project and 
-download the Magento (see install.sh)
-2. The default creation of the project for phpstorm (see etc/phpstorm)
-3. A single point of running tests with the preparation (magento prepare_tests) of Magento
+https://github.com/duhon/magento-docker/projects
