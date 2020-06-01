@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+bin/magento indexer:set-dimensions-mode catalog_product_price website_and_customer_group
+bin/magento cache:clean
+export MAGE_INDEXER_THREADS_COUNT=5 && php -d memory_limit=-1 -f bin/magento indexer:reindex > var/reindex.txt && export MAGE_INDEXER_THREADS_COUNT=''

@@ -1,6 +1,11 @@
 #!/bin/bash
 shopt -s extglob
 
+source /var/www/magento-docker/.env
+export $(cut -d= -f1 /var/www/magento-docker/.env)
+
+cp /var/www/magento-docker/etc/php/tools/* /usr/local/sbin
+
 #clean project dir
 if [[ -d .git ]]; then
    git clean -dfx -e '.idea' $(mount | grep -oP '/var/www/magento2ce/\K\S*' | xargs -rn 1 echo '-e ')
@@ -8,12 +13,22 @@ if [[ -d .git ]]; then
 fi
 
 #apply edition
+dst="/var/www/magento2ce"
 for edition in "$@"; do
    if ! [[ -d ../${edition} ]]; then
       edition=magento2${edition}
    fi
-   cp -rlf ../"${edition}"/!(.git|vendor|..|.) .
+   if [[ ${edition} == "data-solutions-services-id" ]]; then
+      dst="/var/www/magento2ce/app/code/Magento"
+   fi
+   php /var/www/${edition}/dev/tools/build-ee.php --ce-source ${dst} --ee-source /var/www/${edition}
+   cp -rlf /var/www/${edition}/composer* ${dst}
 done
+
+if [[ $@ == *"storefront"* ]]; then
+    composer config repositories.ece-tools git git@github.com:magento-architects/magento-services-connector.git
+    composer require --no-update magento/services-connector:dev-master
+fi
 
 #install magento
 composer install
@@ -27,7 +42,6 @@ bin/magento setup:install \
    --admin-password=123123q \
    --db-name=magento \
    --db-host=db \
-   --elasticsearch-host=elastic \
    --db-prefix=m2_
 
 #do x-setup lines
