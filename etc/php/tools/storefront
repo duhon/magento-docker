@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 
-php -r '$sC = include "/var/www/magento-docker/etc/php/services-connector.php"; $env = include "app/etc/env.php"; $env = array_merge($env, $sC); $contents = var_export($env, true); file_put_contents("app/etc/env.php", "<?php\n return $contents; \n");'
-bin/magento app:config:import
-bin/magento setup:upgrade
+source /var/www/magento-docker/.env
+export $(cut -d= -f1 /var/www/magento-docker/.env)
 
-bin/magento queue:consumers:start storefront.catalog.data.consume &
-bin/magento queue:consumers:start storefront.catalog.product.update &
-bin/magento queue:consumers:start storefront.catalog.category.update &
+if [[ ${STOREFRONT_INSTALL} == "yes" ]]; then
+    php -r '$sC = include "/var/www/magento-docker/etc/php/services-connector.php"; $env = include "app/etc/env.php"; $env = array_merge($env, $sC); $contents = var_export($env, true); file_put_contents("app/etc/env.php", "<?php\n return $contents; \n");'
+    bin/magento app:config:import
+    bin/magento setup:upgrade
 
-bin/magento storefront:catalog:sync
+    bin/magento queue:consumers:start storefront.catalog.data.consume &
+    bin/magento queue:consumers:start storefront.catalog.product.update &
+    bin/magento queue:consumers:start storefront.catalog.category.update &
+
+    bin/magento storefront:catalog:sync
+fi

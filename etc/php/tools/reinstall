@@ -32,6 +32,7 @@ fi
 
 #install magento
 composer install
+echo y | bin/magento setup:uninstall
 bin/magento setup:install \
    --cleanup-database \
    --backend-frontname=admin \
