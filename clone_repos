@@ -16,7 +16,7 @@ if [[ "yes" == "$RECLONE" ]]; then
 	if [[ "EE" == "$MAGENTO_EDITION" ]] || [[ "B2B" == "$MAGENTO_EDITION" ]]; then
         git clone --depth 1 git@github.com:${GIT_REPO_EE}/$MAGENTO_EE_DIR.git -b ${GIT_BRANCH_EE}
         cd $MAGENTO_EE_DIR
-        php dev/tools/build-ee.php --ce-source ../$MAGENTO_CE_DIR --ee-source $MAGENTO_EE_DIR
+        php dev/tools/build-ee.php --ce-source ../$MAGENTO_CE_DIR --ee-source ../$MAGENTO_EE_DIR
         cd ..
 	fi
 
@@ -24,7 +24,7 @@ if [[ "yes" == "$RECLONE" ]]; then
         git clone --depth 1 git@github.com:${GIT_REPO_B2B}/magento2b2b.git -b ${GIT_BRANCH_B2B}
         cp magento2ee/dev/tools/build-ee.php magento2b2b/dev/tools/build-ee.php
         cd magento2b2b
-        php dev/tools/build-ee.php --ce-source ../$MAGENTO_CE_DIR --ee-source magento2b2b
+        php dev/tools/build-ee.php --ce-source ../$MAGENTO_CE_DIR --ee-source ../magento2b2b
         cd ..
 	fi
 
@@ -33,7 +33,7 @@ if [[ "yes" == "$RECLONE" ]]; then
         mkdir -p inventory/dev/tools
         cp magento2ee/dev/tools/build-ee.php inventory/dev/tools/build-ee.php
         cd inventory
-        php dev/tools/build-ee.php --ce-source ../$MAGENTO_CE_DIR/app/code/Magento --ee-source inventory
+        php dev/tools/build-ee.php --ce-source ../$MAGENTO_CE_DIR/app/code/Magento --ee-source ../inventory
         cd ..
     fi
 
@@ -42,28 +42,28 @@ if [[ "yes" == "$RECLONE" ]]; then
         mkdir -p catalog-storefront/dev/tools
         cp magento2ee/dev/tools/build-ee.php catalog-storefront/dev/tools/build-ee.php
         cd catalog-storefront
-        php dev/tools/build-ee.php --ce-source ../$MAGENTO_CE_DIR --ee-source catalog-storefront
+        php dev/tools/build-ee.php --ce-source ../$MAGENTO_CE_DIR --ee-source ../catalog-storefront
         cd ..
 
 	    git clone --depth 1 git@github.com:${GIT_REPO_CATALOG_SF_EE}/catalog-storefront-ee.git -b ${GIT_BRANCH_CATALOG_SF_EE}
         mkdir -p catalog-storefront-ee/dev/tools
         cp magento2ee/dev/tools/build-ee.php catalog-storefront-ee/dev/tools/build-ee.php
         cd catalog-storefront-ee
-        php dev/tools/build-ee.php --ce-source ../$MAGENTO_CE_DIR --ee-source catalog-storefront-ee
+        php dev/tools/build-ee.php --ce-source ../$MAGENTO_CE_DIR --ee-source ../catalog-storefront-ee
         cd ..
 
         git clone --depth 1 git@github.com:${GIT_REPO_SAAS_EXPORT}/saas-export.git -b ${GIT_BRANCH_SAAS_EXPORT}
         mkdir -p saas-export/dev/tools
         cp magento2ee/dev/tools/build-ee.php saas-export/dev/tools/build-ee.php
         cd saas-export
-        php dev/tools/build-ee.php --ce-source ../$MAGENTO_CE_DIR --ee-source saas-export
+        php dev/tools/build-ee.php --ce-source ../$MAGENTO_CE_DIR --ee-source ../saas-export
         cd ..
 
 	    git clone --depth 1 git@github.com:${GIT_REPO_DSSI}/data-solutions-services-id.git -b ${GIT_BRANCH_DSSI}
 	    mkdir -p data-solutions-services-id/dev/tools
 	    cp magento2ee/dev/tools/build-ee.php data-solutions-services-id/dev/tools/build-ee.php
 	    cd data-solutions-services-id
-        php dev/tools/build-ee.php --ce-source ../$MAGENTO_CE_DIR/app/code/Magento --ee-source data-solutions-services-id 2>/dev/null
+        php dev/tools/build-ee.php --ce-source ../$MAGENTO_CE_DIR/app/code/Magento --ee-source ../data-solutions-services-id
         cd ..
 	fi
 fi
