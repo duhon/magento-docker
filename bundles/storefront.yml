@@ -92,7 +92,7 @@ services:
     x-setup:
       - config_setup
       - sed -ie 's/zend_extension/;zend_extension/g' /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
-      - profile_generate ee small
+      - profile_generate
       - reindex
       - storefront
     x-info: https://devdocs.magento.com/

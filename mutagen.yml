@@ -8,8 +8,7 @@ beforeCreate:
 # have been established and code pushed to the shared volume.
 afterCreate:
   - docker-compose up --build --detach
-  - docker-compose exec app magento reinstall ee
-#  - docker-compose exec app magento reinstall ee catalog-storefront catalog-storefront-ee saas-export data-solutions-services-id
+  - docker-compose exec app magento reinstall ee b2b inventory catalog-storefront catalog-storefront-ee saas-export data-solutions-services-id
 
 # Pause services after pausing sessions.
 afterPause:

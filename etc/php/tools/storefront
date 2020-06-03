@@ -4,11 +4,13 @@ source /var/www/magento-docker/.env
 export $(cut -d= -f1 /var/www/magento-docker/.env)
 
 if [[ ${STOREFRONT_INSTALL} == "yes" ]]; then
+    sed -ie 's/localhost/elastic/g' ../catalog-storefront/app/code/Magento/CatalogStorefront/Model/Storage/Client/Config.php
     php -r '$sC = include "/var/www/magento-docker/etc/php/services-connector.php"; $env = include "app/etc/env.php"; $env = array_merge($env, $sC); $contents = var_export($env, true); file_put_contents("app/etc/env.php", "<?php\n return $contents; \n");'
     bin/magento app:config:import
     bin/magento setup:upgrade
 
     bin/magento queue:consumers:start storefront.catalog.data.consume &
+    bin/magento queue:consumers:start catalog.export.consumer &
     bin/magento queue:consumers:start storefront.catalog.product.update &
     bin/magento queue:consumers:start storefront.catalog.category.update &
 

@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
-MAGENTO_EDITION="$1"
-PERF_PROFILE="$2"
-
+source /var/www/magento-docker/.env
+export $(cut -d= -f1 /var/www/magento-docker/.env)
 
 if [[ "EE" == "$MAGENTO_EDITION" ]]; then
   cp -r ../magento2ee/setup/performance-toolkit/profiles/ee/$PERF_PROFILE.xml setup/performance-toolkit/profiles/ce/$PERF_PROFILE.xml
