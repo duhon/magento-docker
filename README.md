@@ -29,10 +29,11 @@ In `.env` file environment variables are declared. Here you can change your `MAG
 10. Install magento: `docker-compose exec app magento reinstall`. If you want to install ee/b2b versions run `docker-compose exec app magento reinstall <ee|b2b>`.
 11. Magento installed.
 #### Mutagen installation option
+0. Setup SSH-keys on your github account.
 1. Add `magento.test` to `/etc/hosts`: `127.0.0.1 magento.test`.
 2. cp .env.dist .env
-3. Fill REPO-related variables
-```
+3. Fill REPO-related variables in .env file
+                                                    
         GIT_REPO_CE=magento
         GIT_BRANCH_CE=2.4-develop
         GIT_REPO_EE=magento-architects
@@ -48,16 +49,15 @@ In `.env` file environment variables are declared. Here you can change your `MAG
         GIT_REPO_SAAS_EXPORT=magento
         GIT_BRANCH_SAAS_EXPORT=develop
         GIT_REPO_DSSI=magento
-        GIT_BRANCH_DSSI=develop
-```
-4. Fill EVN-specific variables:
-```
+        GIT_BRANCH_DSSI=develo
+4. Fill EVN-specific variables in .env file:
+        
         MAGENTO_PATH=/magento/magento-docker-install    # local directory to clone repos into
         RECLONE=no                                      # flag indicate whether do re-clon of all repos or no
         MAGENTO_EDITION=EE                              # EE|B2B
         MSI_INSTALL=no                                  # yes|no
         STOREFRONT_INSTALL=no                           # yes|no
-```
+
 5. RUN `mutagen project start`
 
 ## Scenarios
