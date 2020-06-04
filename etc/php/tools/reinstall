@@ -29,13 +29,6 @@ for edition in "$@"; do
    fi
 done
 
-if [[ $@ == *"storefront"* ]]; then
-    mkdir -p ~/.ssh
-    ssh-keyscan github.com >> ~/.ssh/known_hosts
-    composer config repositories.ece-tools git git@github.com:magento-architects/magento-services-connector.git
-    composer require --no-update magento/services-connector:dev-master
-fi
-
 #install magento
 composer install
 echo y | bin/magento setup:uninstall
@@ -49,6 +42,7 @@ bin/magento setup:install \
    --admin-password=123123q \
    --db-name=magento \
    --db-host=db \
+   --elasticsearch-host=elastic \
    --db-prefix=m2_
 
 #do x-setup lines

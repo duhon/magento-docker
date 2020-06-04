@@ -30,7 +30,6 @@ In `.env` file environment variables are declared. Here you can change your `MAG
 11. Magento installed.
 #### Mutagen installation option
 0. Setup SSH-keys on your github account.
-1. Add auth.json file in the root of this project. It have contains github-oauth credentials.
 2. Add `magento.test` to `/etc/hosts`: `127.0.0.1 magento.test`.
 3. cp .env.dist .env
 4. Fill REPO-related variables in .env file
@@ -50,7 +49,9 @@ In `.env` file environment variables are declared. Here you can change your `MAG
         GIT_REPO_SAAS_EXPORT=magento
         GIT_BRANCH_SAAS_EXPORT=develop
         GIT_REPO_DSSI=magento
-        GIT_BRANCH_DSSI=develo
+        GIT_BRANCH_DSSI=develop
+        GIT_REPO_MSC=magento-architects
+        GIT_BRANCH_MSC=master
 5. Fill EVN-specific variables in .env file:
         
         MAGENTO_PATH=/magento/magento-docker-install    # local directory to clone repos into
@@ -58,8 +59,11 @@ In `.env` file environment variables are declared. Here you can change your `MAG
         MAGENTO_EDITION=EE                              # EE|B2B
         MSI_INSTALL=no                                  # yes|no
         STOREFRONT_INSTALL=no                           # yes|no
+6. Update Mutagen config with appropriate local project path: `alpha: /magento/magento-docker-install`  # local directory to clone repos into
+7. RUN `mutagen project start`
 
-6. RUN `mutagen project start`
+Notices:
+1. Before push your code, please fetch particular repo before by the next command: `git fetch --unshallow` 
 
 ## Scenarios
 

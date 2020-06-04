@@ -65,5 +65,13 @@ if [[ "yes" == "$RECLONE" ]]; then
 	    cd data-solutions-services-id
         php dev/tools/build-ee.php --ce-source ../$MAGENTO_CE_DIR/app/code/Magento --ee-source ../data-solutions-services-id
         cd ..
+
+        git clone --depth 1 git@github.com:${GIT_REPO_MSC}/magento-services-connector.git -b ${GIT_BRANCH_MSC}
+	    mkdir -p magento-services-connector/dev/tools
+	    cp magento2ee/dev/tools/build-ee.php magento-services-connector/dev/tools/build-ee.php
+	    cd magento-services-connector
+	    mkdir -p ../$MAGENTO_CE_DIR/app/code/Magento/ServicesConnector
+        php dev/tools/build-ee.php --ce-source ../$MAGENTO_CE_DIR/app/code/Magento/ServicesConnector --ee-source ../magento-services-connector
+        cd ..
 	fi
 fi
