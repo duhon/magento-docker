@@ -22,9 +22,16 @@ for edition in "$@"; do
       dst="/var/www/magento2ce/app/code/Magento"
    fi
    if [[ -d ../${edition} ]]; then
-     php /var/www/${edition}/dev/tools/build-ee.php --ce-source ${dst} --ee-source /var/www/${edition} 2>/dev/null
-     if [[ ${edition} == "ee" ]] || [[ ${edition} == "b2b" ]]; then
+     php /var/www/${edition}/dev/tools/build-ee.php -- --command unlink --exclude true --ce-source ${dst} --ee-source /var/www/${edition}
+     php /var/www/${edition}/dev/tools/build-ee.php -- --command link --exclude true --ce-source ${dst} --ee-source /var/www/${edition}
+     if [[ ${edition} == "magento2ee" ]] || [[ ${edition} == "magento2b2b" ]]; then
        cp -rlf /var/www/${edition}/composer* ${dst} 2>/dev/null
+       cp -rlf /var/www/${edition}/setup /var/www/magento2ce/setup 2>/dev/null
+     fi
+     if [[ ${edition} == *"storefront"* ]]; then
+       set +ex;
+       cp -rf /var/www/${edition}/dev ${dst} 2>/dev/null
+       set -ex;
      fi
    fi
 done

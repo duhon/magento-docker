@@ -2,6 +2,7 @@
 
 source ./.env
 export $(cut -d= -f1 ./.env)
+DOCKER_PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 if [[ "yes" == "$RECLONE" ]]; then
     #prepare data
@@ -38,14 +39,20 @@ if [[ "yes" == "$RECLONE" ]]; then
     fi
 
     if [[ "yes" == "$STOREFRONT_INSTALL" ]]; then
-        git clone --depth 1 git@github.com:${GIT_REPO_CATALOG_SF}/catalog-storefront.git -b ${GIT_BRANCH_CATALOG_SF}
+        git clone git@github.com:${GIT_REPO_CATALOG_SF}/catalog-storefront.git
+        cd catalog-storefront
+        git checkout -b ${GIT_BRANCH_CATALOG_SF} origin/${GIT_BRANCH_CATALOG_SF}
+        cd ..
         mkdir -p catalog-storefront/dev/tools
         cp magento2ee/dev/tools/build-ee.php catalog-storefront/dev/tools/build-ee.php
         cd catalog-storefront
         php dev/tools/build-ee.php --ce-source ../$MAGENTO_CE_DIR --ee-source ../catalog-storefront
         cd ..
 
-	    git clone --depth 1 git@github.com:${GIT_REPO_CATALOG_SF_EE}/catalog-storefront-ee.git -b ${GIT_BRANCH_CATALOG_SF_EE}
+	    git clone git@github.com:${GIT_REPO_CATALOG_SF_EE}/catalog-storefront-ee.git
+        cd catalog-storefront-ee
+        git checkout -b ${GIT_BRANCH_CATALOG_SF_EE} origin/${GIT_BRANCH_CATALOG_SF_EE}
+        cd ..
         mkdir -p catalog-storefront-ee/dev/tools
         cp magento2ee/dev/tools/build-ee.php catalog-storefront-ee/dev/tools/build-ee.php
         cd catalog-storefront-ee
@@ -80,4 +87,12 @@ if [[ "yes" == "$RECLONE" ]]; then
             cd ..
         fi
 	fi
+else
+    cd $MAGENTO_PATH/$MAGENTO_CE_DIR
+    export GIT_DISCOVERY_ACROSS_FILESYSTEM=1 && git checkout -- .
+fi
+
+if [[ 'yes' == "$SYM_LINCS" ]]; then
+    cd $MAGENTO_PATH/$MAGENTO_CE_DIR
+    git apply $DOCKER_PROJECT_DIR/etc/php/path-validator.patch
 fi

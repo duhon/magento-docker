@@ -16,6 +16,9 @@ return [
         'source_prefix' => 'catalog_storefront_v',
         'source_current_version' => 1
     ],
+    'queue' => [
+        'consumers_wait_for_messages' => 0
+    ],
     'system' => [
         'default' => [
             'services_connector' => [
