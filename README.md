@@ -28,6 +28,43 @@ In `.env` file environment variables are declared. Here you can change your `MAG
 9. Check in browser if your magento host is up and running. Enter `http://magento.test:80` in browser. `80` is a default port but you can change it in `.env` file.
 10. Install magento: `docker-compose exec app magento reinstall`. If you want to install ee/b2b versions run `docker-compose exec app magento reinstall <ee|b2b>`.
 11. Magento installed.
+#### Mutagen installation option
+0. Setup SSH-keys on your github account.
+2. Add `magento.test` to `/etc/hosts`: `127.0.0.1 magento.test`.
+3. cp .env.dist .env
+4. Fill REPO-related variables in .env file
+                                                    
+        GIT_REPO_CE=magento
+        GIT_BRANCH_CE=2.4-develop
+        GIT_REPO_EE=magento-architects
+        GIT_BRANCH_EE=2.4-develop
+        GIT_REPO_B2B=magento
+        GIT_BRANCH_B2B=1.2-develop
+        GIT_REPO_MSI=magento
+        GIT_BRANCH_MSI=1.2-develop
+        GIT_REPO_CATALOG_SF=magento
+        GIT_BRANCH_CATALOG_SF=develop
+        GIT_REPO_CATALOG_SF_EE=magento
+        GIT_BRANCH_CATALOG_SF_EE=develop
+        GIT_REPO_SAAS_EXPORT=magento
+        GIT_BRANCH_SAAS_EXPORT=develop
+        GIT_REPO_DSSI=magento
+        GIT_BRANCH_DSSI=develop
+        GIT_REPO_MSC=magento-architects
+        GIT_BRANCH_MSC=master
+5. Fill EVN-specific variables in .env file:
+        
+        MAGENTO_PATH=/magento/magento-docker-install    # local directory to clone repos into
+        RECLONE=no                                      # flag indicate whether do re-clon of all repos or no
+        MAGENTO_EDITION=EE                              # EE|B2B
+        MSI_INSTALL=no                                  # yes|no
+        STOREFRONT_INSTALL=no                           # yes|no
+6. Update Mutagen config with appropriate local project path: `alpha: /magento/magento-docker-install`  # local directory to clone repos into
+7. Add MAGENTO_PATH path to Docker sharing folders (Docker preferences)
+7. RUN `mutagen project start`
+
+Notices:
+1. Before push your code, please fetch particular repo before by the next command: `git fetch --unshallow` 
 
 ## Scenarios
 

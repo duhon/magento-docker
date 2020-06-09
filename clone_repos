@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+
+source ./.env
+export $(cut -d= -f1 ./.env)
+DOCKER_PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+if [[ "yes" == "$RECLONE" ]]; then
+    #prepare data
+    rm -rf $MAGENTO_PATH
+    mkdir -p $MAGENTO_PATH
+    cd $MAGENTO_PATH
+    #chown -R $USER:wheel .
+    chmod g+s .
+
+	git clone --depth 1 git@github.com:${GIT_REPO_CE}/$MAGENTO_CE_DIR.git -b ${GIT_BRANCH_CE}
+
+	if [[ "EE" == "$MAGENTO_EDITION" ]] || [[ "B2B" == "$MAGENTO_EDITION" ]]; then
+      git clone --depth 1 git@github.com:${GIT_REPO_EE}/$MAGENTO_EE_DIR.git -b ${GIT_BRANCH_EE}
+      cd $MAGENTO_EE_DIR
+      php dev/tools/build-ee.php --ce-source ../$MAGENTO_CE_DIR --ee-source ../$MAGENTO_EE_DIR
+      cd ..
+	fi
+
+	if [[ "B2B" == "$MAGENTO_EDITION" ]]; then
+      git clone --depth 1 git@github.com:${GIT_REPO_B2B}/magento2b2b.git -b ${GIT_BRANCH_B2B}
+      cp magento2ee/dev/tools/build-ee.php magento2b2b/dev/tools/build-ee.php
+      cd magento2b2b
+      php dev/tools/build-ee.php --ce-source ../$MAGENTO_CE_DIR --ee-source ../magento2b2b
+      cd ..
+	fi
+
+	if [[ "yes" == "$MSI_INSTALL" ]]; then
+      git clone --depth 1 git@github.com:${GIT_REPO_MSI}/inventory.git -b ${GIT_BRANCH_MSI}
+      mkdir -p inventory/dev/tools
+      cp magento2ee/dev/tools/build-ee.php inventory/dev/tools/build-ee.php
+      cd inventory
+      php dev/tools/build-ee.php --ce-source ../$MAGENTO_CE_DIR/app/code/Magento --ee-source ../inventory
+      cd ..
+    fi
+
+    if [[ "yes" == "$STOREFRONT_INSTALL" ]]; then
+      git clone git@github.com:${GIT_REPO_CATALOG_SF}/catalog-storefront.git
+      cd catalog-storefront
+      git checkout -b ${GIT_BRANCH_CATALOG_SF} origin/${GIT_BRANCH_CATALOG_SF}
+      cd ..
+      mkdir -p catalog-storefront/dev/tools
+      cp magento2ee/dev/tools/build-ee.php catalog-storefront/dev/tools/build-ee.php
+      cd catalog-storefront
+      php dev/tools/build-ee.php --ce-source ../$MAGENTO_CE_DIR --ee-source ../catalog-storefront
+      cd ..
+
+	  git clone git@github.com:${GIT_REPO_CATALOG_SF_EE}/catalog-storefront-ee.git
+      cd catalog-storefront-ee
+      git checkout -b ${GIT_BRANCH_CATALOG_SF_EE} origin/${GIT_BRANCH_CATALOG_SF_EE}
+      cd ..
+      mkdir -p catalog-storefront-ee/dev/tools
+      cp magento2ee/dev/tools/build-ee.php catalog-storefront-ee/dev/tools/build-ee.php
+      cd catalog-storefront-ee
+      php dev/tools/build-ee.php --ce-source ../$MAGENTO_CE_DIR --ee-source ../catalog-storefront-ee
+      cd ..
+
+      if [[ "yes" == "${SAAS_EXPORT}" ]]; then
+        git clone --depth 1 git@github.com:${GIT_REPO_SAAS_EXPORT}/saas-export.git -b ${GIT_BRANCH_SAAS_EXPORT}
+        mkdir -p saas-export/dev/tools
+        cp magento2ee/dev/tools/build-ee.php saas-export/dev/tools/build-ee.php
+        cd saas-export
+        php dev/tools/build-ee.php --ce-source ../$MAGENTO_CE_DIR --ee-source ../saas-export
+        cd ..
+      fi
+
+      if [[ "yes" == "${DSSI}" ]]; then
+	    git clone --depth 1 git@github.com:${GIT_REPO_DSSI}/data-solutions-services-id.git -b ${GIT_BRANCH_DSSI}
+	    mkdir -p data-solutions-services-id/dev/tools
+	    cp magento2ee/dev/tools/build-ee.php data-solutions-services-id/dev/tools/build-ee.php
+	    cd data-solutions-services-id
+        php dev/tools/build-ee.php --ce-source ../$MAGENTO_CE_DIR/app/code/Magento --ee-source ../data-solutions-services-id
+        cd ..
+      fi
+
+      if [[ "yes" == "${MSC}" ]]; then
+        git clone --depth 1 git@github.com:${GIT_REPO_MSC}/magento-services-connector.git -b ${GIT_BRANCH_MSC}
+	    mkdir -p magento-services-connector/dev/tools
+	    cp magento2ee/dev/tools/build-ee.php magento-services-connector/dev/tools/build-ee.php
+	    cd magento-services-connector
+	    mkdir -p ../$MAGENTO_CE_DIR/app/code/Magento/ServicesConnector
+        php dev/tools/build-ee.php --ce-source ../$MAGENTO_CE_DIR/app/code/Magento/ServicesConnector --ee-source ../magento-services-connector
+        cd ..
+      fi
+	fi
+else
+ cd $MAGENTO_PATH/$MAGENTO_CE_DIR
+ export GIT_DISCOVERY_ACROSS_FILESYSTEM=1 && git checkout -- .
+fi
+
+if [[ 'yes' == "$SYM_LINCS" ]]; then
+ cd $MAGENTO_PATH/$MAGENTO_CE_DIR
+ git apply $DOCKER_PROJECT_DIR/etc/php/path-validator.patch
+fi

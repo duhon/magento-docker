@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+source /var/www/magento-docker/.env
+export $(cut -d= -f1 /var/www/magento-docker/.env)
+
+if [[ "no" != "$PERF_PROFILE" ]]; then
+    if [[ "EE" == "$MAGENTO_EDITION" ]]; then
+      cp -r ../magento2ee/setup/performance-toolkit/profiles/ee/$PERF_PROFILE.xml setup/performance-toolkit/profiles/ce/$PERF_PROFILE.xml
+    elif [[ "B2B" == "$MAGENTO_EDITION" ]]; then
+      cd ../magento2b2b
+      git apply /var/www/magento-docker/etc/php/no-email-send.patch
+      cd ../magento2ce
+      cp -r ../magento2b2b/setup/performance-toolkit/profiles/b2b/$PERF_PROFILE.xml setup/performance-toolkit/profiles/ce/$PERF_PROFILE.xml
+    fi
+
+    php -d memory_limit=-1 bin/magento setup:performance:generate-fixtures -s setup/performance-toolkit/profiles/ce/$PERF_PROFILE.xml > var/generate.out
+fi

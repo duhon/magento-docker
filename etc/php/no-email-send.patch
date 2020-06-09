@@ -1,0 +1,72 @@
+diff --git a/app/code/Magento/Company/Model/CompanySuperUserSave.php b/app/code/Magento/Company/Model/CompanySuperUserSave.php
+index 9380f53da..6ced5d33a 100644
+--- a/app/code/Magento/Company/Model/CompanySuperUserSave.php
++++ b/app/code/Magento/Company/Model/CompanySuperUserSave.php
+@@ -89,7 +89,7 @@ class CompanySuperUserSave
+                 );
+             }
+             $companyId = $companyAttributes->getCompanyId();
+-            $this->sendEmails($companyId, $savedCustomer, $oldSuperUserId, $keepActive);
++//            $this->sendEmails($companyId, $savedCustomer, $oldSuperUserId, $keepActive);
+         }
+         return $savedCustomer;
+     }
+diff --git a/app/code/Magento/Company/Model/SaveHandler/CompanyStatus.php b/app/code/Magento/Company/Model/SaveHandler/CompanyStatus.php
+index 64c5a093c..13593ee2e 100644
+--- a/app/code/Magento/Company/Model/SaveHandler/CompanyStatus.php
++++ b/app/code/Magento/Company/Model/SaveHandler/CompanyStatus.php
+@@ -87,19 +87,19 @@ class CompanyStatus implements SaveHandlerInterface
+      */
+     public function execute(CompanyInterface $company, CompanyInterface $initialCompany)
+     {
+-        if ($initialCompany->getStatus() != $company->getStatus()) {
+-            $companyAdmin = $this->companyManagement->getAdminByCompanyId($company->getId());
+-            $template = $this->getEmailTemplate($initialCompany->getStatus(), $company->getStatus());
+-
+-            if ($template && $companyAdmin) {
+-                $this->companyEmailSender->sendCompanyStatusChangeNotificationEmail(
+-                    $companyAdmin,
+-                    $company->getId(),
+-                    $template
+-                );
+-            }
+-            $this->updateCompanyRejectedAtDate($company, $initialCompany);
+-        }
++//        if ($initialCompany->getStatus() != $company->getStatus()) {
++//            $companyAdmin = $this->companyManagement->getAdminByCompanyId($company->getId());
++//            $template = $this->getEmailTemplate($initialCompany->getStatus(), $company->getStatus());
++//
++//            if ($template && $companyAdmin) {
++//                $this->companyEmailSender->sendCompanyStatusChangeNotificationEmail(
++//                    $companyAdmin,
++//                    $company->getId(),
++//                    $template
++//                );
++//            }
++//            $this->updateCompanyRejectedAtDate($company, $initialCompany);
++//        }
+     }
+ 
+     /**
+diff --git a/app/code/Magento/Company/Model/SaveHandler/SalesRepresentative.php b/app/code/Magento/Company/Model/SaveHandler/SalesRepresentative.php
+index 6b66615fa..0020bee48 100644
+--- a/app/code/Magento/Company/Model/SaveHandler/SalesRepresentative.php
++++ b/app/code/Magento/Company/Model/SaveHandler/SalesRepresentative.php
+@@ -33,11 +33,11 @@ class SalesRepresentative implements SaveHandlerInterface
+      */
+     public function execute(CompanyInterface $company, CompanyInterface $initialCompany)
+     {
+-        if ($initialCompany->getSalesRepresentativeId() != $company->getSalesRepresentativeId()) {
+-            $this->companyEmailSender->sendSalesRepresentativeNotificationEmail(
+-                $company->getId(),
+-                $company->getSalesRepresentativeId()
+-            );
+-        }
++//        if ($initialCompany->getSalesRepresentativeId() != $company->getSalesRepresentativeId()) {
++//            $this->companyEmailSender->sendSalesRepresentativeNotificationEmail(
++//                $company->getId(),
++//                $company->getSalesRepresentativeId()
++//            );
++//        }
+     }
+ }

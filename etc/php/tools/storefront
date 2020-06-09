@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+source /var/www/magento-docker/.env
+export $(cut -d= -f1 /var/www/magento-docker/.env)
+
+if [[ ${STOREFRONT_INSTALL} == "yes" ]]; then
+    php -r '$sC = include "/var/www/magento-docker/etc/php/storefront-env.php"; $env = include "app/etc/env.php"; $env = array_replace_recursive($env, $sC); $contents = var_export($env, true); file_put_contents("app/etc/env.php", "<?php\n return $contents; \n");'
+    bin/magento app:config:import
+    bin/magento setup:upgrade
+    bin/magento cache:clean
+
+    nohup bash -c "bin/magento queue:consumers:start storefront.catalog.data.consume" &
+    if [[ "yes" == "${SAAS_EXPORT}" ]]; then
+        nohup bash -c "bin/magento queue:consumers:start catalog.export.consumer" &
+    fi
+    nohup bash -c "bin/magento queue:consumers:start storefront.catalog.product.update" &
+    nohup bash -c "bin/magento queue:consumers:start storefront.catalog.category.update" &
+
+    bin/magento storefront:catalog:sync
+fi

@@ -1,0 +1,55 @@
+# Set up the Mutagen service and code volume before creating sessions.
+beforeCreate:
+  - cp bundles/storefront.yml docker-compose.yml
+  - bash clone_repos
+  - docker-compose up --build --detach mutagen
+
+# Set up the main services after creating sessions. At this point, sessions will
+# have been established and code pushed to the shared volume.
+afterCreate:
+  - docker-compose up --build --detach
+  - docker-compose exec app magento reinstall_storefront ee b2b inventory catalog-storefront catalog-storefront-ee saas-export data-solutions-services-id
+  - docker-compose exec app config_setup
+  - docker-compose exec app profile_generate
+  - docker-compose exec app reindex
+  - docker-compose exec app storefront
+
+# Pause services after pausing sessions.
+afterPause:
+  - docker-compose stop
+
+# Resume services before resume sessions.
+beforeResume:
+  - docker-compose start
+
+# Tear down all services and remove the code volume after terminating sessions.
+afterTerminate:
+  - docker-compose down --volumes
+  - echo y | docker-compose rm -s
+
+# Define common utility commands.
+commands:
+  logs: docker-compose logs --follow
+  reindex: docker-compose exec app magento reindex
+
+# Synchronize code to the shared Docker volume via the Mutagen service.
+sync:
+  defaults:
+    flushOnCreate: true
+    ignore:
+      vcs: true
+    symlink:
+      mode: ignore
+    permissions:
+      defaultFileMode: 0666
+      defaultDirectoryMode: 0777
+  code:
+    alpha: "/magento/magento-docker-install"
+    beta: "docker://web-mutagen/var/www"
+    mode: "two-way-resolved"
+    ignore:
+      paths:
+        - ".idea"
+        - ".git"
+#        - "/magento2ce/vendor"
+#        - "/magento2ce/generated"
