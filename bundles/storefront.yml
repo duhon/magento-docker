@@ -70,7 +70,6 @@ services:
       - code:/var/www
       - ./etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
       - .:/var/www/magento-docker
-      - ./auth.json:/var/www/.composer/auth.json
       - ./etc/php/tools:/usr/local/bin/magento2:ro
       #      - ${MAGENTO_PATH}/magento-docker/etc/php/tideways.ini:/usr/local/etc/php/conf.d/tideways.ini
       #      - ${MAGENTO_PATH}/magento-docker/etc/php/profiler.php:/usr/local/lib/php/header.php
