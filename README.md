@@ -1,6 +1,6 @@
 # magento-docker
 
-`magento-docker` is Docker environment for easy to setup, configure, debug Magento2 instance with varnish, elasticsearch, redis, rabbit and mftf tests.
+`magento-docker` is Docker environment for easy to setup, configure, debug Magento2 + Storefront instance with varnish, elasticsearch, redis, rabbit and mftf tests.
 
 ### Requirements
 
@@ -9,26 +9,6 @@
 * [Docker Compose](https://docs.docker.com/compose/install/)
 
 ### How to install
-1. Add `magento.test` to `/etc/hosts`: `127.0.0.1 magento.test`.
-2. Create your project directory:
-* `cd ~/`
-* `mkdir www`
-* `cd www`
-* `chown -R $USER:root .`
-* `chmod g+s .`
-3. Clone `magento-docker` into you project directory: `git clone git@github.com:duhon/magento-docker.git`)
-4. Clone `magento` repository into your project directory under `magento2ce` directory name: `git clone git@github.com:magento/magento2.git magento2ce`
-Now your project directory `~/www` has 2 folders: `magento-docker` & `magento2ce`.
-5. `cp magento-docker/bundles/typical.yml magento-docker/docker-compose.yml`
-In `docker-compose.yml` you can choose what containers and what extensions you really need.
-6. `cp magento-docker/.env.dist magento-docker/.env`
-In `.env` file environment variables are declared. Here you can change your `MAGENTO_PATH` into your project correct path or change your service containers ports together with `COMPOSE_PROJECT_NAME`.
-7. Enter your `magento-docker` repository: `cd ~/www/magento-docker`.
-8. Run `docker-compose up`. As a result all containers should be up. You can check if containers are up by running: `docker-compose ps`.
-9. Check in browser if your magento host is up and running. Enter `http://magento.test:80` in browser. `80` is a default port but you can change it in `.env` file.
-10. Install magento: `docker-compose exec app magento reinstall`. If you want to install ee/b2b versions run `docker-compose exec app magento reinstall <ee|b2b>`.
-11. Magento installed.
-#### Mutagen installation option
 0. Setup SSH-keys on your github account.
 2. Add `magento.test` to `/etc/hosts`: `127.0.0.1 magento.test`.
 3. cp .env.dist .env
