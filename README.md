@@ -60,6 +60,7 @@ In `.env` file environment variables are declared. Here you can change your `MAG
         MSI_INSTALL=no                                  # yes|no
         STOREFRONT_INSTALL=no                           # yes|no
 6. Update Mutagen config with appropriate local project path: `alpha: /magento/magento-docker-install`  # local directory to clone repos into
+7. Add MAGENTO_PATH path to Docker sharing folders (Docker preferences)
 7. RUN `mutagen project start`
 
 Notices:

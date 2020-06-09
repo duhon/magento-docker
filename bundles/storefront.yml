@@ -91,10 +91,6 @@ services:
     x-hints:
       - magento reinstall ee
     x-setup:
-      - config_setup
-      - profile_generate
-      - reindex
-      - storefront
     x-info: https://devdocs.magento.com/
   #  mftf:
   #    image: selenium/standalone-chrome-debug:3.12.0
