@@ -9,42 +9,31 @@
 * [Docker Compose](https://docs.docker.com/compose/install/)
 
 ### How to install
-0. Setup SSH-keys on your github account.
-2. Add `magento.test` to `/etc/hosts`: `127.0.0.1 magento.test`.
-3. cp .env.dist .env
-4. Fill REPO-related variables in .env file
-                                                    
-        GIT_REPO_CE=magento
-        GIT_BRANCH_CE=2.4-develop
-        GIT_REPO_EE=magento-architects
-        GIT_BRANCH_EE=2.4-develop
-        GIT_REPO_B2B=magento
-        GIT_BRANCH_B2B=1.2-develop
-        GIT_REPO_MSI=magento
-        GIT_BRANCH_MSI=1.2-develop
-        GIT_REPO_CATALOG_SF=magento
-        GIT_BRANCH_CATALOG_SF=develop
-        GIT_REPO_CATALOG_SF_EE=magento
-        GIT_BRANCH_CATALOG_SF_EE=develop
-        GIT_REPO_SAAS_EXPORT=magento
-        GIT_BRANCH_SAAS_EXPORT=develop
-        GIT_REPO_DSSI=magento
-        GIT_BRANCH_DSSI=develop
-        GIT_REPO_MSC=magento-architects
-        GIT_BRANCH_MSC=master
-5. Fill EVN-specific variables in .env file:
-        
-        MAGENTO_PATH=/magento/magento-docker-install    # local directory to clone repos into
-        RECLONE=no                                      # flag indicate whether do re-clon of all repos or no
-        MAGENTO_EDITION=EE                              # EE|B2B
-        MSI_INSTALL=no                                  # yes|no
-        STOREFRONT_INSTALL=no                           # yes|no
-6. Update Mutagen config with appropriate local project path: `alpha: /magento/magento-docker-install`  # local directory to clone repos into
-7. Add MAGENTO_PATH path to Docker sharing folders (Docker preferences)
-7. RUN `mutagen project start`
+#### Requirements
+0. Docker and docker-compose is [installed](https://docs.docker.com/compose/install/)
+1. Setup SSH-keys on your github account. (see [docs](https://help.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)  for [help](https://help.github.com/en/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account))
 
-Notices:
-1. Before push your code, please fetch particular repo before by the next command: `git fetch --unshallow` 
+2. Install Mutagen [docs](https://mutagen.io/documentation/introduction/installation)
+
+#### Steps
+1. Create directory where all repositories will be cloned (used in your IDE)
+
+2. Update MAGENTO_PATH in .env with recently created directory path
+
+3. RUN `mutagen project start`
+
+#### Configuration
+
+    MAGENTO_PATH=/magento/magento-docker-install    # local directory to clone repos into
+    RECLONE=no                                      # flag indicate whether do re-clon of all repos or no
+    MAGENTO_EDITION=EE                              # EE|B2B
+    MSI_INSTALL=no                                  # yes|no
+    STOREFRONT_INSTALL=no                           # yes|no
+    Notices:
+
+#### Troubleshooting
+   1. Add MAGENTO_PATH path to Docker sharing folders (Docker preferences) in case docker-error
+
 
 ## Scenarios
 
