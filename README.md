@@ -17,9 +17,10 @@
 1. Create directory where all repositories will be cloned (used in your IDE)
  
     Proposed structure:
-
+```
     ~/projects/storefront/magento-docker    # this repo
     ~/projects/storefront/repos             # directory with repositories
+```
 
 2. Update MAGENTO_PATH in .env with recently created directory path
 
