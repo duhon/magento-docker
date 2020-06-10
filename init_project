@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -ex
+
 source ./.env
 export $(cut -d= -f1 ./.env)
 DOCKER_PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
@@ -19,17 +21,17 @@ if [[ "yes" == "$RECLONE" ]]; then
     #chown -R $USER:wheel .
     chmod g+s .
 
-	git clone ./git@github.com:${GIT_REPO_CE}/$MAGENTO_CE_DIR.git -b ${GIT_BRANCH_CE}
+	git clone git@github.com:${GIT_REPO_CE}/$MAGENTO_CE_DIR.git -b ${GIT_BRANCH_CE}
 
 	if [[ "EE" == "$MAGENTO_EDITION" ]] || [[ "B2B" == "$MAGENTO_EDITION" ]]; then
-      git clone ./git@github.com:${GIT_REPO_EE}/$MAGENTO_EE_DIR.git -b ${GIT_BRANCH_EE}
+      git clone git@github.com:${GIT_REPO_EE}/$MAGENTO_EE_DIR.git -b ${GIT_BRANCH_EE}
       cd $MAGENTO_EE_DIR
       php dev/tools/build-ee.php --ce-source ../$MAGENTO_CE_DIR --ee-source ../$MAGENTO_EE_DIR
       cd ..
 	fi
 
 	if [[ "B2B" == "$MAGENTO_EDITION" ]]; then
-      git clone ./git@github.com:${GIT_REPO_B2B}/magento2b2b.git -b ${GIT_BRANCH_B2B}
+      git clone git@github.com:${GIT_REPO_B2B}/magento2b2b.git -b ${GIT_BRANCH_B2B}
       cp $MAGENTO_EE_DIR/dev/tools/build-ee.php magento2b2b/dev/tools/build-ee.php
       cd magento2b2b
       php dev/tools/build-ee.php --ce-source ../$MAGENTO_CE_DIR --ee-source ../magento2b2b
@@ -37,7 +39,7 @@ if [[ "yes" == "$RECLONE" ]]; then
 	fi
 
 	if [[ "yes" == "$MSI_INSTALL" ]]; then
-      git clone ./git@github.com:${GIT_REPO_MSI}/inventory.git -b ${GIT_BRANCH_MSI}
+      git clone git@github.com:${GIT_REPO_MSI}/inventory.git -b ${GIT_BRANCH_MSI}
       mkdir -p inventory/dev/tools
       cp $MAGENTO_EE_DIR/dev/tools/build-ee.php inventory/dev/tools/build-ee.php
       cd inventory
@@ -67,7 +69,7 @@ if [[ "yes" == "$RECLONE" ]]; then
       cd ..
 
       if [[ "yes" == "${SAAS_EXPORT}" ]]; then
-        git clone ./git@github.com:${GIT_REPO_SAAS_EXPORT}/saas-export.git -b ${GIT_BRANCH_SAAS_EXPORT}
+        git clone git@github.com:${GIT_REPO_SAAS_EXPORT}/saas-export.git -b ${GIT_BRANCH_SAAS_EXPORT}
         mkdir -p saas-export/dev/tools
         cp $MAGENTO_EE_DIR/dev/tools/build-ee.php saas-export/dev/tools/build-ee.php
         cd saas-export
@@ -76,7 +78,7 @@ if [[ "yes" == "$RECLONE" ]]; then
       fi
 
       if [[ "yes" == "${DSSI}" ]]; then
-	    git clone ./git@github.com:${GIT_REPO_DSSI}/data-solutions-services-id.git -b ${GIT_BRANCH_DSSI}
+	    git clone git@github.com:${GIT_REPO_DSSI}/data-solutions-services-id.git -b ${GIT_BRANCH_DSSI}
 	    mkdir -p data-solutions-services-id/dev/tools
 	    cp $MAGENTO_EE_DIR/dev/tools/build-ee.php data-solutions-services-id/dev/tools/build-ee.php
 	    cd data-solutions-services-id
@@ -85,7 +87,7 @@ if [[ "yes" == "$RECLONE" ]]; then
       fi
 
       if [[ "yes" == "${MSC}" ]]; then
-        git clone ./git@github.com:${GIT_REPO_MSC}/magento-services-connector.git -b ${GIT_BRANCH_MSC}
+        git clone git@github.com:${GIT_REPO_MSC}/magento-services-connector.git -b ${GIT_BRANCH_MSC}
 	    mkdir -p magento-services-connector/dev/tools
 	    cp $MAGENTO_EE_DIR/dev/tools/build-ee.php magento-services-connector/dev/tools/build-ee.php
 	    cd magento-services-connector

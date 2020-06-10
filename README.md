@@ -7,16 +7,19 @@
 * [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 * [Docker](https://docs.docker.com/)
 * [Docker Compose](https://docs.docker.com/compose/install/)
+* Setup SSH-keys on your github account. (see [docs](https://help.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)  for [help](https://help.github.com/en/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account))
+
+* Install Mutagen [docs](https://mutagen.io/documentation/introduction/installation)
 
 ### How to install
-#### Requirements
-0. Docker and docker-compose is [installed](https://docs.docker.com/compose/install/)
-1. Setup SSH-keys on your github account. (see [docs](https://help.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)  for [help](https://help.github.com/en/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account))
-
-2. Install Mutagen [docs](https://mutagen.io/documentation/introduction/installation)
 
 #### Steps
 1. Create directory where all repositories will be cloned (used in your IDE)
+ 
+    Proposed structure:
+
+    ~/projects/storefront/magento-docker    # this repo
+    ~/projects/storefront/repos             # directory with repositories
 
 2. Update MAGENTO_PATH in .env with recently created directory path
 
