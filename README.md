@@ -100,8 +100,9 @@ Notices:
     echo never | tee /sys/kernel/mm/transparent_hugepage/enabled
     echo never | tee /sys/kernel/mm/transparent_hugepage/defrag
     ```
-2. [Optimization for MacOS](https://gist.github.com/tombigel/d503800a282fcadbee14b537735d202c)
-(https://markshust.com/2018/01/30/performance-tuning-docker-mac/)
+2. Optimization for MacOS
+* https://gist.github.com/tombigel/d503800a282fcadbee14b537735d202c
+* https://markshust.com/2018/01/30/performance-tuning-docker-mac/
 
 ### FAQ
 1. If docker containers do not go up, check errors in console, run `docker-compose down`, fix issue and run `docker-compose up` again.
