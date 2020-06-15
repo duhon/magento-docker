@@ -59,7 +59,7 @@ services:
       - curl -i http://localhost:9200/_cluster/health
     x-info: https://devdocs.magento.com/guides/v2.3/config-guide/elasticsearch/es-overview.html
   app:
-    image: duhon/php:7.4-fpm
+    image: duhon/php:7.3-fpm
     hostname: app
     ports:
       - "${SSH_PORT}:22"

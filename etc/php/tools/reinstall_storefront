@@ -49,7 +49,6 @@ bin/magento setup:install \
    --admin-password=123123q \
    --db-name=magento \
    --db-host=db \
-   --elasticsearch-host=elastic \
    --db-prefix=m2_
 
 #do x-setup lines
