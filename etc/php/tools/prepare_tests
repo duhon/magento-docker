@@ -18,7 +18,3 @@ bin/magento cache:flush
 vendor/bin/mftf build:project
 #vendor/bin/mftf generate:urn-catalog --force .idea/
 vendor/bin/mftf generate:tests
-
-#https://devdocs.magento.com/guides/v2.0/mtf/mtf_installation.html
-composer install -d dev/tests/functional/
-php dev/tests/functional/utils/generate.php
