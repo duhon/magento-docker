@@ -50,8 +50,6 @@ services:
 #      - ${MAGENTO_PATH}/magento-docker/etc/php/append.ini:/usr/local/etc/php/conf.d/append.ini
       - ${MAGENTO_PATH}/magento-docker/etc/php/php.ini:/usr/local/etc/php/php.ini:ro
       - ${MAGENTO_PATH}/magento-docker/etc/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
-      - ${MAGENTO_PATH}/magento-docker/etc/php/tests/functional/phpunit.xml:/var/www/magento2ce/dev/tests/functional/phpunit.xml:rw
-      - ${MAGENTO_PATH}/magento-docker/etc/php/tests/functional/config.xml:/var/www/magento2ce/dev/tests/functional/etc/config.xml:rw
       - ${MAGENTO_PATH}/magento-docker/etc/php/tests/acceptance/.env:/var/www/magento2ce/dev/tests/acceptance/.env:rw
       - ${MAGENTO_PATH}/magento-docker/etc/php/tests/integration/install-config-mysql.php:/var/www/magento2ce/dev/tests/integration/etc/install-config-mysql.php:rw
       - ${MAGENTO_PATH}/magento-docker/etc/php/tests/api-functional/install-config-mysql.php:/var/www/magento2ce/dev/tests/api-functional/config/install-config-mysql.php:rw
