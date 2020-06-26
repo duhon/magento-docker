@@ -23,7 +23,7 @@
 ```
 2. Update MAGENTO_PATH in .env with recently created directory path
 3. If you have repositories already cloned, make sure `RECLONE` is set to `no` in `.env` file. Update branches manually before running `mutagen`
-   1. :exclamation: `RECLONE` is set to `yes` leads to all the code being removed and cloned from scratch.
+   1. :exclamation: `RECLONE` set to `yes` leads to all the code being removed and cloned from scratch.
 4. RUN `mutagen project start`
 
 #### Configuration
