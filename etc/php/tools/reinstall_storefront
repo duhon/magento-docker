@@ -4,13 +4,16 @@ shopt -s extglob
 source /var/www/magento-docker/.env
 export $(cut -d= -f1 /var/www/magento-docker/.env)
 
-cp /var/www/magento-docker/etc/php/tools/* /usr/local/sbin
+cp /var/www/magento-docker/etc/php/tools/* /usr/local/bin 2>/dev/null || :
 
 #clean project dir
 if [[ -d .git ]]; then
    git clean -dfx -e '.idea' $(mount | grep -oP '/var/www/magento2ce/\K\S*' | xargs -rn 1 echo '-e ')
    git checkout composer.lock composer.json
 fi
+
+# remove links
+find  . -type l -delete
 
 #apply edition
 dst="/var/www/magento2ce"
@@ -29,6 +32,11 @@ for edition in "$@"; do
        cp -rlf /var/www/${edition}/setup /var/www/magento2ce/setup 2>/dev/null
      fi
      if [[ ${edition} == *"storefront"* ]]; then
+       set +ex;
+       cp -rf /var/www/${edition}/dev ${dst} 2>/dev/null
+       set -ex;
+     fi
+     if [[ ${edition} == *"saas-export"* ]]; then
        set +ex;
        cp -rf /var/www/${edition}/dev ${dst} 2>/dev/null
        set -ex;

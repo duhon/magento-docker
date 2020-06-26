@@ -10,7 +10,7 @@ DOCKER_PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && 
 sed -ie "s|alpha: .*|alpha: \"$MAGENTO_PATH\"|" $DOCKER_PROJECT_DIR/mutagen.yml
 
 # Add domain to hosts
-sudo -- sh -c "echo '127.0.0.1 $MAGENTO_DAMAIN' >> /etc/hosts"
+#sudo -- sh -c "echo '127.0.0.1 $MAGENTO_DOMAIN' >> /etc/hosts"
 
 
 if [[ "yes" == "$RECLONE" ]]; then

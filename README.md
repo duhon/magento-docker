@@ -21,11 +21,19 @@
     ~/projects/storefront/magento-docker    # this repo
     ~/projects/storefront/repos             # directory with repositories
 ```
+
 2. Update MAGENTO_PATH in .env with recently created directory path
-3. If you have repositories already cloned, make sure `RECLONE` is set to `no` in `.env` file. Update branches manually before running `mutagen`
-   1. :exclamation: `RECLONE` set to `yes` leads to all the code being removed and cloned from scratch.
+
+3. Add $MAGENTO_DOMAIN from .env to hosts, e.g.:
+
+```
+    sudo -- sh -c "echo '127.0.0.1 magento.test >> /etc/hosts"
+```
+
 4. RUN `mutagen project start`
 
+Note, for the first installation (when you don't have cloned repositories yes) please change settings "RECLONE" to "yes" in ".env" file
+Please, aware that with "RECLONE=yes" options all data from "$MAGENTO_PATH" will be deleted
 #### Configuration
 
     MAGENTO_PATH=/magento/magento-docker-install    # local directory to clone repos into

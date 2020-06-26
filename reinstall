@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# reinstall storefront application bases on the current code base
+
+docker-compose exec app magento reinstall_storefront ee b2b inventory catalog-storefront catalog-storefront-ee saas-export data-solutions-services-id
+docker-compose exec app config_setup
+docker-compose exec app profile_generate
+docker-compose exec app reindex
+docker-compose exec app storefront

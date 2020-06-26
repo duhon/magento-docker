@@ -8,11 +8,7 @@ beforeCreate:
 # have been established and code pushed to the shared volume.
 afterCreate:
   - docker-compose up --build --detach
-  - docker-compose exec app magento reinstall_storefront ee b2b inventory catalog-storefront catalog-storefront-ee saas-export data-solutions-services-id
-  - docker-compose exec app config_setup
-  - docker-compose exec app profile_generate
-  - docker-compose exec app reindex
-  - docker-compose exec app storefront
+  - bash reinstall
 
 # Pause services after pausing sessions.
 afterPause:
@@ -31,6 +27,7 @@ afterTerminate:
 commands:
   logs: docker-compose logs --follow
   reindex: docker-compose exec app magento reindex
+  reinstall: bash reinstall
 
 # Synchronize code to the shared Docker volume via the Mutagen service.
 sync:

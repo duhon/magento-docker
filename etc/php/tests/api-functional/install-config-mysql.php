@@ -30,4 +30,5 @@ return [
     'amqp-port'                    => '5672',
     'amqp-user'                    => 'guest',
     'amqp-password'                => 'guest',
+    'document-root-is-pub'   => 'true',
 ];

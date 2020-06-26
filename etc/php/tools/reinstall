@@ -12,6 +12,10 @@ if [[ -d .git ]]; then
    git checkout composer.lock composer.json
 fi
 
+# remove links
+find  . -type l -delete
+
+
 #apply edition
 dst="/var/www/magento2ce"
 for edition in "$@"; do
