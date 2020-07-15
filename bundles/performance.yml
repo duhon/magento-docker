@@ -22,7 +22,7 @@ services:
     x-hint: uncomment the line above and change error_log in nginx.conf
     x-info: https://devdocs.magento.com/guides/v2.3/install-gde/prereq/nginx.html
   db:
-    image: mariadb
+    image: mariadb:10.4
     hostname: db
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
