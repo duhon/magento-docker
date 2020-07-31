@@ -9,9 +9,9 @@ if [[ ${STOREFRONT_INSTALL} == "yes" ]]; then
     bin/magento setup:upgrade
     bin/magento cache:clean
 
-    nohup bash -c "bin/magento queue:consumers:start storefront.catalog.data.consume" &
     if [[ "yes" == "${SAAS_EXPORT}" ]]; then
-        nohup bash -c "bin/magento queue:consumers:start catalog.export.consumer" &
+        nohup bash -c "bin/magento queue:consumers:start catalog.product.export.consumer" &
+        nohup bash -c "bin/magento queue:consumers:start catalog.category.export.consumer" &
     fi
     nohup bash -c "bin/magento queue:consumers:start storefront.catalog.product.update" &
     nohup bash -c "bin/magento queue:consumers:start storefront.catalog.category.update" &
