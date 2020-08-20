@@ -25,11 +25,10 @@ for edition in "$@"; do
       dst="/var/www/magento2ce/app/code/Magento"
    fi
    if [[ -d ../${edition} ]]; then
-     php /var/www/${edition}/dev/tools/build-ee.php -- --command unlink --exclude true --ce-source ${dst} --ee-source /var/www/${edition}
-     php /var/www/${edition}/dev/tools/build-ee.php -- --command link --exclude true --ce-source ${dst} --ee-source /var/www/${edition}
      if [[ ${edition} == "magento2ee" ]] || [[ ${edition} == "magento2b2b" ]]; then
        cp -rlf /var/www/${edition}/composer* ${dst} 2>/dev/null
        cp -rlf /var/www/${edition}/setup /var/www/magento2ce/setup 2>/dev/null
+       cp -rf /var/www/${edition}/dev ${dst} 2>/dev/null
      fi
      if [[ ${edition} == *"storefront"* ]]; then
        set +ex;
@@ -41,12 +40,20 @@ for edition in "$@"; do
        cp -rf /var/www/${edition}/dev ${dst} 2>/dev/null
        set -ex;
      fi
+
+     php /var/www/${edition}/dev/tools/build-ee.php -- --command unlink --exclude true --ce-source ${dst} --ee-source /var/www/${edition}
+     php /var/www/${edition}/dev/tools/build-ee.php -- --command link --exclude true --ce-source ${dst} --ee-source /var/www/${edition}
+
    fi
 done
 
 #install magento
 composer install
-echo y | bin/magento setup:uninstall
+
+mysql -uroot -hdb -e "DROP DATABASE IF EXISTS db; create database db;"
+rm -rf generated/* var/* app/etc/env.php app/etc/config.php
+
+# echo y | bin/magento setup:uninstall
 bin/magento setup:install \
    --cleanup-database \
    --backend-frontname=admin \
@@ -57,9 +64,11 @@ bin/magento setup:install \
    --admin-password=123123q \
    --db-name=magento \
    --db-host=db \
-   --elasticsearch-host=elastic \
-   --db-prefix=m2_
+   --elasticsearch-host=elastic
 
+
+ echo 'install module dependencies'
+ php dev/tools/install-dependencies.php .
 #do x-setup lines
 #IFS=$'\n' setup=($(yq read /var/www/magento-docker/docker-compose.yml services.*.x-setup | grep -oP '^(?:\s*\-\s)+(?!null)\K.*'))
 #for i in ${setup[*]}; do eval "${i}"; done
