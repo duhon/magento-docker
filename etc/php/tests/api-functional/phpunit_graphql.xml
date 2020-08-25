@@ -105,5 +105,6 @@
                 </array>
             </arguments>
         </listener>
+        <listener class="Magento\TestFramework\Listener\QueueTrigger"/>
     </listeners>
 </phpunit>
