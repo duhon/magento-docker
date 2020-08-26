@@ -1,0 +1,8 @@
+version: '2'
+services:
+  elasticsearch-hq:
+    image: elastichq/elasticsearch-hq
+    ports:
+      - "${ELASTIC_HQ_PORT}:5000"
+    environment:
+      - HQ_DEFAULT_URL=http://elastic:9200

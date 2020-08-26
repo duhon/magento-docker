@@ -32,6 +32,8 @@ services:
     x-hits:
       - curl -i http://localhost:9200/_cluster/health
     x-info: https://devdocs.magento.com/guides/v2.3/config-guide/elasticsearch/es-overview.html
+    x-setup:
+      - bin/magento config:set catalog/search/engine elasticsearch7
   app:
     image: duhon/php:7.3-fpm
     hostname: app

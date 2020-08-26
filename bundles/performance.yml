@@ -124,9 +124,14 @@ services:
     ports:
       - "${ELASTIC_PORT}:9200"
     environment:
-      - cluster.name=docker-cluster
+      - cluster.name=magento-cluster
       - bootstrap.memory_lock=true
       - discovery.type=single-node
+      - http.port=9200
+      - http.cors.enabled=true
+      - http.cors.allow-origin=*
+      - http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
+      - http.cors.allow-credentials=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
       memlock:
@@ -136,8 +141,6 @@ services:
       - curl -i http://localhost:9200/_cluster/health
     x-setup:
       - bin/magento config:set catalog/search/engine elasticsearch7
-      - bin/magento config:set catalog/search/elasticsearch7_server_hostname elastic
-      - bin/magento indexer:reindex catalogsearch_fulltext
     x-info: https://devdocs.magento.com/guides/v2.3/config-guide/elasticsearch/es-overview.html
   redis:
     image: redis
