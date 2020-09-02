@@ -17,12 +17,15 @@ find  . -type l -delete
 
 #apply edition
 dst="/var/www/magento2ce"
+
 for edition in "$@"; do
    if ! [[ -d ../${edition} ]]; then
       edition=magento2${edition}
    fi
    if [[ ${edition} == "data-solutions-services-id" ]]; then
       dst="/var/www/magento2ce/app/code/Magento"
+   else
+      dst="/var/www/magento2ce"
    fi
    if [[ -d ../${edition} ]]; then
      if [[ ${edition} == "magento2ee" ]] || [[ ${edition} == "magento2b2b" ]]; then
@@ -41,8 +44,7 @@ for edition in "$@"; do
        set -ex;
      fi
 
-     php /var/www/${edition}/dev/tools/build-ee.php -- --command unlink --exclude true --ce-source ${dst} --ee-source /var/www/${edition}
-     php /var/www/${edition}/dev/tools/build-ee.php -- --command link --exclude true --ce-source ${dst} --ee-source /var/www/${edition}
+     php /var/www/magento2ee/dev/tools/build-ee.php --command link --exclude true --ce-source ${dst} --ee-source /var/www/${edition}
 
    fi
 done
@@ -50,12 +52,11 @@ done
 #install magento
 composer install
 
-mysql -uroot -hdb -e "DROP DATABASE IF EXISTS db; create database db;"
+mysql -uroot -hdb -e "DROP DATABASE IF EXISTS magento; create database magento;"
 rm -rf generated/* var/* app/etc/env.php app/etc/config.php
 
 # echo y | bin/magento setup:uninstall
 bin/magento setup:install \
-   --cleanup-database \
    --backend-frontname=admin \
    --admin-lastname=Admin \
    --admin-firstname=Admin \
@@ -65,7 +66,6 @@ bin/magento setup:install \
    --db-name=magento \
    --db-host=db \
    --elasticsearch-host=elastic
-
 
  echo 'install module dependencies'
  php dev/tools/install-dependencies.php .
