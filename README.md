@@ -93,3 +93,35 @@ Please, aware that with "RECLONE=yes" options all data from "$MAGENTO_PATH" will
 
 ### TODO list
 https://github.com/duhon/magento-docker/projects
+
+### gRPC set up:
+1. Change line  `- cp bundles/storefront.yml docker-compose.yml` (ref: ./mutagen.yml:3) to: `- cp bundles/grpc.yml docker-compose.yml`
+This step needed to build app container from build/php/fpm-grpc
+
+2. Change catalog-storefront branch to **develop-grpc** (ref: .env:45 - `GIT_BRANCH_CATALOG_SF` variable)
+There is magento.proto file in the root of this branch - which is needed for gRPC server and client.
+
+3. Run `mutagen project start --project-file mutagen-grpc.yml` command to build and set up docker containers, link code and install Magento.
+
+4. Run `mutagen project run grpc-server-start --project-file mutagen-grpc.yml` command to execute etc/php/tools/grpc script which will:
+ - Setup Magento gRPC module (if it not installed yet)
+ - Execute php ./bin/magento setup:upgrade command to upgrade Magento
+ - Download gRPC server (rr-grpc binary file) and put it to the /usr/bin directory (if it not installed yet)
+ - Create generated file with list of gRPC services and put it to `./generated/code/grpc_services_map.php` file
+ - Run gRPC server via executing of ./vendor/bin/grpc-server
+ - Please NOTE: Port **9001** should be opened to allow external connections to the server.
+
+5. Run gRPC client (can be executed from any instance which has access to **app:9001**):
+ - Uncomment following code in docker-compose.yml:
+ ```yaml
+    grpcui:
+      image: wongnai/grpcui
+      ports:
+        - "8080:8080"
+      volumes:
+        - code:/var/www
+      entrypoint: ["grpcui", "-plaintext", "-proto", "/var/www/magento2ce/magento.proto", "-port", "8080", "-bind", "0.0.0.0", "-import-path", "/var/www/magento2ce", "app:9001"]
+ ```
+ - Make sure that paths to Magento root in entry point are correct (**/var/www/magento2ce**) - if no, replace them by correct paths.
+ - Port **8080** should be opened to allow external connections to the client.
+ - Run grpcui container: `docker-compose up grpcui`
