@@ -1,0 +1,61 @@
+ARG MIN_PHP_VERSION=7.4
+
+FROM php:$MIN_PHP_VERSION AS source_php_ext
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        libfreetype6-dev \
+        libjpeg62-turbo-dev \
+        libmcrypt-dev \
+        libsodium-dev \
+        libicu-dev \
+        libxslt-dev \
+        gnupg \
+        libssl-dev \
+        libgringotts-dev \
+        libzip-dev \
+        zlib1g-dev \
+    && rm -r /var/lib/apt/lists/* \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) pcntl gd opcache bcmath soap intl zip xsl pdo_mysql sockets \
+    && pecl install -f xdebug apcu msgpack libsodium runkit7 \
+    && mv $(php-config --extension-dir)/*.so /
+
+FROM php:$MIN_PHP_VERSION-fpm-buster
+ARG MIN_PHP_VERSION
+COPY --from=source_php_ext *.so /tmp/ext/
+ADD https://github.com/mailhog/mhsendmail/releases/download/v0.2.0/mhsendmail_linux_amd64 /usr/local/bin/mhsendmail
+ADD https://github.com/mikefarah/yq/releases/download/3.2.1/yq_linux_amd64 /usr/local/bin/yq
+COPY --from=composer /usr/bin/composer /usr/local/bin/
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        vim \
+        git \
+        wget \
+        default-mysql-client \
+        openssh-server \
+        iputils-ping \
+        unzip \
+        libzip4 \
+        libxslt1.1 \
+        libpng16-16 \
+        libjpeg62-turbo \
+        libfreetype6 \
+        zlib1g-dev \
+    && rm -r /var/lib/apt/lists/*\
+    && mv /tmp/ext/* $(php-config --extension-dir)/ \
+    && docker-php-ext-enable apcu bcmath gd intl msgpack opcache pcntl pdo_mysql soap sockets xsl zip \
+    && echo 'alias ll="ls -lA"' >>/root/.bashrc \
+    && usermod -a -G root www-data \
+    && chmod +x /usr/local/bin/* \
+    && ln -sf /usr/local/bin/magento2/magento /usr/local/bin/magento \
+    && echo 'root:root' | chpasswd \
+    && sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+RUN pecl install grpc
+RUN docker-php-ext-enable grpc
+
+WORKDIR /var/www/magento2ce
+
+EXPOSE 9000
+CMD ["php-fpm", "-R"]
