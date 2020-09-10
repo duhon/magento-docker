@@ -1,0 +1,55 @@
+# Set up the Mutagen service and code volume before creating sessions.
+beforeCreate:
+  - cp bundles/grpc.yml docker-compose.yml
+  - bash init_project
+  - docker-compose up --build --detach mutagen
+
+# Set up the main services after creating sessions. At this point, sessions will
+# have been established and code pushed to the shared volume.
+afterCreate:
+  - docker-compose up --build --detach
+  - bash reinstall
+
+# Pause services after pausing sessions.
+afterPause:
+  - docker-compose stop
+
+# Resume services before resume sessions.
+beforeResume:
+  - docker-compose start
+
+# Tear down all services and remove the code volume after terminating sessions.
+afterTerminate:
+  - docker-compose down --volumes
+  - echo y | docker-compose rm -s
+
+# Define common utility commands.
+commands:
+  logs: docker-compose logs --follow
+  reindex: docker-compose exec app magento reindex
+  reinstall: bash reinstall
+  xdebug-enable: sed -ie "s|#zend_extension=xdebug.so|zend_extension=xdebug.so|" ./etc/php/xdebug.ini && docker-compose restart app
+  xdebug-disable: sed -ie "s|zend_extension=xdebug.so|#zend_extension=xdebug.so|" ./etc/php/xdebug.ini && docker-compose restart app
+  grpc-server-start: docker-compose exec app magento grpc
+
+# Synchronize code to the shared Docker volume via the Mutagen service.
+sync:
+  defaults:
+    flushOnCreate: true
+    ignore:
+      vcs: true
+    symlink:
+      mode: ignore
+    permissions:
+      defaultFileMode: 0666
+      defaultDirectoryMode: 0777
+  code:
+    alpha: "~/projects/storefront/repos"
+    beta: "docker://web-mutagen/var/www"
+    mode: "two-way-resolved"
+    ignore:
+      paths:
+        - ".idea"
+        - ".git"
+#        - "/magento2ce/vendor"
+#        - "/magento2ce/generated"
