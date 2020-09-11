@@ -95,12 +95,9 @@ Please, aware that with "RECLONE=yes" options all data from "$MAGENTO_PATH" will
 https://github.com/duhon/magento-docker/projects
 
 ### gRPC set up:
-1. Change catalog-storefront branch to **develop-grpc** (ref: .env:45 - `GIT_BRANCH_CATALOG_SF` variable)
-There is magento.proto file in the root of this branch - which is needed for gRPC server and client.
+1. Run `mutagen project start --project-file mutagen-grpc.yml` command to build and set up docker containers, link code and install Magento.
 
-2. Run `mutagen project start --project-file mutagen-grpc.yml` command to build and set up docker containers, link code and install Magento.
-
-3. Run `mutagen project run grpc-server-start --project-file mutagen-grpc.yml` command to execute etc/php/tools/grpc script which will:
+2. Run `mutagen project run grpc-server-start --project-file mutagen-grpc.yml` command to execute etc/php/tools/grpc script which will:
  - Setup Magento gRPC module (if it not installed yet)
  - Execute php ./bin/magento setup:upgrade command to upgrade Magento
  - Download gRPC server (rr-grpc binary file) and put it to the /usr/bin directory (if it not installed yet)
@@ -108,7 +105,7 @@ There is magento.proto file in the root of this branch - which is needed for gRP
  - Run gRPC server via executing of ./vendor/bin/grpc-server
  - Please NOTE: Port **9001** should be opened to allow external connections to the server.
 
-4. Run gRPC client (can be executed from any instance which has access to **app:9001**):
+3. Run gRPC client (can be executed from any instance which has access to **app:9001**):
  - Uncomment following code in docker-compose.yml:
  ```yaml
     grpcui:
