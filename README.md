@@ -95,27 +95,46 @@ Please, aware that with "RECLONE=yes" options all data from "$MAGENTO_PATH" will
 https://github.com/duhon/magento-docker/projects
 
 ### gRPC set up:
-1. Run `mutagen project start --project-file mutagen-grpc.yml` command to build and set up docker containers, link code and install Magento.
+As currently we don't have ability to generate Storefront API on fly - we put magento.proto file to the root of catalog-storefront:develop branch.
+It's needed to run gRPC server and client.
+#### Steps for manual setup
+1. PHP should be built with "grpc" extension
+   - `pecl install grpc`: see ./build/php/fpm-grpc
+2. the following packages should be installed (see ./etc/php/tools/grpc)
+   - Magento extension - *magento/module-grpc*
+   - gRPC server *rr-grpc* (https://github.com/spiral/php-grpc/releases/download/v1.4.0/rr-grpc-1.4.0-linux-amd64.tar.gz)
+3. the following files should be precreated:
+   - *./generated/code/grpc_services_map.php* with code
+   ```php
+       <?php
+       return ['\Magento\CatalogStorefrontApi\Api\CatalogProxyServer'];
+   ```
+4. gRPC server can be executed now: `./vendor/bin/grpc-server`
+ 
+#### Automated setup
+1. Change `sed -ie "s|alpha: .*|alpha: \"$MAGENTO_PATH\"|" $DOCKER_PROJECT_DIR/mutagen.yml` string to `sed -ie "s|alpha: .*|alpha: \"$MAGENTO_PATH\"|" $DOCKER_PROJECT_DIR/mutagen-grpc.yml` to tell mutagen which $MAGENTO_PATH it should use.
 
-2. Run `mutagen project run grpc-server-start --project-file mutagen-grpc.yml` command to execute etc/php/tools/grpc script which will:
- - Setup Magento gRPC module (if it not installed yet)
- - Execute php ./bin/magento setup:upgrade command to upgrade Magento
- - Download gRPC server (rr-grpc binary file) and put it to the /usr/bin directory (if it not installed yet)
- - Create generated file with list of gRPC services and put it to `./generated/code/grpc_services_map.php` file
- - Run gRPC server via executing of ./vendor/bin/grpc-server
- - Please NOTE: Port **9001** should be opened to allow external connections to the server.
+2. Run `mutagen project start --project-file mutagen-grpc.yml` command to build and set up docker containers, link code and install Magento.
 
-3. Run gRPC client (can be executed from any instance which has access to **app:9001**):
- - Uncomment following code in docker-compose.yml:
- ```yaml
-    grpcui:
-      image: wongnai/grpcui
-      ports:
-        - "8080:8080"
-      volumes:
-        - code:/var/www
-      entrypoint: ["grpcui", "-plaintext", "-proto", "/var/www/magento2ce/magento.proto", "-port", "8080", "-bind", "0.0.0.0", "-import-path", "/var/www/magento2ce", "app:9001"]
- ```
- - Make sure that paths to Magento root in entry point are correct (**/var/www/magento2ce**) - if no, replace them by correct paths.
- - Port **8080** should be opened to allow external connections to the client.
- - Run grpcui container: `docker-compose up grpcui`
+3. Run `mutagen project run grpc-server-start --project-file mutagen-grpc.yml` command to execute etc/php/tools/grpc script which will:
+   - Setup Magento gRPC module (if it not installed yet) (*github token* will be prompted on this step)
+   - Execute php ./bin/magento setup:upgrade command to upgrade Magento
+   - Download gRPC server (rr-grpc binary file) and put it to the /usr/bin directory (if it not installed yet)
+   - Create generated file with list of gRPC services and put it to `./generated/code/grpc_services_map.php` file
+   - Run gRPC server via executing of ./vendor/bin/grpc-server
+   - Please NOTE: Port **9001** should be opened to allow external connections to the server.
+
+4. Run gRPC client (can be executed from any instance which has access to **app:9001**):
+   - Uncomment following code in docker-compose.yml:
+     ```yaml
+        grpcui:
+          image: wongnai/grpcui
+          ports:
+            - "8080:8080"
+          volumes:
+            - code:/var/www
+          entrypoint: ["grpcui", "-plaintext", "-proto", "/var/www/magento2ce/magento.proto", "-port", "8080", "-bind", "0.0.0.0", "-import-path", "/var/www/magento2ce", "app:9001"]
+     ```
+   - Make sure that paths to Magento root in entry point are correct (**/var/www/magento2ce**) - if no, replace them by correct paths.
+   - Port **8080** should be opened to allow external connections to the client.
+   - Run grpcui container: `docker-compose up grpcui`
