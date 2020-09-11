@@ -59,9 +59,11 @@ services:
       - curl -i http://localhost:9200/_cluster/health
     x-info: https://devdocs.magento.com/guides/v2.3/config-guide/elasticsearch/es-overview.html
   app:
-    build:
-      context: .
-      dockerfile: build/php/fpm-grpc
+    image: mslabko/php-with-grpc
+# to re-build image with gRPC use the following docker file:
+#    build:
+#      context: .
+#      dockerfile: build/php/fpm-grpc
     hostname: app
     ports:
       - "${SSH_PORT}:22"
