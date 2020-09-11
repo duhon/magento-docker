@@ -98,18 +98,18 @@ https://github.com/duhon/magento-docker/projects
 As currently we don't have ability to generate Storefront API on fly - we put magento.proto file to the root of catalog-storefront:develop branch.
 It's needed to run gRPC server and client.
 #### Steps for manual setup
-  - PHP should be built with "grpc" extension
-    - `pecl install grpc`: see ./build/php/fpm-grpc
-  - the following packages should be installed (see ./etc/php/tools/grpc)
-    - Magento extension - *magento/module-grpc*
-    - gRPC server *rr-grpc* (https://github.com/spiral/php-grpc/releases/download/v1.4.0/rr-grpc-1.4.0-linux-amd64.tar.gz)
-  - the following files should be precreated:
-    - *./generated/code/grpc_services_map.php* with code
+1. PHP should be built with "grpc" extension
+   - `pecl install grpc`: see ./build/php/fpm-grpc
+2. the following packages should be installed (see ./etc/php/tools/grpc)
+   - Magento extension - *magento/module-grpc*
+   - gRPC server *rr-grpc* (https://github.com/spiral/php-grpc/releases/download/v1.4.0/rr-grpc-1.4.0-linux-amd64.tar.gz)
+3. the following files should be precreated:
+   - *./generated/code/grpc_services_map.php* with code
    ```php
        <?php
        return ['\Magento\CatalogStorefrontApi\Api\CatalogProxyServer'];
    ```
-  - gRPC server can be executed now: `./vendor/bin/grpc-server`
+4. gRPC server can be executed now: `./vendor/bin/grpc-server`
  
 #### Automated setup
 1. Change `sed -ie "s|alpha: .*|alpha: \"$MAGENTO_PATH\"|" $DOCKER_PROJECT_DIR/mutagen.yml` string to `sed -ie "s|alpha: .*|alpha: \"$MAGENTO_PATH\"|" $DOCKER_PROJECT_DIR/mutagen-grpc.yml` to tell mutagen which $MAGENTO_PATH it should use.
