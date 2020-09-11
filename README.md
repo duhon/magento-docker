@@ -126,15 +126,15 @@ It's needed to run gRPC server and client.
 
 4. Run gRPC client (can be executed from any instance which has access to **app:9001**):
    - Uncomment following code in docker-compose.yml:
- ```yaml
-    grpcui:
-      image: wongnai/grpcui
-      ports:
-        - "8080:8080"
-      volumes:
-        - code:/var/www
-      entrypoint: ["grpcui", "-plaintext", "-proto", "/var/www/magento2ce/magento.proto", "-port", "8080", "-bind", "0.0.0.0", "-import-path", "/var/www/magento2ce", "app:9001"]
- ```
+     ```yaml
+        grpcui:
+          image: wongnai/grpcui
+          ports:
+            - "8080:8080"
+          volumes:
+            - code:/var/www
+          entrypoint: ["grpcui", "-plaintext", "-proto", "/var/www/magento2ce/magento.proto", "-port", "8080", "-bind", "0.0.0.0", "-import-path", "/var/www/magento2ce", "app:9001"]
+     ```
    - Make sure that paths to Magento root in entry point are correct (**/var/www/magento2ce**) - if no, replace them by correct paths.
    - Port **8080** should be opened to allow external connections to the client.
    - Run grpcui container: `docker-compose up grpcui`
