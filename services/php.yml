@@ -2,7 +2,7 @@ version: '2'
 services:
   app:
     build:
-      context: ${MAGENTO_PATH}/docker-magento
+      context: ${MAGENTO_PATH}/magento-docker
       dockerfile: build/php/test
     image: duhon/php:7.1-fpm
     hostname: app
