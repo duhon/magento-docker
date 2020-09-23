@@ -5,4 +5,5 @@ services:
     expose:
       - "80"
     volumes:
+      - ${MAGENTO_PATH}:/var/www:${FILE_SYNC}
       - ${MAGENTO_PATH}/magento-docker/etc/apache/httpd.conf:/usr/local/apache2/conf/httpd.conf
