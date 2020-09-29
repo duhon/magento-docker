@@ -7,6 +7,7 @@
 * [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 * [Docker](https://docs.docker.com/)
 * [Docker Compose](https://docs.docker.com/compose/install/)
+* Ensure you do not have `dnsmasq` installed/enabled locally (will be auto-installed if you've use Valet+ to install Magento)
 
 ### How to install
 1. Add `magento.test` to `/etc/hosts`: `127.0.0.1 magento.test`.
