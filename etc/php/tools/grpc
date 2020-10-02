@@ -9,12 +9,5 @@ if [ ! -f /usr/bin/rr-grpc ]; then
 fi
 echo 'gRPC server installed'
 
-# Create generated file with list of gRPC services (TEMP solution)
-cat > ./generated/code/grpc_services_map.php <<EOF
-<?php
-return ['\Magento\CatalogStorefrontApi\Api\CatalogProxyServer'];
-EOF
-echo 'grpc_services_map.php created'
-
 # Run gRPC server
 ./vendor/bin/grpc-server
