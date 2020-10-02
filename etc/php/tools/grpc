@@ -1,16 +1,5 @@
 #!/usr/bin/env bash
 
-#Setup Magento gRPC module
-if [ ! -d ./vendor/magento/module-grpc ]; then
-    composer config repositories.magento-grpc vcs git@github.com:magento-commerce/module-grpc.git
-    composer require magento/module-grpc:dev-master
-
-    #Upgrade magento
-    php ./bin/magento setup:upgrade
-    echo 'Magento upgrade completed'
-fi
-echo 'Magento gRPC installed'
-
 #Download gRPC server
 if [ ! -f /usr/bin/rr-grpc ]; then
     curl -LJO https://github.com/spiral/php-grpc/releases/download/v1.4.0/rr-grpc-1.4.0-linux-amd64.tar.gz
