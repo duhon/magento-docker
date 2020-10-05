@@ -9,5 +9,11 @@ if [ ! -f /usr/bin/rr-grpc ]; then
 fi
 echo 'gRPC server installed'
 
+echo 'Start gRPC initialization...'
+bin/magento storefront:grpc:init
+echo 'End of gRPC initialization'
+
+echo 'Starting gRPC server...';
 # Run gRPC server
 ./vendor/bin/grpc-server
+echo '<info>gRPC server started';
