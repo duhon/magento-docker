@@ -137,3 +137,12 @@ It's needed to run gRPC server and client.
    - Make sure that paths to Magento root in entry point are correct (**/var/www/magento2ce**) - if no, replace them by correct paths.
    - Port **8080** should be opened to allow external connections to the client.
    - Run grpcui container: `docker-compose up grpcui`
+   - NOTE: If project uses symlinks then `magento.proto` in root folder will not work correctly with `grpcui`. The following errors can occur:
+    ```
+   Attaching to storefront_grpcui_1
+   grpcui_1   | Failed to process proto source files.: /var/www/magento2ce/magento.proto does not reside in any import path
+   storefront_grpcui_1 exited with code 1
+    ```
+    Connect to project, unlink proto and copy from `catalog-storefront`, then start container again:
+     - `unlink magento.proto`
+     - `cp ../catalog-storefront/magento.proto magento.proto`
