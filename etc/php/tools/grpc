@@ -10,7 +10,7 @@ fi
 echo 'gRPC server installed'
 
 echo 'Start gRPC initialization...'
-bin/magento storefront:grpc:init
+bin/magento storefront:grpc:init \\Magento\\CatalogStorefrontApi\\Api\\CatalogProxyServer
 echo 'End of gRPC initialization'
 
 echo 'Starting gRPC server...';
