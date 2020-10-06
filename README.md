@@ -104,7 +104,7 @@ It's needed to run gRPC server and client.
    - `pecl install grpc`: see `./build/php/fpm-grpc`
 2. the following packages should be installed (see `./etc/php/tools/grpc`)
    - gRPC server *rr-grpc* (https://github.com/spiral/php-grpc/releases/download/v1.4.0/rr-grpc-1.4.0-linux-amd64.tar.gz)
-3. run magento CLI command `bin/magento storefront:grpc:init` 
+3. run magento CLI command `bin/magento storefront:grpc:init \\Magento\\CatalogStorefrontApi\\Api\\CatalogProxyServer` 
 4. gRPC server can be executed now: `./vendor/bin/grpc-server`
  
 #### Automated setup
@@ -117,7 +117,7 @@ It's needed to run gRPC server and client.
 
 3. Run `mutagen project run grpc-server-start --project-file mutagen-grpc.yml` command to execute `etc/php/tools/grpc` script which does the following:
    - Downloads gRPC server (`rr-grpc` binary file) and puts it to the `/usr/bin` directory (if it not installed yet)
-   - Run magento CLI command `bin/magento storefront:grpc:init` that does the following: 
+   - Run magento CLI command `bin/magento storefront:grpc:init \\Magento\\CatalogStorefrontApi\\Api\\CatalogProxyServer` that does the following: 
         - copies certain files to `vendor/bin` (if they don't exist)
         - creates list of gRPC services and puts it to `./generated/code/grpc_services_map.php` file (if not created yet)
    - Runs gRPC server via executing of ./vendor/bin/grpc-server
