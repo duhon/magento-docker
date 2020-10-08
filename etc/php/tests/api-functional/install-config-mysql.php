@@ -30,5 +30,6 @@ return [
     'amqp-port'                    => '5672',
     'amqp-user'                    => 'guest',
     'amqp-password'                => 'guest',
+    'elasticsearch-host' => 'elastic',
     'document-root-is-pub'   => 'true',
 ];
