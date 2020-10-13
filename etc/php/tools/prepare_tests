@@ -2,6 +2,8 @@
 
 #For integration tests
 php -r '(new PDO("mysql:host=db;dbname=magento", "root"))->exec("CREATE DATABASE IF NOT EXISTS magento_integration_tests;");'
+php -r '(new PDO("mysql:host=db;dbname=magento", "root"))->exec("CREATE DATABASE IF NOT EXISTS magento_integration_tests_checkout;");'
+php -r '(new PDO("mysql:host=db;dbname=magento", "root"))->exec("CREATE DATABASE IF NOT EXISTS magento_integration_tests_sales;");'
 #TODO: replace magento_url in phpunit.xml
 #TODO: separete to service and save in autoload dir witch uses reinstall script
 
@@ -15,6 +17,7 @@ bin/magento config:set cms/wysiwyg/enabled disabled
 bin/magento cache:flush
 
 #https://devdocs.magento.com/mftf/docs/getting-started.html
+cp -f dev/tests/acceptance/.htaccess.sample dev/tests/acceptance/.htaccess
 vendor/bin/mftf build:project
 #vendor/bin/mftf generate:urn-catalog --force .idea/
 vendor/bin/mftf generate:tests

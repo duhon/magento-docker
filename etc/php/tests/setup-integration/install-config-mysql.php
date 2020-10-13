@@ -24,12 +24,12 @@ return [
         'host' => 'db',
         'username' => 'root',
         'password' => '',
-        'dbname' => 'magento_integration_tests'
+        'dbname' => 'magento_integration_tests_checkout'
     ],
     'sales' => [
         'host' => 'db',
         'username' => 'root',
         'password' => '',
-        'dbname' => 'magento_integration_tests'
+        'dbname' => 'magento_integration_tests_sales'
     ]
 ];
