@@ -39,7 +39,6 @@ class XH
         foreach($raw as $key => $value) {
             $profile[strtr($key, ['.' => '_'])] = $value;
         }
-        $data['profile'] = $profile;
         $data = [
             'profile' => $profile,
             'meta' => [

@@ -15,7 +15,8 @@ RUN tar xzvf newrelic.tar.gz -C /tmp/ \
     && mv /tmp/newrelic-php5-9.9.0.260-linux/agent/x64/newrelic-$NEWRELIC_PHP_VERSION.so /newrelic.so
 
 FROM alpine/git AS source_git
-RUN git clone -b 'master' --depth=1 https://github.com/NoiseByNorthwest/php-spx.git \
+RUN git clone -b '4.x' --depth=1 --single-branch https://github.com/reynaldliu/tideways-PHP7.4.git \
+    && git clone -b 'master' --depth=1 https://github.com/NoiseByNorthwest/php-spx.git \
     && mv * /
 
 FROM php:$MIN_PHP_VERSION AS source_php_ext
