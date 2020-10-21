@@ -32,6 +32,7 @@ if [[ "yes" == "$RECLONE" ]]; then
 
 	if [[ "B2B" == "$MAGENTO_EDITION" ]]; then
       git clone git@github.com:${GIT_REPO_B2B}/magento2b2b.git -b ${GIT_BRANCH_B2B}
+      mkdir -p magento2b2b/dev/tools/
       cp magento2ee/dev/tools/build-ee.php magento2b2b/dev/tools/build-ee.php
       cd magento2b2b
       php dev/tools/build-ee.php --ce-source ../magento2ce --ee-source ../magento2b2b
