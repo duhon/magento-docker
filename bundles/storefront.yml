@@ -28,12 +28,13 @@ services:
     x-hint: uncomment the line above and change error_log in nginx.conf
     x-info: https://devdocs.magento.com/guides/v2.3/install-gde/prereq/nginx.html
   db:
-    image: mariadb:10.4
+    image: mysql:8
     hostname: db
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: "magento"
     shm_size: '2gb'
+    command: --default-authentication-plugin=mysql_native_password
     volumes:
       - ./etc/mysql/my.cnf:/etc/mysql/conf.d/mysql.cnf
     ports:
@@ -59,7 +60,11 @@ services:
       - curl -i http://localhost:9200/_cluster/health
     x-info: https://devdocs.magento.com/guides/v2.3/config-guide/elasticsearch/es-overview.html
   app:
-    image: duhon/php:7.3-fpm
+    image: mslabko/php-with-grpc
+    # to re-build image with gRPC use the following docker file:
+    #    build:
+    #      context: .
+    #      dockerfile: build/php/fpm-grpc
     hostname: app
     ports:
       - "${SSH_PORT}:22"
@@ -128,6 +133,15 @@ services:
       - "http://localhost:15672/ user:guest pass:guest"
     x-setup:
     x-info: https://devdocs.magento.com/guides/v2.3/config-guide/mq/manage-message-queues.html
+# Uncomment after gRPC server executed.
+#  grpcui:
+#    image: wongnai/grpcui
+#    ports:
+#      - "8080:8080"
+#    volumes:
+#      - code:/var/www
+#    entrypoint: ["grpcui", "-plaintext", "-proto", "magento.proto", "-port", "8080", "-bind", "0.0.0.0", "-import-path", "/var/www/magento2ce", "app:9001"]
+
 networks:
   default:
     driver: bridge

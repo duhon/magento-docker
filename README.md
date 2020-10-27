@@ -9,14 +9,14 @@
 * [Docker Compose](https://docs.docker.com/compose/install/)
 * Setup SSH-keys on your github account. (see [docs](https://help.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)  for [help](https://help.github.com/en/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account))
 
-* Install Mutagen [docs](https://mutagen.io/documentation/introduction/installation)
+* (optional - for Mutagen installation only) Install Mutagen [docs](https://mutagen.io/documentation/introduction/installation)
 * Ensure you do not have `dnsmasq` installed/enabled locally (will be auto-installed if you've use Valet+ to install Magento)
 
 
 ### How to install
 
 #### Steps
-1. Create directory where all repositories will be cloned (used in your IDE)
+1. Create a directory where all repositories will be cloned (used in your IDE)
  
     Proposed structure:
 ```
@@ -32,11 +32,22 @@
     sudo -- sh -c "echo '127.0.0.1 magento.test >> /etc/hosts"
 ```
 
+4. You have 2 options to install the project
+#### docker-compose based installation
+This approach will use only docker-compose to install Storefront project. Files between the host and guest are synced with "delegated" options (see FILE_SYNC in .env) 
+ - RUN `git checkout docker-compose.yml` - optional: reset changes if any present in docker-compose.yml
+ - RUN `bash ./init_project` - clone repos (if RECLONE=YES in .evn)
+ - RUN `docker-compose up -d` - up services
+ - RUN `bash ./reinstall` - install/reinstall Magento with repositories provided in INSTALLED_REPOS (see .env)
+ 
+#### mutagen based installation
+This approach will use mutagen service to share code between the host and guest.  
+
 4. RUN `mutagen project start`
 
 Note, for the first installation (when you don't have cloned repositories yes) please change settings "RECLONE" to "yes" in ".env" file
-Please, aware that with "RECLONE=yes" options all data from "$MAGENTO_PATH" will be deleted
-#### Configuration
+
+### Configuration
 
     MAGENTO_PATH=/magento/magento-docker-install    # local directory to clone repos into
     RECLONE=no                                      # flag indicate whether do re-clon of all repos or no
@@ -45,7 +56,7 @@ Please, aware that with "RECLONE=yes" options all data from "$MAGENTO_PATH" will
     STOREFRONT_INSTALL=no                           # yes|no
     Notices:
 
-#### Troubleshooting
+### Troubleshooting
    1. Add MAGENTO_PATH path to Docker sharing folders (Docker preferences) in case docker-error
 
 
@@ -107,14 +118,7 @@ It's needed to run gRPC server and client.
 3. run magento CLI command `bin/magento storefront:grpc:init \\Magento\\CatalogStorefrontApi\\Api\\CatalogProxyServer` 
 4. gRPC server can be executed now: `./vendor/bin/grpc-server`
  
-#### Automated setup
-1. Navigate to `magento-docker/init_project` and change `mutagen.yml` to `mutagen-grpc.yml` in the following string:
-`sed -ie "s|alpha: .*|alpha: \"$MAGENTO_PATH\"|" $DOCKER_PROJECT_DIR/mutagen.yml`
---->
-`sed -ie "s|alpha: .*|alpha: \"$MAGENTO_PATH\"|" $DOCKER_PROJECT_DIR/mutagen-grpc.yml`
-
-2. Run `mutagen project start --project-file mutagen-grpc.yml` command to build and set up docker containers, link code and install Magento.
-
+#### Run service
 3. Run `mutagen project run grpc-server-start --project-file mutagen-grpc.yml` command to execute `etc/php/tools/grpc` script which does the following:
    - Downloads gRPC server (`rr-grpc` binary file) and puts it to the `/usr/bin` directory (if it not installed yet)
    - Run magento CLI command `bin/magento storefront:grpc:init \\Magento\\CatalogStorefrontApi\\Api\\CatalogProxyServer` that does the following: 
