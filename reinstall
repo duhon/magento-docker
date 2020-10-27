@@ -21,10 +21,10 @@ cd $DOCKER_PROJECT_DIR
 
 docker-compose exec app magento reinstall_storefront ${INSTALLED_REPOS}
 
-docker-compose exec app config_setup
-# docker-compose exec app profile_generate
-# docker-compose exec app reindex
-docker-compose exec app storefront
-docker-compose stop redis
+docker-compose exec app magento config_setup
+# docker-compose exec app magento profile_generate
+# docker-compose exec app magento reindex
+docker-compose exec app magento storefront
+docker-compose stop magento redis
 echo y | docker-compose rm redis
 docker-compose up -d redis
