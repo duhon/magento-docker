@@ -134,6 +134,20 @@ services:
     x-setup:
       - bin/magento setup:config:set -n --amqp-host=rabbit --amqp-user=guest --amqp-password=guest
     x-info: https://devdocs.magento.com/guides/v2.3/config-guide/mq/manage-message-queues.html
+#  mail:
+#    image: mailhog/mailhog
+#    hostname: mail
+#    ports:
+#      - "1025:1025"
+#      - "8025:8025"
+# Uncomment after gRPC server executed.
+#  grpcui:
+#    image: wongnai/grpcui
+#    ports:
+#      - "8080:8080"
+#    volumes:
+#      - code:/var/www
+#    entrypoint: ["grpcui", "-plaintext", "-proto", "magento.proto", "-port", "8080", "-bind", "0.0.0.0", "-import-path", "/var/www/magento2ce", "app:9001"]
 networks:
   default:
     driver: bridge
