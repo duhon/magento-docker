@@ -29,7 +29,7 @@ for edition in "$@"; do
    if [[ -d ../${edition} ]] || [[ -d ../magento2ce/${edition} ]]; then
      source=/var/www/${edition}
      if [[ ${edition} == "magento2ee" ]] || [[ ${edition} == "magento2b2b" ]]; then
-       cp -rlf /var/www/magento2ce/${edition}/composer* ${dst} 2>/dev/null
+       cp -rlf /var/www/magento2ce/magento2ee/composer* ${dst} 2>/dev/null
        source=/var/www/magento2ce/${edition}
      fi
      if [[ ${edition} == *"storefront"* ]]; then
