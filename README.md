@@ -41,7 +41,8 @@ This approach will use only docker-compose to install Storefront project. Files 
  - RUN `bash ./reinstall` - install/reinstall Magento with repositories provided in INSTALLED_REPOS (see .env)
  
 #### mutagen based installation
-This approach will use mutagen service to share code between the host and guest.  
+This approach will use mutagen service to share code between the host and guest.
+Before run, set `MUTAGEN_INSTALLATION=YES` in .env  
 
 4. RUN `mutagen project start`
 

@@ -14,6 +14,12 @@ find  . -type l -delete
 #apply edition
 dst="/var/www/magento2ce"
 
+#clean project dir (not for mutagen)
+if [[ -d .git ]]; then
+   git clean -dfx -e '.idea' $(mount | grep -oP '/var/www/magento2ce/\K\S*' | xargs -rn 1 echo '-e ')
+   git checkout composer.lock composer.json
+fi
+
 for edition in "$@"; do
 
    if [[ ${edition} == "magento2ce" ]]; then
@@ -27,34 +33,37 @@ for edition in "$@"; do
       dst="/var/www/magento2ce"
    fi
    if [[ -d ../${edition} ]] || [[ -d ../magento2ce/${edition} ]]; then
+
      source=/var/www/${edition}
-     if [[ ${edition} == "magento2ee" ]] || [[ ${edition} == "magento2b2b" ]]; then
-       cp -rlf /var/www/magento2ce/magento2ee/composer* ${dst} 2>/dev/null
-       source=/var/www/magento2ce/${edition}
-     fi
-     if [[ ${edition} == *"storefront"* ]]; then
-       set +ex;
-       cp -rf /var/www/${edition}/dev ${dst} 2>/dev/null
-       set -ex;
-     fi
-     if [[ ${edition} == *"saas-export"* ]]; then
-       set +ex;
-       cp -rf /var/www/${edition}/dev ${dst} 2>/dev/null
-       set -ex;
-     fi
 
-echo $source
-echo $edition
+     if [ ${MUTAGEN_INSTALLATION} == "NO" ]; then
+       cp -rlf ${source}/!(.git|vendor|..|.) ${dst}
+     else
+       if [[ ${edition} == "magento2*" ]]; then
+         cp -rlf /var/www/magento2ce/magento2ee/composer* ${dst} 2>/dev/null
+       fi
+       if [[ ${edition} == *"storefront"* ]]; then
+         set +ex;
+         cp -rf /var/www/${edition}/dev ${dst} 2>/dev/null
+         set -ex;
+       fi
+       if [[ ${edition} == *"saas-export"* ]]; then
+         set +ex;
+         cp -rf /var/www/${edition}/dev ${dst} 2>/dev/null
+         set -ex;
+       fi
 
-     php /var/www/magento2ce/magento2ee/dev/tools/build-ee.php --command link --exclude true --ce-source ${dst} --ee-source ${source}
-
+       php /var/www/magento2ce/magento2ee/dev/tools/build-ee.php --command link --exclude true --ce-source ${dst} --ee-source ${source}
+     fi
    fi
 done
 
 #install magento
 
-echo 'install module dependencies'
-php dev/tools/install-dependencies.php .
+if [ --f dev/tools/install-dependencies.php  ]; then
+  echo 'install module dependencies'
+  php dev/tools/install-dependencies.php .
+fi
 
 composer install
 

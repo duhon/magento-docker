@@ -22,14 +22,11 @@ if [[ "yes" == "$RECLONE" ]]; then
       continue
    fi
 
-   repo=$(echo "GIT_REPO_${edition}" | sed "s|-|_|g")
-   branch=$(echo "GIT_BRANCH_${edition}" | sed "s|-|_|g")
-   path=$edition
-   chmod g+s .
+     repo=$(echo "GIT_REPO_${edition}" | sed "s|-|_|g")
+     branch=$(echo "GIT_BRANCH_${edition}" | sed "s|-|_|g")
+     path=$edition
+     chmod g+s .
 
-    if [[ "magento2ee" == "$edition" ]] || [[ "magento2b2b" == "$edition" ]]; then
-      path=magento2ce/$edition
-    fi
     git clone ${GIT_CLONE_DEPTH} git@github.com:magento/${!repo}.git ${path} -b ${!branch}
   done
 else
@@ -37,10 +34,12 @@ else
  export GIT_DISCOVERY_ACROSS_FILESYSTEM=1 && git checkout -- .
 fi
 
-if [[ 'yes' == "$SYM_LINCS" ]]; then
+if [ ${MUTAGEN_INSTALLATION} == "YES" ]; then
  cd $MAGENTO_PATH/magento2ce
  git apply $DOCKER_PROJECT_DIR/etc/php/path-validator.patch
 fi
 
 # workaround to work with magento/magento2 && magento/partners-magento2ee repos
 cd $MAGENTO_PATH
+
+echo 'project initialized'
