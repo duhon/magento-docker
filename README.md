@@ -53,8 +53,6 @@ Note, for the first installation (when you don't have cloned repositories yes) p
     MAGENTO_PATH=/magento/magento-docker-install    # local directory to clone repos into
     RECLONE=no                                      # flag indicate whether do re-clon of all repos or no
     MAGENTO_EDITION=EE                              # EE|B2B
-    MSI_INSTALL=no                                  # yes|no
-    STOREFRONT_INSTALL=no                           # yes|no
     Notices:
 
 ### Troubleshooting
