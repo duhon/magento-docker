@@ -53,7 +53,7 @@ for edition in "$@"; do
          set -ex;
        fi
 
-       php /var/www/magento2ce/magento2ee/dev/tools/build-ee.php --command link --exclude true --ce-source ${dst} --ee-source ${source}
+       php /var/www/magento2ce/dev/tools/build-ee.php --command link --exclude true --ce-source ${dst} --ee-source ${source}
      fi
    fi
 done

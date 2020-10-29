@@ -9,11 +9,10 @@ DOCKER_PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && 
 
 cd $MAGENTO_PATH/magento2ce
 
-#clean project dir FOR MUTAGEN ONLY
-# if [[ -d .git ]]; then
-#   git clean -df -e '.idea' -e 'vendor' -e 'magento2*'
-#   git checkout composer.lock composer.json
-# fi
+if [ ${MUTAGEN_INSTALLATION} == "YES" ] && [[ -d .git ]]; then
+    git clean -df -e '.idea' -e 'vendor' -e 'magento2*'
+    git checkout composer.lock composer.json
+fi
 
 cd $DOCKER_PROJECT_DIR
 
