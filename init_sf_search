@@ -27,4 +27,4 @@ fi
 cd $DOCKER_PROJECT_DIR
 cp bundles/storefront-search.yml docker-compose.yml
 docker-compose up --build -d
-docker-compose exec app-search magento search_init grpc
+docker-compose exec app-search magento search_init grpc_start
