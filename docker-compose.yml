@@ -59,6 +59,7 @@ services:
     hostname: app
     ports:
       - "${SSH_PORT}:22"
+      - "9001:9001"
     depends_on:
       - elastic
     stop_signal: SIGKILL
