@@ -2,16 +2,19 @@ version: '3.7'
 services:
   graphql:
     image: node:12.14.1-buster-slim
-    command: sh -c 'npm ci && npm run build && ./bin/magento-graphql start '
-    # tty: true
+    command: sh -c './bin/magento-graphql start '
+    tty: true
     working_dir: /usr/src/app
+    depends_on:
+      - app
     volumes:
       - ${MAGENTO_PATH}/graphql:/usr/src/app:${FILE_SYNC}
     environment:
       - MONOLITH_GRAPHQL_URL=http://magento.test/graphql
       - LOG_FILE=/usr/src/app/app.log
       - ENABLE_CATALOG_STOREFRONT=true
-      - CATALOG_STOREFRONT_HOST=magento.test
+      - CATALOG_STOREFRONT_HOST=app
+      - CATALOG_STOREFRONT_PORT=9001
     ports:
       - 8008:8008
   web:
@@ -47,6 +50,8 @@ services:
       - ./etc/mysql/my.cnf:/etc/mysql/conf.d/mysql.cnf
     ports:
       - "${DB_PORT}:3306"
+    cap_add:
+      - SYS_NICE
     x-hits:
       - bin/magento dev:query-log:enable and watch var/debug/db.log
     x-info: https://devdocs.magento.com/guides/v2.3/install-gde/prereq/mysql.html
