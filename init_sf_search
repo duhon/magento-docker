@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+set -ex
+
+source ./.env
+export $(cut -d= -f1 ./.env)
+DOCKER_PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+# Add domain to hosts
+#sudo -- sh -c "echo '127.0.0.1 $MAGENTO_DOMAIN' >> /etc/hosts"
+
+
+if [[ "yes" == "$RECLONE" ]]; then
+    #prepare data
+    rm -rf $MAGENTO_PATH/magento-search
+    cd $MAGENTO_PATH
+    #chown -R $USER:wheel .
+    chmod g+s .
+
+	git clone git@github.com:${GIT_REPO_SF_SEARCH}.git magento-search -b ${GIT_BRANCH_SF_SEARCH}
+
+else
+ cd $MAGENTO_PATH/magento-search
+ export GIT_DISCOVERY_ACROSS_FILESYSTEM=1 && git checkout -- .
+fi
+
+cd $DOCKER_PROJECT_DIR
+cp bundles/storefront-search.yml docker-compose.yml
+docker-compose up --build -d
+docker-compose exec app-search magento search_init grpc

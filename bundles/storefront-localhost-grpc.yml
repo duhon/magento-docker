@@ -1,0 +1,110 @@
+version: '3.7'
+services:
+  db:
+    image: mariadb:10.4
+    hostname: db
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: "magento"
+    shm_size: '2gb'
+    volumes:
+      - ./etc/mysql/my.cnf:/etc/mysql/conf.d/mysql.cnf
+    ports:
+      - "${DB_PORT}:3306"
+    x-hits:
+      - bin/magento dev:query-log:enable and watch var/debug/db.log
+    x-info: https://devdocs.magento.com/guides/v2.3/install-gde/prereq/mysql.html
+  elastic:
+    image: elasticsearch:$ELASTICSEARCH_IMAGE_VERSION
+    hostname: elastic
+    ports:
+      - "${ELASTIC_PORT}:9200"
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    x-hits:
+      - curl -i http://localhost:9200/_cluster/health
+    x-info: https://devdocs.magento.com/guides/v2.3/config-guide/elasticsearch/es-overview.html
+  app:
+    image: mslabko/php-with-grpc
+    hostname: app
+    ports:
+      - "${SSH_PORT}:22"
+    stop_signal: SIGKILL
+    volumes:
+      - ${MAGENTO_PATH}:/var/www:${FILE_SYNC}
+      - ${MAGENTO_PATH}/magento-docker/etc/php/tools:/usr/local/bin/magento2:ro
+      #      - ${MAGENTO_PATH}/magento-docker/etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+      #      - ${MAGENTO_PATH}/magento-docker/etc/php/blackfire.ini:/usr/local/etc/php/conf.d/blackfire.ini
+      #      - ${MAGENTO_PATH}/magento-docker/etc/php/tideways.ini:/usr/local/etc/php/conf.d/tideways.ini
+      #      - ${MAGENTO_PATH}/magento-docker/etc/php/xhprof.ini:/usr/local/etc/php/conf.d/xhprof.ini
+      #      - ${MAGENTO_PATH}/magento-docker/etc/php/tideways_xhprof.ini:/usr/local/etc/php/conf.d/tideways_xhprof.ini
+      - ${MAGENTO_PATH}/magento-docker/etc/php/spx.ini:/usr/local/etc/php/conf.d/spx.ini
+      #      - ${MAGENTO_PATH}/magento-docker/etc/php/profiler.php:/usr/local/lib/php/header.php
+      #      - ${MAGENTO_PATH}/magento-docker/etc/php/append.ini:/usr/local/etc/php/conf.d/append.ini
+      - ${MAGENTO_PATH}/magento-docker/etc/php/php.ini:/usr/local/etc/php/php.ini:ro
+      - ${MAGENTO_PATH}/magento-docker/etc/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
+    environment:
+      COMPOSER_HOME: /var/www/.composer
+      PHP_IDE_CONFIG: serverName=magento.test
+      TIDEWAYS_APIKEY: ${TIDEWAYS_APIKEY}
+    command: sh -c 'service ssh start; php-fpm -R'
+    x-hints:
+      - magento reinstall
+      - magento sample_data
+      - magento page_builder
+      - docker-compose up --detach --force-recreate app
+    x-setup:
+      - bin/magento config:set web/seo/use_rewrites 1
+      - bin/magento config:set dev/template/allow_symlink 1
+      - bin/magento setup:performance:generate-fixtures ./setup/performance-toolkit/profiles/ce/small.xml
+      - bin/magento deploy:mode:set production
+      - composer dumpautoload -o
+      - bin/magento cache:clean
+    x-info: https://devdocs.magento.com/
+  redis:
+    image: redis
+    hostname: redis
+    ports:
+      - "${REDIS_PORT}:6379"
+    sysctls:
+      net.core.somaxconn: 1024
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 20000
+        hard: 40000
+    x-hints:
+      - redis-cli monitor
+      - telnet localhost 6379
+    x-setup:
+    x-info: https://devdocs.magento.com/guides/v2.3/config-guide/redis/config-redis.html
+  rabbit:
+    image: rabbitmq:management
+    hostname: rabbitmq
+    ports:
+      - "${RABBIT_PORT}:15672"
+      - "5672:5672"
+    x-hints:
+      - bin/magento queue:consumers:list
+      - bin/magento queue:consumers:start
+      - "http://localhost:15672/ user:guest pass:guest"
+    x-setup:
+    x-info: https://devdocs.magento.com/guides/v2.3/config-guide/mq/manage-message-queues.html
+    # Uncomment after gRPC server executed.
+  grpcui:
+    image: wongnai/grpcui
+    ports:
+      - "8080:8080"
+    volumes:
+      - code:/var/www
+    entrypoint: ["grpcui", "-plaintext", "-proto", "/var/www/magento2ce/magento.proto", "-port", "8080", "-bind", "0.0.0.0", "-import-path", "/var/www/magento2ce", "app:9001"]
+networks:
+  default:
+    driver: bridge
