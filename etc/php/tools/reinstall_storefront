@@ -22,7 +22,7 @@ fi
 
 for edition in "$@"; do
 
-   if [[ ${edition} == "magento2ce" ]]; then
+   if [[ ${edition} == "magento2ce" ]] || [[ ${edition} == "graphql" ]]; then
       continue
    fi
 

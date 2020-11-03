@@ -1,5 +1,19 @@
 version: '3.7'
 services:
+  graphql:
+    image: node:12.14.1-buster-slim
+    command: sh -c 'npm ci && npm run build && ./bin/magento-graphql start '
+    # tty: true
+    working_dir: /usr/src/app
+    volumes:
+      - ${MAGENTO_PATH}/graphql:/usr/src/app:${FILE_SYNC}
+    environment:
+      - MONOLITH_GRAPHQL_URL=http://magento.test/graphql
+      - LOG_FILE=/usr/src/app/app.log
+      - ENABLE_CATALOG_STOREFRONT=true
+      - CATALOG_STOREFRONT_HOST=magento.test
+    ports:
+      - 8008:8008
   web:
     image: nginx:alpine
     hostname: web
