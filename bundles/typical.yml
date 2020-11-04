@@ -55,6 +55,9 @@ services:
       - ${MAGENTO_PATH}/magento-docker/etc/php/tests/api-functional/install-config-mysql.php:/var/www/magento2ce/dev/tests/api-functional/config/install-config-mysql.php:rw
       - ${MAGENTO_PATH}/magento-docker/etc/php/tests/api-functional/phpunit_rest.xml:/var/www/magento2ce/dev/tests/api-functional/phpunit_rest.xml:rw
       - ${MAGENTO_PATH}/magento-docker/etc/php/tests/api-functional/phpunit_graphql.xml:/var/www/magento2ce/dev/tests/api-functional/phpunit_graphql.xml:rw
+      - ${MAGENTO_PATH}/magento-docker/etc/php/tests/api-functional/phpunit_soap.xml:/var/www/magento2ce/dev/tests/api-functional/phpunit_soap.xml:rw
+      - ${MAGENTO_PATH}/magento-docker/etc/php/tests/setup-integration/install-config-mysql.php:/var/www/magento2ce/dev/tests/setup-integration/etc/install-config-mysql.php:rw
+      - ${MAGENTO_PATH}/magento-docker/etc/php/tests/setup-integration/phpunit.xml:/var/www/magento2ce/dev/tests/setup-integration/phpunit.xml:rw
     environment:
       COMPOSER_HOME: /var/www/.composer
       PHP_IDE_CONFIG: serverName=magento.test
