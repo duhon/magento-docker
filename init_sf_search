@@ -12,19 +12,19 @@ DOCKER_PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && 
 
 if [[ "yes" == "$RECLONE" ]]; then
     #prepare data
-    rm -rf $MAGENTO_PATH/magento-search
+    rm -rf $MAGENTO_PATH/storefront-search
     cd $MAGENTO_PATH
     #chown -R $USER:wheel .
     chmod g+s .
 
-	git clone git@github.com:${GIT_REPO_SF_SEARCH}.git magento-search -b ${GIT_BRANCH_SF_SEARCH}
+	git clone git@github.com:${GIT_REPO_storefront_search}.git storefront-search -b ${GIT_BRANCH_storefront_search}
 
 else
- cd $MAGENTO_PATH/magento-search
+ cd $MAGENTO_PATH/storefront-search
  export GIT_DISCOVERY_ACROSS_FILESYSTEM=1 && git checkout -- .
 fi
 
 cd $DOCKER_PROJECT_DIR
-cp bundles/storefront-search.yml docker-compose.yml
-docker-compose up --build -d
-docker-compose exec app-search magento search_init grpc_start
+docker-compose up --build -d app-search
+docker-compose exec app-search magento app_search_init
+docker-compose exec app-search magento grpc_sf_search

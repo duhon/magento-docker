@@ -55,7 +55,7 @@ RUN apt-get update \
 RUN pecl install grpc
 RUN docker-php-ext-enable grpc
 
-WORKDIR /var/www/magento-search
+WORKDIR /var/www/storefront-search
 
 EXPOSE 9000
 CMD ["php-fpm", "-R"]

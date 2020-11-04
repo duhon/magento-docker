@@ -93,6 +93,29 @@ services:
       - magento reinstall ee
     x-setup:
     x-info: https://devdocs.magento.com/
+  app-search:
+    image: mslabko/php-with-grpc
+    build:
+      context: .
+      dockerfile: build/php/fpm-grpc-search
+    hostname: app-search
+    ports:
+      - "${SSH_PORT}:22"
+    stop_signal: SIGKILL
+    volumes:
+      - ${MAGENTO_PATH}/storefront-search:/var/www/storefront-search:${FILE_SYNC}
+      - ./etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+      - .:/var/www/magento-docker
+      - ./etc/php/tools:/usr/local/bin/magento2:ro
+      - ./etc/php/php.ini:/usr/local/etc/php/php.ini:ro
+      - ./etc/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
+
+    environment:
+      COMPOSER_HOME: /var/www/.composer
+    command: sh -c 'service ssh start; php-fpm -R'
+    x-hints:
+    x-setup:
+    x-info: https://devdocs.magento.com/
   elastic:
     image: elasticsearch:$ELASTICSEARCH_IMAGE_VERSION
     hostname: elastic
