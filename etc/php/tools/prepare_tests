@@ -1,23 +1,30 @@
 #!/bin/bash
 
-#For integration tests
-php -r '(new PDO("mysql:host=db;dbname=magento", "root"))->exec("CREATE DATABASE IF NOT EXISTS magento_integration_tests;");'
-php -r '(new PDO("mysql:host=db;dbname=magento", "root"))->exec("CREATE DATABASE IF NOT EXISTS magento_integration_tests_checkout;");'
-php -r '(new PDO("mysql:host=db;dbname=magento", "root"))->exec("CREATE DATABASE IF NOT EXISTS magento_integration_tests_sales;");'
-#TODO: replace magento_url in phpunit.xml
-#TODO: separete to service and save in autoload dir witch uses reinstall script
+test=${1:-'all'}
 
-#The Admin Account Sharing drop-down menu is set to Yes in the backend (Stores > Configuration > Advanced > Admin > Security);
-bin/magento config:set admin/security/admin_account_sharing 1
-#The Add Secret Key to URLs drop-down menu is set to No in the backend (Stores > Configuration > Advanced > Admin > Security);
-bin/magento config:set admin/security/use_form_key 0
-#The Enable WYSIWYG Editor drop-down menu is set to Disabled Completely in the backend (Stores > Configuration > General> Content Management > WYSIWYG Options);
-bin/magento config:set cms/wysiwyg/enabled disabled
-#clean cache after change config
-bin/magento cache:flush
+if [ $test = 'integration' ] || [ $test = 'all' ]; then
+    #For integration tests
+    php -r '(new PDO("mysql:host=db;dbname=magento", "root"))->exec("CREATE DATABASE IF NOT EXISTS magento_integration_tests;");'
+    php -r '(new PDO("mysql:host=db;dbname=magento", "root"))->exec("CREATE DATABASE IF NOT EXISTS magento_integration_tests_checkout;");'
+    php -r '(new PDO("mysql:host=db;dbname=magento", "root"))->exec("CREATE DATABASE IF NOT EXISTS magento_integration_tests_sales;");'
+fi
 
-#https://devdocs.magento.com/mftf/docs/getting-started.html
-cp -f dev/tests/acceptance/.htaccess.sample dev/tests/acceptance/.htaccess
-vendor/bin/mftf build:project
-#vendor/bin/mftf generate:urn-catalog --force .idea/
-vendor/bin/mftf generate:tests
+#For functional tests
+if [ $test = 'mftf' ] || [ $test = 'all' ]; then
+    #The Admin Account Sharing drop-down menu is set to Yes in the backend (Stores > Configuration > Advanced > Admin > Security);
+    bin/magento config:set admin/security/admin_account_sharing 1
+    #The Add Secret Key to URLs drop-down menu is set to No in the backend (Stores > Configuration > Advanced > Admin > Security);
+    bin/magento config:set admin/security/use_form_key 0
+    #The Enable WYSIWYG Editor drop-down menu is set to Disabled Completely in the backend (Stores > Configuration > General> Content Management > WYSIWYG Options);
+    bin/magento config:set cms/wysiwyg/enabled disabled
+    #If the Nginx Web server is used on your development environment
+    bin/magento config:set web/seo/use_rewrites 1
+    #clean cache after change config
+    bin/magento cache:flush
+
+    #https://devdocs.magento.com/mftf/docs/getting-started.html
+    cp -f dev/tests/acceptance/.htaccess.sample dev/tests/acceptance/.htaccess
+    vendor/bin/mftf build:project
+    #vendor/bin/mftf generate:urn-catalog --force .idea/
+    vendor/bin/mftf generate:tests
+fi
