@@ -1,16 +1,12 @@
 #!/bin/bash
 shopt -s extglob
 
+DB_HOST=db
 source /var/www/magento-docker/.env
 export $(cut -d= -f1 /var/www/magento-docker/.env)
 
-cp /var/www/magento-docker/etc/php/tools/* /usr/local/bin 2>/dev/null || :
-
-#clean project dir
-if [[ -d .git ]]; then
-   git clean -dfx -e '.idea' $(mount | grep -oP '/var/www/magento2ce/\K\S*' | xargs -rn 1 echo '-e ')
-   git checkout composer.lock composer.json
-fi
+# for mutagen installation:
+# cp /var/www/magento-docker/etc/php/tools/* /usr/local/bin 2>/dev/null || :
 
 # remove links
 find  . -type l -delete
@@ -18,57 +14,88 @@ find  . -type l -delete
 #apply edition
 dst="/var/www/magento2ce"
 
+#clean project dir (not for mutagen)
+if [[ -d .git ]]; then
+   git clean -dfx -e '.idea' $(mount | grep -oP '/var/www/magento2ce/\K\S*' | xargs -rn 1 echo '-e ')
+   git checkout composer.lock composer.json
+fi
+
 for edition in "$@"; do
-   if ! [[ -d ../${edition} ]]; then
-      edition=magento2${edition}
+
+   if [[ ${edition} == "magento2ce" ]] || [[ ${edition} == "graphql" ]]; then
+      continue
    fi
+
+   # TODO: delete after split saas-export
    if [[ ${edition} == "data-solutions-services-id" ]]; then
       dst="/var/www/magento2ce/app/code/Magento"
    else
       dst="/var/www/magento2ce"
    fi
-   if [[ -d ../${edition} ]]; then
-     if [[ ${edition} == "magento2ee" ]] || [[ ${edition} == "magento2b2b" ]]; then
-       cp -rlf /var/www/${edition}/composer* ${dst} 2>/dev/null
-       cp -rlf /var/www/${edition}/setup /var/www/magento2ce/setup 2>/dev/null
-       cp -rf /var/www/${edition}/dev ${dst} 2>/dev/null
-     fi
-     if [[ ${edition} == *"storefront"* ]]; then
-       set +ex;
-       cp -rf /var/www/${edition}/dev ${dst} 2>/dev/null
-       set -ex;
-     fi
-     if [[ ${edition} == *"saas-export"* ]]; then
-       set +ex;
-       cp -rf /var/www/${edition}/dev ${dst} 2>/dev/null
-       set -ex;
-     fi
+   if [[ -d ../${edition} ]] || [[ -d ../magento2ce/${edition} ]]; then
 
-     php /var/www/magento2ee/dev/tools/build-ee.php --command link --exclude true --ce-source ${dst} --ee-source /var/www/${edition}
+     source=/var/www/${edition}
 
+     if [ ${MUTAGEN_INSTALLATION} == "NO" ]; then
+       cp -rlf ${source}/!(.git|vendor|..|.) ${dst}
+     else
+       if [[ ${edition} == "magento2*" ]]; then
+         cp -rlf /var/www/magento2ce/magento2ee/composer* ${dst} 2>/dev/null
+       fi
+       if [[ ${edition} == *"storefront"* ]]; then
+         set +ex;
+         cp -rf /var/www/${edition}/dev ${dst} 2>/dev/null
+         set -ex;
+       fi
+       if [[ ${edition} == *"saas-export"* ]]; then
+         set +ex;
+         cp -rf /var/www/${edition}/dev ${dst} 2>/dev/null
+         set -ex;
+       fi
+
+       php /var/www/magento2ce/dev/tools/build-ee.php --command link --exclude true --ce-source ${dst} --ee-source ${source}
+     fi
    fi
 done
 
 #install magento
+
+if [ --f dev/tools/install-dependencies.php  ]; then
+  echo 'install module dependencies'
+  php dev/tools/install-dependencies.php .
+fi
+
 composer install
 
-mysql -uroot -hdb -e "DROP DATABASE IF EXISTS magento; create database magento;"
+mysql -uroot -h${DB_HOST} -e "DROP DATABASE IF EXISTS magento; create database magento;"
 rm -rf generated/* var/* app/etc/env.php app/etc/config.php
 
 # echo y | bin/magento setup:uninstall
 bin/magento setup:install \
-   --backend-frontname=admin \
-   --admin-lastname=Admin \
-   --admin-firstname=Admin \
-   --admin-email=magento@mailinator.com \
-   --admin-user=admin \
-   --admin-password=123123q \
-   --db-name=magento \
-   --db-host=db \
-   --elasticsearch-host=elastic
+  --backend-frontname=admin \
+  --admin-lastname=Admin \
+  --admin-firstname=Admin \
+  --admin-email=magento@mailinator.com \
+  --admin-user=admin \
+  --admin-password=123123q \
+  --db-name=magento \
+  --db-host=${DB_HOST} \
+  --elasticsearch-host=elastic \
+  --search-engine=elasticsearch${ELASTICSEARCH_VERSION} \
+  --base-url=http://${MAGENTO_DOMAIN}/ \
+  --session-save=redis \
+  --session-save-redis-host=redis \
+  --session-save-redis-db=0 \
+  --cache-backend=redis \
+  --cache-backend-redis-server=redis \
+  --cache-backend-redis-db=1 \
+  --amqp-host=rabbit \
+  --amqp-user=guest \
+  --amqp-password=guest
 
- echo 'install module dependencies'
- php dev/tools/install-dependencies.php .
+bin/magento config:set web/secure/base_url http://${MAGENTO_DOMAIN}/
+
+
 #do x-setup lines
 #IFS=$'\n' setup=($(yq read /var/www/magento-docker/docker-compose.yml services.*.x-setup | grep -oP '^(?:\s*\-\s)+(?!null)\K.*'))
 #for i in ${setup[*]}; do eval "${i}"; done

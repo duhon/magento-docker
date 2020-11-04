@@ -1,16 +1,5 @@
 #!/usr/bin/env bash
 
-#Setup Magento gRPC module
-#if [ ! -d ./vendor/magento/module-grpc ]; then
-#    composer config repositories.magento-grpc vcs git@github.com:magento-commerce/module-grpc.git
-#    composer require magento/module-grpc:dev-master
-#
-#    #Upgrade magento
-#    php ./bin/magento setup:upgrade
-#    echo 'Magento upgrade completed'
-#fi
-#echo 'Magento gRPC installed'
-
 #Download gRPC server
 if [ ! -f /usr/bin/rr-grpc ]; then
     curl -LJO https://github.com/spiral/php-grpc/releases/download/v1.4.0/rr-grpc-1.4.0-linux-amd64.tar.gz
@@ -20,12 +9,11 @@ if [ ! -f /usr/bin/rr-grpc ]; then
 fi
 echo 'gRPC server installed'
 
-# Create generated file with list of gRPC services (TEMP solution)
-cat > ./generated/code/grpc_services_map.php <<EOF
-<?php
-return ['\Magento\CatalogStorefrontApi\Api\CatalogProxyServer'];
-EOF
-echo 'grpc_services_map.php created'
+echo 'Start gRPC initialization...'
+bin/magento storefront:grpc:init \\Magento\\CatalogStorefrontApi\\Api\\CatalogProxyServer
+echo 'End of gRPC initialization'
 
+echo 'Starting gRPC server...';
 # Run gRPC server
 ./vendor/bin/grpc-server
+echo 'gRPC server started';

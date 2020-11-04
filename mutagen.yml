@@ -30,6 +30,7 @@ commands:
   reinstall: bash reinstall
   xdebug-enable: sed -ie "s|#zend_extension=xdebug.so|zend_extension=xdebug.so|" ./etc/php/xdebug.ini && docker-compose restart app
   xdebug-disable: sed -ie "s|zend_extension=xdebug.so|#zend_extension=xdebug.so|" ./etc/php/xdebug.ini && docker-compose restart app
+  grpc-server-start: docker-compose exec app magento grpc
 
 # Synchronize code to the shared Docker volume via the Mutagen service.
 sync:
@@ -43,7 +44,7 @@ sync:
       defaultFileMode: 0666
       defaultDirectoryMode: 0777
   code:
-    alpha: "/Users/lykhachov/DEV/dockerTest"
+    alpha: "~/projects/magento/storefront/repos"
     beta: "docker://web-mutagen/var/www"
     mode: "two-way-resolved"
     ignore:

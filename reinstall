@@ -1,12 +1,29 @@
 #!/usr/bin/env bash
 
+set -ex
+
+source ./.env
+export $(cut -d= -f1 ./.env)
+
+DOCKER_PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+cd $MAGENTO_PATH/magento2ce
+
+if [ ${MUTAGEN_INSTALLATION} == "YES" ] && [[ -d .git ]]; then
+    git clean -df -e '.idea' -e 'vendor' -e 'magento2*'
+    git checkout composer.lock composer.json
+fi
+
+cd $DOCKER_PROJECT_DIR
+
 # reinstall storefront application bases on the current code base
 
-docker-compose exec app magento reinstall_storefront ee b2b inventory catalog-storefront catalog-storefront-ee saas-export data-solutions-services-id
-docker-compose exec app config_setup
-docker-compose exec app profile_generate
-docker-compose exec app reindex
-docker-compose exec app storefront
+docker-compose exec app magento reinstall_storefront ${INSTALLED_REPOS}
+
+docker-compose exec app magento config_setup
+# docker-compose exec app magento profile_generate
+# docker-compose exec app magento reindex
+docker-compose exec app magento storefront
 docker-compose stop redis
 echo y | docker-compose rm redis
 docker-compose up -d redis

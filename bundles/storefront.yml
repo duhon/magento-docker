@@ -6,6 +6,23 @@ services:
     container_name: web-mutagen
     volumes:
       - code:/var/www
+  graphql:
+    image: node:12.14.1-buster-slim
+    command: sh -c './bin/magento-graphql start '
+    tty: true
+    working_dir: /usr/src/app
+    depends_on:
+      - app
+    volumes:
+      - ${MAGENTO_PATH}/graphql:/usr/src/app:${FILE_SYNC}
+    environment:
+      - MONOLITH_GRAPHQL_URL=http://magento.test/graphql
+      - LOG_FILE=/usr/src/app/app.log
+      - ENABLE_CATALOG_STOREFRONT=true
+      - CATALOG_STOREFRONT_HOST=app
+      - CATALOG_STOREFRONT_PORT=9001
+    ports:
+      - 8008:8008
   web:
     image: nginx:alpine
     hostname: web
@@ -28,16 +45,19 @@ services:
     x-hint: uncomment the line above and change error_log in nginx.conf
     x-info: https://devdocs.magento.com/guides/v2.3/install-gde/prereq/nginx.html
   db:
-    image: mariadb:10.4
+    image: mysql:8
     hostname: db
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: "magento"
     shm_size: '2gb'
+    command: --default-authentication-plugin=mysql_native_password
     volumes:
       - ./etc/mysql/my.cnf:/etc/mysql/conf.d/mysql.cnf
     ports:
       - "${DB_PORT}:3306"
+    cap_add:
+      - SYS_NICE
     x-hits:
       - bin/magento dev:query-log:enable and watch var/debug/db.log
     x-info: https://devdocs.magento.com/guides/v2.3/install-gde/prereq/mysql.html
@@ -59,10 +79,15 @@ services:
       - curl -i http://localhost:9200/_cluster/health
     x-info: https://devdocs.magento.com/guides/v2.3/config-guide/elasticsearch/es-overview.html
   app:
-    image: duhon/php:7.3-fpm
+    image: mslabko/php-with-grpc
+    # to re-build image with gRPC use the following docker file:
+    #    build:
+    #      context: .
+    #      dockerfile: build/php/fpm-grpc
     hostname: app
     ports:
       - "${SSH_PORT}:22"
+      - "9001:9001"
     depends_on:
       - elastic
     stop_signal: SIGKILL
@@ -128,6 +153,20 @@ services:
       - "http://localhost:15672/ user:guest pass:guest"
     x-setup:
     x-info: https://devdocs.magento.com/guides/v2.3/config-guide/mq/manage-message-queues.html
+#  mail:
+#    image: mailhog/mailhog
+#    hostname: mail
+#    ports:
+#      - "1025:1025"
+#      - "8025:8025"
+# Uncomment after gRPC server executed.
+#  grpcui:
+#    image: wongnai/grpcui
+#    ports:
+#      - "8080:8080"
+#    volumes:
+#      - code:/var/www
+#    entrypoint: ["grpcui", "-plaintext", "-proto", "magento.proto", "-port", "8080", "-bind", "0.0.0.0", "-import-path", "/var/www/magento2ce", "app:9001"]
 networks:
   default:
     driver: bridge
