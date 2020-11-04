@@ -177,6 +177,13 @@ services:
 #      - "1025:1025"
 #      - "8025:8025"
 # Uncomment after gRPC server executed.
+#  grpcui-search:
+#    image: wongnai/grpcui
+#    ports:
+#      - "8080:8080"
+#    volumes:
+#      - ${MAGENTO_PATH}/storefront-search:/var/www/storefront-search:${FILE_SYNC}
+#    entrypoint: ["grpcui", "-plaintext", "-proto", "search.proto", "-port", "8080", "-bind", "0.0.0.0", "-import-path", "/var/www/storefront-search", "app-search:9001"]
 #  grpcui:
 #    image: wongnai/grpcui
 #    ports:
