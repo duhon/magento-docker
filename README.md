@@ -34,10 +34,11 @@
 
 4. You have 2 options to install the project
 #### docker-compose based installation
-This approach will use only docker-compose to install Storefront project. Files between the host and guest are synced with "delegated" options (see FILE_SYNC in .env) 
+If you want to run search-service please first - populate `auth.json` in the root of repository with your magento composer keys
+This approach will use only docker-compose to install Storefront (Search service) project. Files between the host and guest are synced with "delegated" options (see FILE_SYNC in .env) 
  - RUN `git checkout docker-compose.yml` - optional: reset changes if any present in docker-compose.yml
  - RUN `bash ./init_project` - clone repos (if RECLONE=YES in .evn)
- - RUN `docker-compose up -d` - up services
+ - RUN `docker-compose up -d` - up services (note: to run search-service run - `docker-compose up -d app-search`)
  - RUN `bash ./reinstall` - install/reinstall Magento with repositories provided in INSTALLED_REPOS (see .env)
  
 #### mutagen based installation

@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+shopt -s extglob
+
+source /var/www/magento-docker/.env
+export $(cut -d= -f1 /var/www/magento-docker/.env)
+
 #Download gRPC server
 if [ ! -f /usr/bin/rr-grpc ]; then
     curl -LJO https://github.com/spiral/php-grpc/releases/download/v1.4.0/rr-grpc-1.4.0-linux-amd64.tar.gz
@@ -10,7 +15,7 @@ fi
 echo 'gRPC server installed'
 
 echo 'Start gRPC initialization...'
-bin/magento storefront:grpc:init \\Magento\\CatalogStorefrontApi\\Api\\CatalogProxyServer
+bin/magento storefront:grpc:init ${GRPC_SERVICE_CLASS}
 echo 'End of gRPC initialization'
 
 echo 'Starting gRPC server...';

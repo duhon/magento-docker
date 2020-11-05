@@ -25,9 +25,16 @@ if [[ "yes" == "$RECLONE" ]]; then
      repo=$(echo "GIT_REPO_${edition}" | sed "s|-|_|g")
      branch=$(echo "GIT_BRANCH_${edition}" | sed "s|-|_|g")
      path=$edition
+
      chmod g+s .
 
-    git clone ${GIT_CLONE_DEPTH} git@github.com:magento/${!repo}.git ${path} -b ${!branch}
+     if [ $edition == "storefront_search" ]; then
+        path="magento2ce"
+        # @TODO remove when repo will be moved from fork to magento repo
+        git clone ${GIT_CLONE_DEPTH} git@github.com:${!repo}.git ${path} -b ${!branch}
+     else
+        git clone ${GIT_CLONE_DEPTH} git@github.com:magento/${!repo}.git ${path} -b ${!branch}
+     fi
   done
 else
  cd $MAGENTO_PATH/magento2ce
