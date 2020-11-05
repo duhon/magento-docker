@@ -104,7 +104,7 @@ services:
       - "9001:9001"
     stop_signal: SIGKILL
     volumes:
-      - ${MAGENTO_PATH}/magento2ce:/var/www/magento2ce:${FILE_SYNC}
+      - ${MAGENTO_PATH}/storefront-search-ce:/var/www/magento2ce:${FILE_SYNC}
       - ./auth.json:/var/www/magento2ce/auth.json
       - ./etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
       - .:/var/www/magento-docker
