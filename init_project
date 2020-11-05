@@ -27,13 +27,7 @@ if [[ "yes" == "$RECLONE" ]]; then
      path=$edition
 
      chmod g+s .
-
-     if [ $edition == "storefront-search-ce" ]; then
-        # @TODO remove when repo will be moved from fork to magento repo
-        git clone ${GIT_CLONE_DEPTH} git@github.com:${!repo}.git ${path} -b ${!branch}
-     else
-        git clone ${GIT_CLONE_DEPTH} git@github.com:magento/${!repo}.git ${path} -b ${!branch}
-     fi
+     git clone ${GIT_CLONE_DEPTH} git@github.com:${!repo}.git ${path} -b ${!branch}
   done
 else
  cd $MAGENTO_PATH/magento2ce
