@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+composer update
+bin/magento storefront:search:init

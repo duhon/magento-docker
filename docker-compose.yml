@@ -113,8 +113,7 @@ services:
       - ./etc/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
     environment:
       COMPOSER_HOME: /var/www/.composer
-    command: >
-      sh -c "cd /var/www/magento2ce && composer update && bin/magento storefront:search:init && magento grpc && service ssh start; php-fpm -R"
+    command: sh -c "service ssh start; php-fpm -R"
     x-hints:
     x-setup:
     x-info: https://devdocs.magento.com/
