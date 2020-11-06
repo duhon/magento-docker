@@ -41,6 +41,11 @@ This approach will use only docker-compose to install Storefront (Search service
  - RUN `docker-compose up -d` - up services (note: to run search-service run - `docker-compose up -d app-search`)
  - RUN `bash ./reinstall` - install/reinstall Magento with repositories provided in INSTALLED_REPOS (see .env)
  
+ Note: for storefront-search-ce to work do this after install:
+ - docker-compose exec app-search magneto storefront_search (this will add env.php and config.php)
+ - go to app/etc/env.php and put creds for database and elasticsearch if needed.
+ - docker-compose exec app-search magneto grpc (this will generate service map and run GRPC service)
+ 
 #### mutagen based installation
 This approach will use mutagen service to share code between the host and guest.
 Before run, set `MUTAGEN_INSTALLATION=YES` in .env  
