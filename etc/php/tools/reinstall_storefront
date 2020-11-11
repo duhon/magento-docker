@@ -20,8 +20,6 @@ if [[ -d .git ]]; then
    git checkout composer.lock composer.json
 fi
 
-cp /var/www/magento2ee/dev/tools/build-ee.php /var/www/magento2ce/dev/tools/build-ee.php
-
 for edition in "$@"; do
 
    if [[ ${edition} == "magento2ce" ]] || [[ ${edition} == "graphql" ]]; then
@@ -55,7 +53,7 @@ for edition in "$@"; do
          set -ex;
        fi
 
-       php /var/www/magento2ce/dev/tools/build-ee.php --command link --exclude true --ce-source ${dst} --ee-source ${source}
+       php /var/www/commerce-data-export/dev/tools/build-sc.php --command link --exclude true --ce-source ${dst} --ee-source ${source}
      fi
    fi
 done
