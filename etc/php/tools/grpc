@@ -1,16 +1,8 @@
 #!/usr/bin/env bash
 
-if [ -f magento.proto ] && [ -h magento.proto ]; then
-  echo 'magento.proto must be not a link. Copying from catalog-storefront'
-  unlink magento.proto
-  cp /var/www/catalog-storefront/magento.proto .
-fi
-
 echo 'Start gRPC initialization...'
-bin/magento storefront:grpc:init \\Magento\\CatalogStorefrontApi\\Api\\CatalogProxyServer \\Magento\\CatalogStorefrontApi\\Api\\VariantServiceProxyServer
-echo 'End of gRPC initialization'
-
+bin/magento storefront:grpc:init \\Magento\\CatalogStorefrontApi\\Api\\CatalogProxyServer \\Magento\\CatalogStorefrontApi\\Api\\VariantServiceProxyServerecho 'End of gRPC initialization'
 echo 'Starting gRPC server...';
 # Run gRPC server
-nohup bash -c "./vendor/bin/grpc-server&"
+./vendor/bin/grpc-server
 echo 'gRPC server started';
