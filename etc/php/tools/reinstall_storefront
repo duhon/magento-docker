@@ -20,6 +20,8 @@ if [[ -d .git ]]; then
    git checkout composer.lock composer.json
 fi
 
+php /var/www/magento2ee/dev/tools/build-ee.php /var/www/magento2ce/dev/tools/build-ee.php
+
 for edition in "$@"; do
 
    if [[ ${edition} == "magento2ce" ]] || [[ ${edition} == "graphql" ]]; then
@@ -47,7 +49,7 @@ for edition in "$@"; do
          cp -rf /var/www/${edition}/dev ${dst} 2>/dev/null
          set -ex;
        fi
-       if [[ ${edition} == *"saas-export"* ]]; then
+       if [[ ${edition} == *"commerce-data-export"* ]]; then
          set +ex;
          cp -rf /var/www/${edition}/dev ${dst} 2>/dev/null
          set -ex;
