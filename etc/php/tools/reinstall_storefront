@@ -60,7 +60,7 @@ done
 
 #install magento
 
-if [ --f dev/tools/install-dependencies.php  ]; then
+if [ -f dev/tools/install-dependencies.php  ]; then
   echo 'install module dependencies'
   php dev/tools/install-dependencies.php .
 fi
