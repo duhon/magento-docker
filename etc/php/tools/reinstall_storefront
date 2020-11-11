@@ -20,8 +20,6 @@ if [[ -d .git ]]; then
    git checkout composer.lock composer.json
 fi
 
-cp /var/www/magento2ee/dev/tools/build-ee.php /var/www/magento2ce/dev/tools/build-ee.php
-
 for edition in "$@"; do
 
    if [[ ${edition} == "magento2ce" ]] || [[ ${edition} == "graphql" ]]; then

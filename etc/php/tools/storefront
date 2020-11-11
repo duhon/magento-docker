@@ -9,7 +9,7 @@ export $(cut -d= -f1 /var/www/magento-docker/.env)
   bin/magento cache:clean
 
   # required by consumers in Message Broker
-  nohup bash -c "bin/magento queue:consumers:start catalog.product.export.consumer" &
-  nohup bash -c "bin/magento queue:consumers:start catalog.category.export.consumer" &
-  nohup bash -c "bin/magento queue:consumers:start catalog.product.variants.export.consumer" &
+  bash -c "bin/magento queue:consumers:start catalog.product.export.consumer&"
+  bash -c "bin/magento queue:consumers:start catalog.category.export.consumer&"
+  bash -c "bin/magento queue:consumers:start catalog.product.variants.export.consumer&"
 #    bin/magento storefront:catalog:sync
