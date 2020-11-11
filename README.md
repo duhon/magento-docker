@@ -111,19 +111,19 @@ It's needed to run gRPC server and client.
 #### Steps for manual setup
 1. PHP image should be built with "grpc" extension and `rr-grpc`
    - see details in `./build/php/fpm-grpc`
-2. run magento CLI command `bin/magento storefront:grpc:init \\Magento\\CatalogStorefrontApi\\Api\\CatalogProxyServer \\Magento\\CatalogStorefrontApi\\Api\\VariantServiceProxyServer` 
+2. enter into a container and run magento CLI command `bin/magento storefront:grpc:init \\Magento\\CatalogStorefrontApi\\Api\\CatalogProxyServer \\Magento\\CatalogStorefrontApi\\Api\\VariantServiceProxyServer` 
 3. gRPC server can be executed now: `./vendor/bin/grpc-server`
  
-#### Run service
-3. Run `mutagen project run grpc-server-start --project-file mutagen-grpc.yml` command to execute `etc/php/tools/grpc` script which does the following:
-   - Downloads gRPC server (`rr-grpc` binary file) and puts it to the `/usr/bin` directory (if it not installed yet)
-   - Run magento CLI command `bin/magento storefront:grpc:init \\Magento\\CatalogStorefrontApi\\Api\\CatalogProxyServer \\Magento\\CatalogStorefrontApi\\Api\\VariantServiceProxyServer` that does the following: 
+#### Automated setup
+1. Run `mutagen project run grpc-server-start` command to execute `etc/php/tools/grpc` script which does the following:
+   - replaces `magento.proto` with a file from `catalog-storfront` if it's a link  
+   - runs magento CLI command `bin/magento storefront:grpc:init \\Magento\\CatalogStorefrontApi\\Api\\CatalogProxyServer \\Magento\\CatalogStorefrontApi\\Api\\VariantServiceProxyServer` that does the following: 
         - copies certain files to `vendor/bin` (if they don't exist)
         - creates list of gRPC services and puts it to `./generated/code/grpc_services_map.php` file (if not created yet)
-   - Runs gRPC server via executing of ./vendor/bin/grpc-server
+   - runs gRPC server via executing of `./vendor/bin/grpc-server`
    - Please NOTE: Port **9001** should be opened to allow external connections to the server.
 
-4. Run gRPC client (can be executed from any instance which has access to **app:9001**):
+2. Run gRPC client (can be executed from any instance which has access to **app:9001**):
    - Uncomment following code in docker-compose.yml:
      ```yaml
         grpcui:
