@@ -20,7 +20,7 @@ if [[ -d .git ]]; then
    git checkout composer.lock composer.json
 fi
 
-php /var/www/magento2ee/dev/tools/build-ee.php /var/www/magento2ce/dev/tools/build-ee.php
+cp /var/www/magento2ee/dev/tools/build-ee.php /var/www/magento2ce/dev/tools/build-ee.php
 
 for edition in "$@"; do
 
