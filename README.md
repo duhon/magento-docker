@@ -109,12 +109,10 @@ https://github.com/duhon/magento-docker/projects
 As currently we don't have ability to generate Storefront API on fly - we put magento.proto file to the root of `catalog-storefront:develop` branch.
 It's needed to run gRPC server and client.
 #### Steps for manual setup
-1. PHP should be built with "grpc" extension
-   - `pecl install grpc`: see `./build/php/fpm-grpc`
-2. the following packages should be installed (see `./etc/php/tools/grpc`)
-   - gRPC server *rr-grpc* (https://github.com/spiral/php-grpc/releases/download/v1.4.0/rr-grpc-1.4.0-linux-amd64.tar.gz)
-3. run magento CLI command `bin/magento storefront:grpc:init \\Magento\\CatalogStorefrontApi\\Api\\CatalogProxyServer \\Magento\\CatalogStorefrontApi\\Api\\VariantServiceProxyServer` 
-4. gRPC server can be executed now: `./vendor/bin/grpc-server`
+1. PHP image should be built with "grpc" extension and `rr-grpc`
+   - see details in `./build/php/fpm-grpc`
+2. run magento CLI command `bin/magento storefront:grpc:init \\Magento\\CatalogStorefrontApi\\Api\\CatalogProxyServer \\Magento\\CatalogStorefrontApi\\Api\\VariantServiceProxyServer` 
+3. gRPC server can be executed now: `./vendor/bin/grpc-server`
  
 #### Run service
 3. Run `mutagen project run grpc-server-start --project-file mutagen-grpc.yml` command to execute `etc/php/tools/grpc` script which does the following:
