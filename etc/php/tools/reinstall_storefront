@@ -47,20 +47,20 @@ for edition in "$@"; do
          cp -rf /var/www/${edition}/dev ${dst} 2>/dev/null
          set -ex;
        fi
-       if [[ ${edition} == *"saas-export"* ]]; then
+       if [[ ${edition} == *"commerce-data-export"* ]]; then
          set +ex;
          cp -rf /var/www/${edition}/dev ${dst} 2>/dev/null
          set -ex;
        fi
 
-       php /var/www/magento2ce/dev/tools/build-ee.php --command link --exclude true --ce-source ${dst} --ee-source ${source}
+       php /var/www/commerce-data-export/dev/tools/build-sc.php --command link --exclude true --ce-source ${dst} --ee-source ${source}
      fi
    fi
 done
 
 #install magento
 
-if [ --f dev/tools/install-dependencies.php  ]; then
+if [ -f dev/tools/install-dependencies.php  ]; then
   echo 'install module dependencies'
   php dev/tools/install-dependencies.php .
 fi
