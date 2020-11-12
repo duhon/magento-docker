@@ -20,7 +20,7 @@ if [[ -d .git ]]; then
    git checkout composer.lock composer.json
 fi
 
-for edition in "$@"; do
+for edition in ${INSTALLED_REPOS}; do
 
    if [[ ${edition} == "magento2ce" ]] || [[ ${edition} == "graphql" ]]; then
       continue
@@ -33,8 +33,8 @@ for edition in "$@"; do
      if [ ${MUTAGEN_INSTALLATION} == "NO" ]; then
        cp -rlf ${source}/!(.git|vendor|..|.) ${dst}
      else
-       if [[ ${edition} == "magento2*" ]]; then
-         cp -rlf /var/www/magento2ce/magento2ee/composer* ${dst} 2>/dev/null
+       if [[ ${edition} == *"magento2"* ]]; then
+         cp -rlf /var/www/magento2ee/composer* ${dst} 2>/dev/null
        fi
        if [[ ${edition} == *"storefront"* ]]; then
          set +ex;
