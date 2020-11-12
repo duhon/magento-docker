@@ -47,8 +47,6 @@ for edition in "$@"; do
          set -ex;
        fi
 
-       echo ${source} ${dst}
-
        php /var/www/commerce-data-export/dev/tools/build-sc.php --command link --exclude true --ce-source ${dst} --ee-source ${source}
      fi
    fi
@@ -56,7 +54,7 @@ done
 
 #install magento
 
-if [ --f dev/tools/install-dependencies.php  ]; then
+if [ -f dev/tools/install-dependencies.php  ]; then
   echo 'install module dependencies'
   php dev/tools/install-dependencies.php .
 fi

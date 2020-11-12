@@ -58,7 +58,6 @@ Note, for the first installation (when you don't have cloned repositories yes) p
 ### Troubleshooting
    1. Add MAGENTO_PATH path to Docker sharing folders (Docker preferences) in case docker-error
 
-
 ## Scenarios
 
 ### 1. Enter container
@@ -107,26 +106,24 @@ Note, for the first installation (when you don't have cloned repositories yes) p
 https://github.com/duhon/magento-docker/projects
 
 ### gRPC set up:
-As currently we don't have ability to generate Storefront API on fly - we put magento.proto file to the root of catalog-storefront:develop branch.
+As currently we don't have ability to generate Storefront API on fly - we put magento.proto file to the root of `catalog-storefront:develop` branch.
 It's needed to run gRPC server and client.
 #### Steps for manual setup
-1. PHP should be built with "grpc" extension
-   - `pecl install grpc`: see `./build/php/fpm-grpc`
-2. the following packages should be installed (see `./etc/php/tools/grpc`)
-   - gRPC server *rr-grpc* (https://github.com/spiral/php-grpc/releases/download/v1.4.0/rr-grpc-1.4.0-linux-amd64.tar.gz)
-3. run magento CLI command `bin/magento storefront:grpc:init \\Magento\\CatalogStorefrontApi\\Api\\CatalogProxyServer` 
-4. gRPC server can be executed now: `./vendor/bin/grpc-server`
+1. PHP image should be built with "grpc" extension and `rr-grpc`
+   - see details in `./build/php/fpm-grpc`
+2. enter into a container and run magento CLI command `bin/magento storefront:grpc:init \\Magento\\CatalogStorefrontApi\\Api\\CatalogProxyServer \\Magento\\CatalogStorefrontApi\\Api\\VariantServiceProxyServer` 
+3. gRPC server can be executed now: `./vendor/bin/grpc-server`
  
-#### Run service
-3. Run `mutagen project run grpc-server-start --project-file mutagen-grpc.yml` command to execute `etc/php/tools/grpc` script which does the following:
-   - Downloads gRPC server (`rr-grpc` binary file) and puts it to the `/usr/bin` directory (if it not installed yet)
-   - Run magento CLI command `bin/magento storefront:grpc:init \\Magento\\CatalogStorefrontApi\\Api\\CatalogProxyServer` that does the following: 
+#### Automated setup
+1. Run `mutagen project run grpc-server-start` command to execute `etc/php/tools/grpc` script which does the following:
+   - replaces `magento.proto` with a file from `catalog-storfront` if it's a link  
+   - runs magento CLI command `bin/magento storefront:grpc:init \\Magento\\CatalogStorefrontApi\\Api\\CatalogProxyServer \\Magento\\CatalogStorefrontApi\\Api\\VariantServiceProxyServer` that does the following: 
         - copies certain files to `vendor/bin` (if they don't exist)
         - creates list of gRPC services and puts it to `./generated/code/grpc_services_map.php` file (if not created yet)
-   - Runs gRPC server via executing of ./vendor/bin/grpc-server
+   - runs gRPC server via executing of `./vendor/bin/grpc-server`
    - Please NOTE: Port **9001** should be opened to allow external connections to the server.
 
-4. Run gRPC client (can be executed from any instance which has access to **app:9001**):
+2. Run gRPC client (can be executed from any instance which has access to **app:9001**):
    - Uncomment following code in docker-compose.yml:
      ```yaml
         grpcui:
