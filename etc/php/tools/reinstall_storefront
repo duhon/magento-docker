@@ -26,12 +26,6 @@ for edition in "$@"; do
       continue
    fi
 
-   # TODO: delete after split saas-export
-   if [[ ${edition} == "data-solutions-services-id" ]]; then
-      dst="/var/www/magento2ce/app/code/Magento"
-   else
-      dst="/var/www/magento2ce"
-   fi
    if [[ -d ../${edition} ]] || [[ -d ../magento2ce/${edition} ]]; then
 
      source=/var/www/${edition}
@@ -47,13 +41,15 @@ for edition in "$@"; do
          cp -rf /var/www/${edition}/dev ${dst} 2>/dev/null
          set -ex;
        fi
-       if [[ ${edition} == *"saas-export"* ]]; then
+       if [[ ${edition} == *"commerce-data-export"* ]]; then
          set +ex;
          cp -rf /var/www/${edition}/dev ${dst} 2>/dev/null
          set -ex;
        fi
 
-       php /var/www/magento2ce/dev/tools/build-ee.php --command link --exclude true --ce-source ${dst} --ee-source ${source}
+       echo ${source} ${dst}
+
+       php /var/www/commerce-data-export/dev/tools/build-sc.php --command link --exclude true --ce-source ${dst} --ee-source ${source}
      fi
    fi
 done

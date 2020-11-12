@@ -8,11 +8,13 @@
  */
 -->
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/6.2/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/9.1/phpunit.xsd"
          colors="true"
          columns="max"
          beStrictAboutTestsThatDoNotTestAnything="false"
          bootstrap="./framework/bootstrap.php"
+         testSuiteLoaderClass="Magento\TestFramework\ApiSuiteLoader"
+         testSuiteLoaderFile="framework/Magento/TestFramework/ApiSuiteLoader.php"
 >
     <!-- Test suites definition -->
     <testsuites>
@@ -26,6 +28,7 @@
     <!-- PHP INI settings and constants definition -->
     <php>
         <includePath>./testsuite</includePath>
+        <ini name="date.timezone" value="America/Los_Angeles"/>
         <const name="TESTS_INSTALL_CONFIG_FILE" value="config/install-config-mysql.php"/>
         <const name="TESTS_GLOBAL_CONFIG_FILE" value="config/config-global.php"/>
         <!-- WebSerivice Type -->
@@ -41,6 +44,7 @@
         <!-- Define XDEBUG_SESSION cookie value-->
         <const name="TESTS_XDEBUG_SESSION" value="phpstorm" />
         <!--Generate documentation from REST tests and put it into var/log/rest-documentation directory-->
+        <const name="USE_OVERRIDE_CONFIG" value="enabled"/>
         <const name="GENERATE_REST_DOCUMENTATION" value="false" />
 
         <ini name="date.timezone" value="America/Los_Angeles"/>

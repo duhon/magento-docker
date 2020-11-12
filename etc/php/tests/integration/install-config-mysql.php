@@ -4,9 +4,11 @@
  * See COPYING.txt for license details.
  */
 return [
-    'db-host' => 'db',
+    'db-host' => 'mysql8',
     'db-user' => 'root',
     'db-password' => '',
+    // use the same DB (call web-abi inside integration test)
+//    'db-name' => 'magento',
     'db-name' => 'magento_integration_tests',
     'db-prefix' => '',
     'search-engine' => 'elasticsearch6',
