@@ -44,6 +44,7 @@ This approach will use only docker-compose to install Storefront (Search service
  Note: for storefront-search-ce to work do this after install:
  - docker-compose exec app-search magento storefront_search (this will add env.php and config.php)
  - go to app/etc/env.php and put creds for database and elasticsearch if needed. (GRPC server won't start if db creds are incorrect)
+ - uncomment GRPC_SERVICE_CLASS var in .env
  - docker-compose exec app-search magento grpc (this will generate service map and run GRPC service)
  
 #### mutagen based installation
