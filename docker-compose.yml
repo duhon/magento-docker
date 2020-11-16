@@ -1,5 +1,11 @@
 version: '3.7'
 services:
+  mutagen:
+    build: ./build/mutagen
+    init: true
+    container_name: web-mutagen
+    volumes:
+      - code:/var/www
   graphql:
     image: node:12.14.1-buster-slim
     command: sh -c './bin/magento-graphql start '
@@ -21,7 +27,7 @@ services:
     image: nginx:alpine
     hostname: web
     volumes:
-      - ${MAGENTO_PATH}:/var/www:${FILE_SYNC}
+      - code:/var/www
       - ./etc/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./etc/nginx/server.crt:/etc/nginx/server.crt
       - ./etc/nginx/server.key:/etc/nginx/server.key
@@ -55,68 +61,6 @@ services:
     x-hits:
       - bin/magento dev:query-log:enable and watch var/debug/db.log
     x-info: https://devdocs.magento.com/guides/v2.3/install-gde/prereq/mysql.html
-  app:
-    image: mslabko/php-with-grpc
-    # to re-build image with gRPC use the following docker file:
-    #    build:
-    #      context: .
-    #      dockerfile: build/php/fpm-grpc
-    hostname: app
-    ports:
-      - "${SSH_PORT}:22"
-      - "9001:9001"
-    depends_on:
-      - elastic
-    stop_signal: SIGKILL
-    volumes:
-      - ${MAGENTO_PATH}:/var/www:${FILE_SYNC}
-      - ./:/var/www/magento-docker:${FILE_SYNC}
-#      - ./etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
-      - ./etc/php/tools:/usr/local/bin/magento2:ro
-      #      - ./etc/php/tideways.ini:/usr/local/etc/php/conf.d/tideways.ini
-      #      - ./etc/php/profiler.php:/usr/local/lib/php/header.php
-      #      - ./etc/php/append.ini:/usr/local/etc/php/conf.d/append.ini
-      - ./etc/php/php.ini:/usr/local/etc/php/php.ini:ro
-      - ./etc/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
-      - ./etc/php/tests/functional/phpunit.xml:/var/www/magento2ce/dev/tests/functional/phpunit.xml:rw
-      - ./etc/php/tests/functional/config.xml:/var/www/magento2ce/dev/tests/functional/etc/config.xml:rw
-      - ./etc/php/tests/acceptance/.env:/var/www/magento2ce/dev/tests/acceptance/.env:rw
-      - ./etc/php/tests/integration/install-config-mysql.php:/var/www/magento2ce/dev/tests/integration/etc/install-config-mysql.php:rw
-      - ./etc/php/tests/api-functional/install-config-mysql.php:/var/www/magento2ce/dev/tests/api-functional/config/install-config-mysql.php:rw
-      - ./etc/php/tests/api-functional/phpunit_rest.xml:/var/www/magento2ce/dev/tests/api-functional/phpunit_rest.xml:rw
-      - ./etc/php/tests/api-functional/phpunit_graphql.xml:/var/www/magento2ce/dev/tests/api-functional/phpunit_graphql.xml:rw
-    environment:
-      COMPOSER_HOME: /var/www/.composer
-      PHP_IDE_CONFIG: serverName=magento.test
-    command: sh -c 'service ssh start; php-fpm -R'
-    x-hints:
-      - magento reinstall ee
-    x-setup:
-    x-info: https://devdocs.magento.com/
-  app-search:
-    image: mslabko/php-with-grpc
-    build:
-      context: .
-      dockerfile: build/php/fpm-grpc
-    hostname: app-search
-    ports:
-      - "${SSH_PORT}:22"
-      - "9001:9001"
-    stop_signal: SIGKILL
-    volumes:
-      - ${MAGENTO_PATH}/storefront-search-ce:/var/www/magento2ce:${FILE_SYNC}
-      - ./auth.json:/var/www/magento2ce/auth.json
-      - ./etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
-      - .:/var/www/magento-docker
-      - ./etc/php/tools:/usr/local/bin/magento2:ro
-      - ./etc/php/php.ini:/usr/local/etc/php/php.ini:ro
-      - ./etc/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
-    environment:
-      COMPOSER_HOME: /var/www/.composer
-    command: sh -c "service ssh start; php-fpm -R"
-    x-hints:
-    x-setup:
-    x-info: https://devdocs.magento.com/
   elastic:
     image: elasticsearch:$ELASTICSEARCH_IMAGE_VERSION
     hostname: elastic
@@ -134,6 +78,44 @@ services:
     x-hits:
       - curl -i http://localhost:9200/_cluster/health
     x-info: https://devdocs.magento.com/guides/v2.3/config-guide/elasticsearch/es-overview.html
+  app:
+    image: rkostiv/php-with-rr-grpc
+    # to re-build image with gRPC use the following docker file:
+#    build:
+#      context: .
+#      dockerfile: build/php/fpm-grpc
+    hostname: app
+    ports:
+      - "${SSH_PORT}:22"
+      - "9001:9001"
+    depends_on:
+      - elastic
+    stop_signal: SIGKILL
+    volumes:
+      - code:/var/www
+      - ./etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+      - .:/var/www/magento-docker
+      - ./etc/php/tools:/usr/local/bin/magento2:ro
+      #      - ./etc/php/tideways.ini:/usr/local/etc/php/conf.d/tideways.ini
+      #      - ./etc/php/profiler.php:/usr/local/lib/php/header.php
+      #      - ./etc/php/append.ini:/usr/local/etc/php/conf.d/append.ini
+      - ./etc/php/php.ini:/usr/local/etc/php/php.ini:ro
+      - ./etc/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
+      #      - ./etc/php/tests/functional/phpunit.xml:/var/www/magento2ce/dev/tests/functional/phpunit.xml:rw
+      #      - ./etc/php/tests/functional/config.xml:/var/www/magento2ce/dev/tests/functional/etc/config.xml:rw
+      #      - ./etc/php/tests/acceptance/.env:/var/www/magento2ce/dev/tests/acceptance/.env:rw
+      - ./etc/php/tests/integration/install-config-mysql.php:/var/www/magento2ce/dev/tests/integration/etc/install-config-mysql.php:rw
+      - ./etc/php/tests/api-functional/install-config-mysql.php:/var/www/magento2ce/dev/tests/api-functional/config/install-config-mysql.php:rw
+      - ./etc/php/tests/api-functional/phpunit_rest.xml:/var/www/magento2ce/dev/tests/api-functional/phpunit_rest.xml:rw
+      - ./etc/php/tests/api-functional/phpunit_graphql.xml:/var/www/magento2ce/dev/tests/api-functional/phpunit_graphql.xml:rw
+    environment:
+      COMPOSER_HOME: /var/www/.composer
+      PHP_IDE_CONFIG: serverName=magento.test
+    command: sh -c 'service ssh start; php-fpm -R'
+    x-hints:
+      - magento reinstall ee
+    x-setup:
+    x-info: https://devdocs.magento.com/
   #  mftf:
   #    image: selenium/standalone-chrome-debug:3.12.0
   #    ports:
@@ -183,11 +165,10 @@ services:
 #    ports:
 #      - "8080:8080"
 #    volumes:
-#      - ${MAGENTO_PATH}:/var/www
-# Uncomment following line to use grpcui for catalog-sstorefront
+#      - code:/var/www
 #    entrypoint: ["grpcui", "-plaintext", "-proto", "magento.proto", "-port", "8080", "-bind", "0.0.0.0", "-import-path", "/var/www/magento2ce", "app:9001"]
-# Uncomment following line to use grpcui for search-service
-#    entrypoint: ["grpcui", "-plaintext", "-proto", "magento.proto", "-port", "8080", "-bind", "0.0.0.0", "-import-path", "/var/www/magento2ce", "app-search:9001"]
 networks:
   default:
     driver: bridge
+volumes:
+  code:

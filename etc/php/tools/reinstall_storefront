@@ -20,18 +20,12 @@ if [[ -d .git ]]; then
    git checkout composer.lock composer.json
 fi
 
-for edition in "$@"; do
+for edition in ${INSTALLED_REPOS}; do
 
    if [[ ${edition} == "magento2ce" ]] || [[ ${edition} == "graphql" ]]; then
       continue
    fi
 
-   # TODO: delete after split saas-export
-   if [[ ${edition} == "data-solutions-services-id" ]]; then
-      dst="/var/www/magento2ce/app/code/Magento"
-   else
-      dst="/var/www/magento2ce"
-   fi
    if [[ -d ../${edition} ]] || [[ -d ../magento2ce/${edition} ]]; then
 
      source=/var/www/${edition}
@@ -39,28 +33,28 @@ for edition in "$@"; do
      if [ ${MUTAGEN_INSTALLATION} == "NO" ]; then
        cp -rlf ${source}/!(.git|vendor|..|.) ${dst}
      else
-       if [[ ${edition} == "magento2*" ]]; then
-         cp -rlf /var/www/magento2ce/magento2ee/composer* ${dst} 2>/dev/null
+       if [[ ${edition} == *"magento2"* ]]; then
+         cp -rlf /var/www/magento2ee/composer* ${dst} 2>/dev/null
        fi
        if [[ ${edition} == *"storefront"* ]]; then
          set +ex;
          cp -rf /var/www/${edition}/dev ${dst} 2>/dev/null
          set -ex;
        fi
-       if [[ ${edition} == *"saas-export"* ]]; then
+       if [[ ${edition} == *"commerce-data-export"* ]]; then
          set +ex;
          cp -rf /var/www/${edition}/dev ${dst} 2>/dev/null
          set -ex;
        fi
 
-       php /var/www/magento2ce/dev/tools/build-ee.php --command link --exclude true --ce-source ${dst} --ee-source ${source}
+       php /var/www/commerce-data-export/dev/tools/build-sc.php --command link --exclude true --ce-source ${dst} --ee-source ${source}
      fi
    fi
 done
 
 #install magento
 
-if [ --f dev/tools/install-dependencies.php  ]; then
+if [ -f dev/tools/install-dependencies.php  ]; then
   echo 'install module dependencies'
   php dev/tools/install-dependencies.php .
 fi
