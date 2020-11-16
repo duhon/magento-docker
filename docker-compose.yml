@@ -116,15 +116,42 @@ services:
       - magento reinstall ee
     x-setup:
     x-info: https://devdocs.magento.com/
-  #  mftf:
-  #    image: selenium/standalone-chrome-debug:3.12.0
-  #    ports:
-  #      - "${MFTF_PORT}:5900"
-  #    x-hints:
-  #      - "vnc://localhost:5900 pass:secret"
-  #      - magento prepare_tests
-  #      - vendor/bin/mftf run:test
-  #    x-info: https://devdocs.magento.com/mftf/docs/introduction.html
+  app-search:
+    image: rkostiv/php-with-rr-grpc
+    # to re-build image with gRPC use the following docker file:
+    #    build:
+    #      context: .
+    #      dockerfile: build/php/fpm-grpc
+    hostname: app-search
+    depends_on:
+      - elastic
+    stop_signal: SIGKILL
+    volumes:
+      - ${MAGENTO_PATH}/storefront-search-ce:/var/www/magento2ce:${FILE_SYNC}
+      - ./etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+      - .:/var/www/magento-docker
+      - ./etc/php/tools:/usr/local/bin/magento2:ro
+      #      - ./etc/php/tideways.ini:/usr/local/etc/php/conf.d/tideways.ini
+      #      - ./etc/php/profiler.php:/usr/local/lib/php/header.php
+      #      - ./etc/php/append.ini:/usr/local/etc/php/conf.d/append.ini
+      - ./etc/php/php.ini:/usr/local/etc/php/php.ini:ro
+      - ./etc/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
+      - ./etc/php/tests/integration/install-config-mysql.php:/var/www/magento2ce/dev/tests/integration/etc/install-config-mysql.php:rw
+      - ./etc/php/tests/api-functional/install-config-mysql.php:/var/www/magento2ce/dev/tests/api-functional/config/install-config-mysql.php:rw
+      - ./etc/php/tests/api-functional/phpunit_rest.xml:/var/www/magento2ce/dev/tests/api-functional/phpunit_rest.xml:rw
+      - ./etc/php/tests/api-functional/phpunit_graphql.xml:/var/www/magento2ce/dev/tests/api-functional/phpunit_graphql.xml:rw
+    environment:
+      COMPOSER_HOME: /var/www/.composer
+    command: sh -c 'service ssh start; php-fpm -R'
+#  mftf:
+#    image: selenium/standalone-chrome-debug:3.12.0
+#    ports:
+#      - "${MFTF_PORT}:5900"
+#    x-hints:
+#      - "vnc://localhost:5900 pass:secret"
+#      - magento prepare_tests
+#      - vendor/bin/mftf run:test
+#    x-info: https://devdocs.magento.com/mftf/docs/introduction.html
   redis:
     image: redis
     hostname: redis
@@ -167,6 +194,13 @@ services:
 #    volumes:
 #      - code:/var/www
 #    entrypoint: ["grpcui", "-plaintext", "-proto", "magento.proto", "-port", "8080", "-bind", "0.0.0.0", "-import-path", "/var/www/magento2ce", "app:9001"]
+  grpcui-search:
+    image: wongnai/grpcui
+    ports:
+      - "8081:8080"
+    volumes:
+      - ${MAGENTO_PATH}/storefront-search-ce:/var/www/magento2ce
+    entrypoint: ["grpcui", "-plaintext", "-proto", "magento.proto", "-port", "8080", "-bind", "0.0.0.0", "-import-path", "/var/www/magento2ce", "app-search:9001"]
 networks:
   default:
     driver: bridge

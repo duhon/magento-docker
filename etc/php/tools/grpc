@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+source /var/www/magento-docker/.env
+export $(cut -d= -f1 /var/www/magento-docker/.env)
+
 if [ -f magento.proto ] && [ -h magento.proto ]; then
   echo 'magento.proto must be not a link. Copying from catalog-storefront'
   unlink magento.proto
@@ -7,7 +10,7 @@ if [ -f magento.proto ] && [ -h magento.proto ]; then
 fi
 
 echo 'Start gRPC initialization...'
-bin/magento storefront:grpc:init \\Magento\\CatalogStorefrontApi\\Api\\CatalogProxyServer \\Magento\\CatalogStorefrontApi\\Api\\VariantServiceProxyServer
+bin/magento storefront:grpc:init ${GRPC_SERVICE_CLASS}
 echo 'End of gRPC initialization'
 
 echo 'Starting gRPC server...';

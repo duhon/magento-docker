@@ -34,7 +34,7 @@
 
 4. You have 2 options to install the project
 #### docker-compose based installation
-If you want to run search-service please first - populate `auth.json` in the root of repository with your magento composer keys
+
 This approach will use only docker-compose to install Storefront (Search service) project. Files between the host and guest are synced with "delegated" options (see FILE_SYNC in .env) 
  - RUN `git checkout docker-compose.yml` - optional: reset changes if any present in docker-compose.yml
  - RUN `bash ./init_project` - clone repos (if RECLONE=YES in .evn)
@@ -42,9 +42,9 @@ This approach will use only docker-compose to install Storefront (Search service
  - RUN `bash ./reinstall` - install/reinstall Magento with repositories provided in INSTALLED_REPOS (see .env)
  
  Note: for storefront-search-ce to work do this after install:
- - docker-compose exec app-search magneto storefront_search (this will add env.php and config.php)
- - go to app/etc/env.php and put creds for database and elasticsearch if needed.
- - docker-compose exec app-search magneto grpc (this will generate service map and run GRPC service)
+ - docker-compose exec app-search magento storefront_search (this will add env.php and config.php)
+ - go to app/etc/env.php and put creds for database and elasticsearch if needed. (GRPC server won't start if db creds are incorrect)
+ - docker-compose exec app-search magento grpc (this will generate service map and run GRPC service)
  
 #### mutagen based installation
 This approach will use mutagen service to share code between the host and guest.
