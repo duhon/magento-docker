@@ -6,12 +6,21 @@ source ./.env
 export $(cut -d= -f1 ./.env)
 DOCKER_PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
+
+ if [[ ! -f ./etc/php/auth.json ]] ; then
+   echo 'auth.json nothing found. Please, add ./etc/php/auth.json'
+   exit
+ fi
+
 # for Mutagen installation: Update Magento path in mutagen.yml
 sed -ie "s|alpha: .*|alpha: \"$MAGENTO_PATH\"|" $DOCKER_PROJECT_DIR/mutagen.yml
 
 # Add domain to hosts
 #sudo -- sh -c "echo '127.0.0.1 $MAGENTO_DOMAIN' >> /etc/hosts"
 
+if [[ "" != "$GIT_CLONE_DEPTH" ]]; then
+  GIT_CLONE_DEPTH="--depth=${GIT_CLONE_DEPTH}"
+fi
 
 if [[ "yes" == "$RECLONE" ]]; then
   cd $MAGENTO_PATH
@@ -32,11 +41,6 @@ if [[ "yes" == "$RECLONE" ]]; then
 else
  cd $MAGENTO_PATH/magento2ce
  export GIT_DISCOVERY_ACROSS_FILESYSTEM=1 && git checkout -- .
-fi
-
-if [ ${MUTAGEN_INSTALLATION} == "YES" ]; then
- cd $MAGENTO_PATH/magento2ce
- git apply $DOCKER_PROJECT_DIR/etc/php/path-validator.patch
 fi
 
 # workaround to work with magento/magento2 && magento/partners-magento2ee repos

@@ -20,18 +20,14 @@ if [[ -d .git ]]; then
    git checkout composer.lock composer.json
 fi
 
-for edition in "$@"; do
+for edition in ${INSTALLED_REPOS}; do
 
-   if [[ ${edition} == "magento2ce" ]] || [[ ${edition} == "graphql" ]]; then
+   if [[ ${edition} == "magento2ce" ]] || [[ ${edition} == "graphql" ]] || [[ ${edition} == "storefront-message-broker" ]] || [[ ${edition} == "storefront-search-ce" ]]; then
       continue
    fi
 
-   # TODO: delete after split saas-export
-   if [[ ${edition} == "data-solutions-services-id" ]]; then
-      dst="/var/www/magento2ce/app/code/Magento"
-   else
-      dst="/var/www/magento2ce"
-   fi
+   dst="/var/www/magento2ce"
+
    if [[ -d ../${edition} ]] || [[ -d ../magento2ce/${edition} ]]; then
 
      source=/var/www/${edition}
