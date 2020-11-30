@@ -28,8 +28,8 @@ commands:
   logs: docker-compose logs --follow
   reindex: docker-compose exec app magento reindex
   reinstall: bash reinstall
-  xdebug-enable: sed -ie "s|#zend_extension=xdebug.so|zend_extension=xdebug.so|" ./etc/php/xdebug.ini && docker-compose restart app
-  xdebug-disable: sed -ie "s|zend_extension=xdebug.so|#zend_extension=xdebug.so|" ./etc/php/xdebug.ini && docker-compose restart app
+  xdebug-enable: sed -ie "s|#zend_extension=xdebug.so|zend_extension=xdebug.so|" ./etc/php/xdebug.ini && docker-compose restart app app-message-broker
+  xdebug-disable: sed -ie "s|zend_extension=xdebug.so|#zend_extension=xdebug.so|" ./etc/php/xdebug.ini && docker-compose restart app app-message-broker
   grpc-server-start: docker-compose exec app magento grpc
 
 # Synchronize code to the shared Docker volume via the Mutagen service.

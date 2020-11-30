@@ -32,7 +32,10 @@
     sudo -- sh -c "echo '127.0.0.1 magento.test >> /etc/hosts"
 ```
 
-4. You have 2 options to install the project
+4. Add Magento authentication keys to access the Magento Commerce repository
+ * copy the contents of `etc/php/auth.json.dist` to new `etc/php/auth.json` file and replace placeholders with your credentials
+
+You have two options to install the project
 #### docker-compose based installation
 
 This approach will use only docker-compose to install Storefront (Search service) project. Files between the host and guest are synced with "delegated" options (see FILE_SYNC in .env) 
@@ -49,6 +52,8 @@ This approach will use only docker-compose to install Storefront (Search service
  
 #### mutagen based installation
 This approach will use mutagen service to share code between the host and guest.
+Mutagen will significantly speedup work of Magento instance 
+
 Before run, set `MUTAGEN_INSTALLATION=YES` in .env  
 
 4. RUN `mutagen project start`

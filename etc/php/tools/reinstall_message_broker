@@ -1,0 +1,18 @@
+#!/bin/bash
+shopt -s extglob
+
+source /var/www/magento-docker/.env
+export $(cut -d= -f1 /var/www/magento-docker/.env)
+
+rm -rf app/etc/env.php app/etc/config.php
+
+bash dev/tools/make_standalone_app.sh
+composer install
+
+bin/command message-broker:install \
+    --amqp-host=rabbit --amqp-port=5672 --amqp-user=guest --amqp-password=guest \
+    --backoffice-base-url=${MAGENTO_DOMAIN} \
+    --consumers_wait_for_messages=0
+
+bin/command message-broker:grpc-connection:add \
+    --grpc-host=app --grpc-port=9001 --name=catalog
