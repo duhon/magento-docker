@@ -26,7 +26,12 @@ for edition in ${INSTALLED_REPOS}; do
       continue
    fi
 
-   dst="/var/www/magento2ce"
+   # copy into app/code/Magento
+   if [[ ${edition} == "inventory" ]] || [[ ${edition} == "grpc-module" ]]; then
+      dst="/var/www/magento2ce/app/code/Magento"
+   else
+      dst="/var/www/magento2ce"
+   fi
 
    if [[ -d ../${edition} ]] || [[ -d ../magento2ce/${edition} ]]; then
 
@@ -35,8 +40,8 @@ for edition in ${INSTALLED_REPOS}; do
      if [ ${MUTAGEN_INSTALLATION} == "NO" ]; then
        cp -rlf ${source}/!(.git|vendor|..|.) ${dst}
      else
-       if [[ ${edition} == "magento2*" ]]; then
-         cp -rlf /var/www/magento2ce/magento2ee/composer* ${dst} 2>/dev/null
+       if [[ ${edition} == "*magento2*" ]]; then
+         cp -rlf /var/www/magento2ee/composer* ${dst} 2>/dev/null
        fi
        if [[ ${edition} == *"storefront"* ]]; then
          set +ex;
