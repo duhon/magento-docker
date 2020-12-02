@@ -27,7 +27,7 @@ for edition in ${INSTALLED_REPOS}; do
    fi
 
    # copy into app/code/Magento
-   if [[ ${edition} == "inventory" ]] || [[ ${edition} == "grpc-module" ]]; then
+   if [[ ${edition} == "inventory" ]]; then
       dst="/var/www/magento2ce/app/code/Magento"
    else
       dst="/var/www/magento2ce"
