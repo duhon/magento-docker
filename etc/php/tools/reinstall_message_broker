@@ -16,3 +16,8 @@ bin/command message-broker:install \
 
 bin/command message-broker:grpc-connection:add \
     --grpc-host=app --grpc-port=9001 --name=catalog
+
+# start consumers
+  nohup bash -c "bin/command queue:consumers:start catalog.product.export.consumer&" &
+  nohup bash -c "bin/command queue:consumers:start catalog.category.export.consumer&" &
+  nohup bash -c "bin/command queue:consumers:start catalog.product.variants.export.consumer&"
