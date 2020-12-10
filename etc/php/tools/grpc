@@ -7,7 +7,8 @@ if [ -f magento.proto ] && [ -h magento.proto ]; then
 fi
 
 echo 'Start gRPC initialization...'
-bin/magento storefront:grpc:init \\Magento\\CatalogStorefrontApi\\Api\\CatalogProxyServer \\Magento\\CatalogStorefrontApi\\Api\\VariantServiceProxyServer
+# uncomment if `storefront-product-reviews-ce` installed
+bin/magento storefront:grpc:init \\Magento\\CatalogStorefrontApi\\Api\\CatalogProxyServer \\Magento\\CatalogStorefrontApi\\Api\\VariantServiceProxyServer #\\Magento\\ReviewsStorefrontApi\\Api\\ProductReviewsProxyServer \\Magento\\ReviewsStorefrontApi\\Api\\RatingsMetadataProxyServer
 echo 'End of gRPC initialization'
 
 echo 'Starting gRPC server...';
