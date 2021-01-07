@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 source /var/www/magento-docker/.env
-export $(cut -d= -f1 /var/www/magento-docker/.env)
+export $(cut -s -d= -f1 /var/www/magento-docker/.env)
 
 bin/magento config:set web/seo/use_rewrites 1
 bin/magento config:set dev/template/allow_symlink 1
