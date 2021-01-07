@@ -2,7 +2,7 @@
 shopt -s extglob
 
 source /var/www/magento-docker/.env
-export $(cut -d= -f1 /var/www/magento-docker/.env)
+export $(cut -s -d= -f1 /var/www/magento-docker/.env)
 
 rm -rf app/etc/env.php app/etc/config.php
 
@@ -24,3 +24,5 @@ bin/command message-broker:grpc-connection:add \
 # uncomment if `storefront-product-reviews-ce` installed
 #  nohup bash -c "bin/command queue:consumers:start export.product.reviews.consumer&"
 #  nohup bash -c "bin/command queue:consumers:start export.rating.metadata.consumer&"
+# uncomment if `storefront-pricing-ce` installed
+#  nohup bash -c "bin/command queue:consumers:start product.prices.export.queue&"
