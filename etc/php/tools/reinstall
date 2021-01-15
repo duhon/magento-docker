@@ -2,7 +2,7 @@
 shopt -s extglob
 
 source /var/www/magento-docker/.env
-export $(cut -d= -f1 /var/www/magento-docker/.env)
+export $(cut -s -d= -f1 /var/www/magento-docker/.env)
 
 cp /var/www/magento-docker/etc/php/tools/* /usr/local/sbin
 

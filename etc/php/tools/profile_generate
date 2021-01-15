@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 source /var/www/magento-docker/.env
-export $(cut -d= -f1 /var/www/magento-docker/.env)
+export $(cut -s -d= -f1 /var/www/magento-docker/.env)
 
 if [[ "no" != "$PERF_PROFILE" ]]; then
     if [[ "EE" == "$MAGENTO_EDITION" ]]; then

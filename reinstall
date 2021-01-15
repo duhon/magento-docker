@@ -3,7 +3,7 @@
 set -ex
 
 source ./.env
-export $(cut -d= -f1 ./.env)
+export $(cut -s -d= -f1 ./.env)
 
 DOCKER_PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
@@ -19,11 +19,14 @@ cd $DOCKER_PROJECT_DIR
 
 # reinstall storefront application bases on the current code base
 
-#standalone installation
-docker-compose exec app-message-broker magento reinstall_message_broker
-
 # monolith installation
 docker-compose exec app magento reinstall_storefront ${INSTALLED_REPOS}
+
+#standalone installations
+## message-broker
+docker-compose exec app-message-broker magento reinstall_message_broker
+## storefront-pricing
+## docker-compose exec app-pricing magento reinstall_storefront_pricing
 
 docker-compose exec app magento config_setup
 # docker-compose exec app magento profile_generate

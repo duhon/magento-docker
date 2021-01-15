@@ -1,15 +1,10 @@
 #!/usr/bin/env bash
 
 source /var/www/magento-docker/.env
-export $(cut -d= -f1 /var/www/magento-docker/.env)
+export $(cut -s -d= -f1 /var/www/magento-docker/.env)
 
   php -r '$sC = include "/var/www/magento-docker/etc/php/storefront-env.php"; $env = include "app/etc/env.php"; $env = array_replace_recursive($env, $sC); $contents = var_export($env, true); file_put_contents("app/etc/env.php", "<?php\n return $contents; \n");'
   bin/magento app:config:import
   bin/magento setup:upgrade
   bin/magento cache:clean
-
-  # required by consumers in Message Broker
-  nohup bash -c "bin/magento queue:consumers:start catalog.product.export.consumer&" &
-  nohup bash -c "bin/magento queue:consumers:start catalog.category.export.consumer&" &
-  nohup bash -c "bin/magento queue:consumers:start catalog.product.variants.export.consumer&"
 #    bin/magento storefront:catalog:sync
