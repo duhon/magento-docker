@@ -25,18 +25,33 @@ fi
 if [[ "yes" == "$RECLONE" ]]; then
   cd $MAGENTO_PATH
   for edition in $INSTALLED_REPOS; do
+     cd $MAGENTO_PATH
+     org=$(echo "GIT_ORG_${edition}" | sed "s|-|_|g")
+     repo=$(echo "GIT_REPO_${edition}" | sed "s|-|_|g")
+     branch=$(echo "GIT_BRANCH_${edition}" | sed "s|-|_|g")
+     github_repo="git@github.com:${!org}/${!repo}.git"
+     path=$edition
 
    if [[ -d ./${edition} ]] || [[ -d "./magento2ce/${edition}" ]]; then
-#       repo exists, do nothing
+#       repo exists, reset working tree and set correct branch
+      # continue
+      cd $MAGENTO_PATH/$edition
+      git clean -dfx -e '.idea' -e 'vendor' -e 'magento2*'
+      git reset --hard
+
+      git remote add ${!org} ${github_repo} || echo "."
+      if [ $? -eq 0 ]; then
+        git fetch ${!org}
+      fi
+
+      git checkout -B ${!branch} ${!org}/${!branch}
+      git pull
       continue
    fi
 
-     repo=$(echo "GIT_REPO_${edition}" | sed "s|-|_|g")
-     branch=$(echo "GIT_BRANCH_${edition}" | sed "s|-|_|g")
-     path=$edition
      chmod g+s .
 
-    git clone ${GIT_CLONE_DEPTH} git@github.com:magento/${!repo}.git ${path} -b ${!branch}
+    git clone ${GIT_CLONE_DEPTH} ${github_repo} ${path} -b ${!branch}
   done
 else
  cd $MAGENTO_PATH/magento2ce
