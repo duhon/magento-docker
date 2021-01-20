@@ -143,6 +143,26 @@ It's needed to run gRPC server and client.
    - Port **8080** should be opened to allow external connections to the client.
    - Run grpcui container: `docker-compose up grpcui`
 
+### Standalone services setup
+Catalog Storefront contains services that can be run separately. For example `storefront-message-broker` is being started [as separate application](https://github.com/duhon/magento-docker/blob/8f02567fa9cd4c106d1419f198930c8383c270c4/reinstall#L27) after Magento Monolith installed.
+Other services are optional (`pricing`, `search`, `reviews`) and can be started after Magento launched. For example `pricing` service can be started by the following steps:
+1. Make sure [container with pricing is available](https://github.com/duhon/magento-docker/blob/8f02567fa9cd4c106d1419f198930c8383c270c4/bundles/storefront.yml#L86). and not commented before install.
+2. In `reinstall` file [uncomment catalog-pricing installation command](https://github.com/duhon/magento-docker/blob/8f02567fa9cd4c106d1419f198930c8383c270c4/reinstall#L29) or run this command if Magento already installed.
+`docker-compose exec app-pricing magento reinstall_storefront_pricing`
+3. To enter the container run the following command:
+`docker-compose exec app-pricing bash`
+
+To start `grpc-server` within pricing application do the following:
+1. Navigate to `.env` file and set `GRPC_SERVICE_CLASS` to the value [mentioned in the example](https://github.com/duhon/magento-docker/blob/6437cac1dc6c97c7c66ef46aacdbcd983ece269c/.env#L13):
+```
+GRPC_SERVICE_CLASS="\\Magento\\PricingStorefrontApi\\Api\\PriceBookServiceProxyServer"
+```
+2. From docker project root start the following command:
+`docker-compose exec app-pricing magento grpc`
+3. To send requests to `pricing` application start grpcui. Uncomment `grpcui-pricing` section in `docker-composer.yml` and start via docker-compose:
+`docker-compose up grpcui-pricing`
+4. Open `http://0.0.0.0:8082/` in browser. `magento.pricingStorefrontApi.proto.PriceBookService` service must be present in services list.
+ 
 ### Q/A
  1. Unable to start `grpcui`.
  
