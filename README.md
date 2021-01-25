@@ -60,7 +60,7 @@ Note, for the first installation (when you don't have cloned repositories yes) p
     MAGENTO_EDITION=EE                              # EE|B2B
     Notices:
 
-### gRPC performance besting
+### gRPC performance testing
 Preconditions:
 - Product with id "1" is created
 - Verify `DOCKER_PATH` in the `.env` file
