@@ -1,0 +1,13 @@
+#!/bin/bash
+shopt -s extglob
+
+source /var/www/magento-docker/.env
+export $(cut -s -d= -f1 /var/www/magento-docker/.env)
+
+rm -rf app/etc/env.php app/etc/config.php
+
+bash dev/tools/make_standalone_app.sh
+composer install
+
+bin/command storefront:review:init \
+    --magento-es-engine=elasticsearch7 --magento-es-hostname=elastic --magento-es-index-prefix=magento2_reviews_

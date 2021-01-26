@@ -73,6 +73,70 @@ services:
       - ./etc/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
     environment:
       COMPOSER_HOME: /var/www/.composer
+      PHP_IDE_CONFIG: serverName=app-message-broker
+    command: sh -c 'service ssh start; php-fpm -R'
+
+  # Storefront Pricing app container (magento/storefront-pricing-ce repo)
+  app-pricing:
+    image: rkostiv/php-with-rr-grpc
+    hostname: app-pricing
+    working_dir: /var/www/app
+    ports:
+      - "225:22" #ssh
+    stop_signal: SIGKILL
+    volumes:
+      - ${MAGENTO_PATH}/storefront-pricing-ce:/var/www/app:${FILE_SYNC}
+      - ./etc/php/auth.json:/var/www/app/auth.json:ro
+      - ./etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+      - .:/var/www/magento-docker
+      - ./etc/php/tools:/usr/local/bin/magento2:ro
+      - ./etc/php/php.ini:/usr/local/etc/php/php.ini:ro
+      - ./etc/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
+    environment:
+      COMPOSER_HOME: /var/www/.composer
+      PHP_IDE_CONFIG: serverName=app-pricing
+    command: sh -c 'service ssh start; php-fpm -R'
+
+  # Storefront Search app container (magento/storefront-search-ce repo)
+  app-search:
+    image: rkostiv/php-with-rr-grpc
+    hostname: app-search
+    working_dir: /var/www/app
+    ports:
+      - "226:22" #ssh
+    stop_signal: SIGKILL
+    volumes:
+      - ${MAGENTO_PATH}/storefront-search-ce:/var/www/app:${FILE_SYNC}
+      - ./etc/php/auth.json:/var/www/app/auth.json:ro
+      - ./etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+      - .:/var/www/magento-docker
+      - ./etc/php/tools:/usr/local/bin/magento2:ro
+      - ./etc/php/php.ini:/usr/local/etc/php/php.ini:ro
+      - ./etc/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
+    environment:
+      COMPOSER_HOME: /var/www/.composer
+      PHP_IDE_CONFIG: serverName=app-search
+    command: sh -c 'service ssh start; php-fpm -R'
+
+  # Storefront Product Review app container (magento/storefront-product-reviews-ce repo)
+  app-product-reviews:
+    image: rkostiv/php-with-rr-grpc
+    hostname: app-product-reviews
+    working_dir: /var/www/app
+    ports:
+      - "227:22" #ssh
+    stop_signal: SIGKILL
+    volumes:
+      - ${MAGENTO_PATH}/storefront-product-reviews-ce:/var/www/app:${FILE_SYNC}
+      - ./etc/php/auth.json:/var/www/app/auth.json:ro
+      - ./etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+      - .:/var/www/magento-docker
+      - ./etc/php/tools:/usr/local/bin/magento2:ro
+      - ./etc/php/php.ini:/usr/local/etc/php/php.ini:ro
+      - ./etc/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
+    environment:
+      COMPOSER_HOME: /var/www/.composer
+      PHP_IDE_CONFIG: serverName=app-product-reviews
     command: sh -c 'service ssh start; php-fpm -R'
 
   # Magento 2 container with commerce-data-export repo
@@ -188,6 +252,13 @@ services:
 #    volumes:
 #      - ${MAGENTO_PATH}/storefront-search-ce:/var/www/magento2ce
 #    entrypoint: ["grpcui", "-plaintext", "-proto", "search.proto", "-port", "8080", "-bind", "0.0.0.0", "-import-path", "/var/www/magento2ce", "app-search:9001"]
+#  grpcui-product-reviews:
+#    image: wongnai/grpcui
+#    ports:
+#      - "8084:8080"
+#    volumes:
+#      - ${MAGENTO_PATH}/storefront-product-reviews-ce:/var/www/magento2ce
+#    entrypoint: ["grpcui", "-plaintext", "-proto", "reviews.proto", "-port", "8080", "-bind", "0.0.0.0", "-import-path", "/var/www/magento2ce", "app-product-reviews:9001"]
 
 networks:
   default:
