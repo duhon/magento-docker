@@ -10,4 +10,4 @@ bash dev/tools/make_standalone_app.sh
 composer install
 
 bin/command storefront:review:init \
-    --magento-es-engine=elasticsearch7 --magento-es-hostname=elastic --magento-es-index-prefix=magento2_reviews_
+    --es-engine=elasticsearch7 --es-hostname=elastic --es-index-prefix=magento2_reviews_

@@ -26,7 +26,7 @@ for edition in ${INSTALLED_REPOS}; do
       [[ ${edition} == "storefront-message-broker" ]] || [[ ${edition} == "storefront-search-ce" ]] ||\
       [[ ${edition} == "storefront-pricing-ce" ]] || [[ ${edition} == "storefront-product-reviews-ce" ]] ||\
       [[ ${edition} == "catalog-storefront" ]]; then
-        # skip copying, linkage for standalone applications
+      # skip copying, linking for standalone applications
       continue
    fi
 
