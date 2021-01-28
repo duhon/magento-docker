@@ -11,4 +11,4 @@ composer install
 
 bin/command storefront:search:init \
   --magento-db-host=db --magento-db-name=magento --magento-db-user=root --magento-db-password= --magento-db-table-prefix=\
-  --magento-es-engine=elasticsearch7 --magento-es-hostname=localhost --magento-es-index-prefix=magento2_search
+  --magento-es-engine=elasticsearch7 --magento-es-hostname=localhost --magento-es-index-prefix=magento2_search_

@@ -24,7 +24,9 @@ for edition in ${INSTALLED_REPOS}; do
 
    if [[ ${edition} == "magento2ce" ]] || [[ ${edition} == "graphql" ]] ||\
       [[ ${edition} == "storefront-message-broker" ]] || [[ ${edition} == "storefront-search-ce" ]] ||\
-      [[ ${edition} == "storefront-pricing-ce" ]] || [[ ${edition} == "storefront-product-reviews-ce" ]]; then
+      [[ ${edition} == "storefront-pricing-ce" ]] || [[ ${edition} == "storefront-product-reviews-ce" ]] ||\
+      [[ ${edition} == "catalog-storefront" ]]; then
+        # skip copying, linkage for standalone applications
       continue
    fi
 
@@ -105,7 +107,8 @@ bin/magento setup:install \
   --amqp-password=guest
 
 bin/magento config:set web/secure/base_url http://${MAGENTO_DOMAIN}/
-
+# need to run di:compile to trigger classes generation in "generated/code/Magento/CatalogExportApi"
+bin/magento setup:di:compile
 
 #do x-setup lines
 #IFS=$'\n' setup=($(yq read /var/www/magento-docker/docker-compose.yml services.*.x-setup | grep -oP '^(?:\s*\-\s)+(?!null)\K.*'))
