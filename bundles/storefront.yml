@@ -153,6 +153,7 @@ services:
     working_dir: /var/www/app
     ports:
       - "228:22" #ssh
+      - "9002:9001" # grpc
     stop_signal: SIGKILL
     volumes:
       - ${MAGENTO_PATH}/catalog-storefront:/var/www/app:${FILE_SYNC}
