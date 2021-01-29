@@ -27,6 +27,7 @@ docker-compose exec app magento reinstall_storefront ${INSTALLED_REPOS}
 docker-compose exec app-message-broker magento reinstall_message_broker
 ## catalog-storefront
 docker-compose exec app-catalog-storefront magento reinstall_catalog_storefront
+
 ## storefront-pricing
 #docker-compose exec app-pricing magento reinstall_storefront_pricing
 ## storefront-search
@@ -42,5 +43,5 @@ docker-compose stop redis
 echo y | docker-compose rm redis
 docker-compose up -d redis
 
-# start grpc server on standalone application
+# start gRPC server on standalone application
 docker-compose exec app-catalog-storefront magento grpc

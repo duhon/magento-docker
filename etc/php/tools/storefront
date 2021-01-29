@@ -7,4 +7,5 @@ export $(cut -s -d= -f1 /var/www/magento-docker/.env)
   bin/magento app:config:import
   bin/magento setup:upgrade
   bin/magento cache:clean
+  bin/magento setup:di:compile
 #    bin/magento storefront:catalog:sync
