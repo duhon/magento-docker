@@ -73,12 +73,16 @@ done
 
 #install magento
 
-if [ -f dev/tools/install-dependencies.php  ]; then
+composer install
+
+if [[ -f ../catalog-storefront/dev/tools/install-dependencies.php ]]; then
+  cp ../catalog-storefront/dev/tools/install-dependencies.php dev/tools/install-dependencies.php
+fi
+
+if [[ -f dev/tools/install-dependencies.php ]]; then
   echo 'install module dependencies'
   php dev/tools/install-dependencies.php .
 fi
-
-composer install
 
 mysql -uroot -h${DB_HOST} -e "DROP DATABASE IF EXISTS magento; create database magento;"
 rm -rf generated/* var/* app/etc/env.php app/etc/config.php

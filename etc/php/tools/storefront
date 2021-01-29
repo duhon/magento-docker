@@ -7,5 +7,6 @@ export $(cut -s -d= -f1 /var/www/magento-docker/.env)
   bin/magento app:config:import
   bin/magento setup:upgrade
   bin/magento cache:clean
+  # need to run di:compile to trigger classes generation in "generated/code/Magento/CatalogExportApi"
   bin/magento setup:di:compile
 #    bin/magento storefront:catalog:sync

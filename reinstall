@@ -27,13 +27,13 @@ docker-compose exec app magento reinstall_storefront ${INSTALLED_REPOS}
 docker-compose exec app-message-broker magento reinstall_message_broker
 ## catalog-storefront
 docker-compose exec app-catalog-storefront magento reinstall_catalog_storefront
+## storefront-product-reviews
+docker-compose exec app-product-reviews magento reinstall_storefront_review
 
 ## storefront-pricing
 #docker-compose exec app-pricing magento reinstall_storefront_pricing
 ## storefront-search
 #docker-compose exec app-search magento reinstall_storefront_search
-## storefront-product-reviews
-#docker-compose exec app-product-reviews magento reinstall_storefront_review
 
 docker-compose exec app magento config_setup
 # docker-compose exec app magento profile_generate
