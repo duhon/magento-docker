@@ -111,8 +111,6 @@ bin/magento setup:install \
   --amqp-password=guest
 
 bin/magento config:set web/secure/base_url http://${MAGENTO_DOMAIN}/
-# need to run di:compile to trigger classes generation in "generated/code/Magento/CatalogExportApi"
-bin/magento setup:di:compile
 
 #do x-setup lines
 #IFS=$'\n' setup=($(yq read /var/www/magento-docker/docker-compose.yml services.*.x-setup | grep -oP '^(?:\s*\-\s)+(?!null)\K.*'))
