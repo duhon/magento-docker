@@ -75,7 +75,7 @@ done
 
 composer install
 
-if [[ -f ../catalog-storefront/dev/tools/install-dependencies.php ]]; then
+if [[ -f ../catalog-storefront/dev/tools/install-dependencies.php ]] && [[ ! -f dev/tools/install-dependencies.php ]]; then
   cp ../catalog-storefront/dev/tools/install-dependencies.php dev/tools/install-dependencies.php
 fi
 
