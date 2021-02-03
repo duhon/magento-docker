@@ -73,6 +73,7 @@ done
 
 #install magento
 
+composer global require hirak/prestissimo
 composer install
 
 if [[ -f ../catalog-storefront/dev/tools/install-dependencies.php ]] && [[ ! -f dev/tools/install-dependencies.php ]]; then

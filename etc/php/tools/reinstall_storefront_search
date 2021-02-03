@@ -7,6 +7,8 @@ export $(cut -s -d= -f1 /var/www/magento-docker/.env)
 rm -rf app/etc/env.php app/etc/config.php
 
 bash dev/tools/make_standalone_app.sh
+
+composer global require hirak/prestissimo
 composer install
 
 bin/command storefront:search:init \
