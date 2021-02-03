@@ -9,5 +9,5 @@ rm -rf app/etc/env.php app/etc/config.php
 bash dev/tools/make_standalone_app.sh
 composer install
 
-bin/command storefront:catalog:init \
+bin/command storefront:init \
   --es-engine=elasticsearch7 --es-hostname=elastic --es-index-prefix=catalog_storefront_
