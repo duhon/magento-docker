@@ -71,6 +71,7 @@ services:
       - "223:22" #ssh
     stop_signal: SIGKILL
     volumes:
+      - code:/var/www/repos
       - ${MAGENTO_PATH}/storefront-message-broker:/var/www/app:${FILE_SYNC}
       - ./etc/php/auth.json:/var/www/app/auth.json:ro
       - ./etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini

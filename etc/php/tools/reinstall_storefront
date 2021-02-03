@@ -22,23 +22,19 @@ fi
 
 for edition in ${INSTALLED_REPOS}; do
 
-   if [[ ${edition} == "magento2ce" ]] || [[ ${edition} == "graphql" ]] || [[ ${edition} == "storefront-message-broker" ]] || [[ ${edition} == "storefront-search-ce" ]] || [[ ${edition} == "storefront-pricing-ce" ]]; then
+   if [[ ${edition} == "magento2ce" ]] || [[ ${edition} == "storefront-libraries" ]] || [[ ${edition} == "graphql" ]] || [[ ${edition} == "storefront-message-broker" ]] || [[ ${edition} == "storefront-search-ce" ]] || [[ ${edition} == "storefront-pricing-ce" ]]; then
       continue
    fi
 
    # copy into app/code/Magento
    if [[ ${edition} == "inventory" ]]; then
       dst="/var/www/magento2ce/app/code/Magento"
-   else
-      dst="/var/www/magento2ce"
    fi
 
    # copy into app/code/Magento
    if [[ ${edition} == "module-grpc" ]]; then
       mkdir -p /var/www/magento2ce/app/code/Magento/Grpc
       dst="/var/www/magento2ce/app/code/Magento/Grpc"
-   else
-      dst="/var/www/magento2ce"
    fi
 
    if [[ -d ../${edition} ]] || [[ -d ../magento2ce/${edition} ]]; then
