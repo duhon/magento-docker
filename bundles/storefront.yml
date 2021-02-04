@@ -11,14 +11,14 @@ services:
 #    image: node:12.14.1-buster-slim
 #    command: sh -c './bin/magento-graphql start '
 #    tty: true
-#    working_dir: /usr/src/app
-#    depends_on:
-#      - app
+#    working_dir: /var/www/graphql
+#    env_file:
+#      - .env
 #    volumes:
-#      - ${MAGENTO_PATH}/graphql:/usr/src/app:${FILE_SYNC}
+#      - code:/var/www
 #    environment:
 #      - MONOLITH_GRAPHQL_URL=http://magento.test/graphql
-#      - LOG_FILE=/usr/src/app/app.log
+#      - LOG_FILE=/var/www/graphql/app.log
 #      - ENABLE_CATALOG_STOREFRONT=true
 #      - CATALOG_STOREFRONT_HOST=app
 #      - CATALOG_STOREFRONT_PORT=9001
@@ -66,16 +66,16 @@ services:
   app-message-broker:
     image: rkostiv/php-with-rr-grpc
     hostname: app-message-broker
-    working_dir: /var/www/app
+    working_dir: /var/www/storefront-message-broker
     ports:
       - "223:22" #ssh
     stop_signal: SIGKILL
+    env_file:
+      - .env
     volumes:
-      - code:/var/www/repos
-      - ${MAGENTO_PATH}/storefront-message-broker:/var/www/app:${FILE_SYNC}
-      - ./etc/php/auth.json:/var/www/app/auth.json:ro
+      - code:/var/www
+      - ./etc/php/auth.json:/var/www/storefront-message-broker/auth.json:ro
       - ./etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
-      - .:/var/www/magento-docker
       - ./etc/php/tools:/usr/local/bin/magento2:ro
       - ./etc/php/php.ini:/usr/local/etc/php/php.ini:ro
       - ./etc/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
@@ -84,24 +84,25 @@ services:
     command: sh -c 'service ssh start; php-fpm -R'
 
   # Storefront Pricing app container (magento/storefront-pricing-ce repo)
-  app-pricing:
-    image: rkostiv/php-with-rr-grpc
-    hostname: app-pricing
-    working_dir: /var/www/app
-    ports:
-      - "225:22" #ssh
-    stop_signal: SIGKILL
-    volumes:
-      - ${MAGENTO_PATH}/storefront-pricing-ce:/var/www/app:${FILE_SYNC}
-      - ./etc/php/auth.json:/var/www/app/auth.json:ro
-      - ./etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
-      - .:/var/www/magento-docker
-      - ./etc/php/tools:/usr/local/bin/magento2:ro
-      - ./etc/php/php.ini:/usr/local/etc/php/php.ini:ro
-      - ./etc/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
-    environment:
-      COMPOSER_HOME: /var/www/.composer
-    command: sh -c 'service ssh start; php-fpm -R'
+#  app-pricing:
+#    image: rkostiv/php-with-rr-grpc
+#    hostname: app-pricing
+#    working_dir: /var/www/storefront-pricing-ce
+#    ports:
+#      - "225:22" #ssh
+#    stop_signal: SIGKILL
+#    env_file:
+#      - .env
+#    volumes:
+#      - code:/var/www
+#      - ./etc/php/auth.json:/var/www/storefront-pricing-ce/auth.json:ro
+#      - ./etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+#      - ./etc/php/tools:/usr/local/bin/magento2:ro
+#      - ./etc/php/php.ini:/usr/local/etc/php/php.ini:ro
+#      - ./etc/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
+#    environment:
+#      COMPOSER_HOME: /var/www/.composer
+#    command: sh -c 'service ssh start; php-fpm -R'
 
   # Magento 2 container with commerce-data-export repo
   app:
@@ -118,10 +119,12 @@ services:
       - elastic
       - db
     stop_signal: SIGKILL
+    env_file:
+      - .env
     volumes:
       - code:/var/www
+      - ./etc/php/storefront-env.php:/var/www/magento-docker/etc/php/storefront-env.php
       - ./etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
-      - .:/var/www/magento-docker
       - ./etc/php/tools:/usr/local/bin/magento2:ro
       #      - ./etc/php/tideways.ini:/usr/local/etc/php/conf.d/tideways.ini
       #      - ./etc/php/profiler.php:/usr/local/lib/php/header.php
@@ -139,10 +142,6 @@ services:
       COMPOSER_HOME: /var/www/.composer
       PHP_IDE_CONFIG: serverName=magento.test
     command: sh -c 'service ssh start; php-fpm -R'
-    x-hints:
-      - magento reinstall ee
-    x-setup:
-    x-info: https://devdocs.magento.com/
   elastic:
     image: elasticsearch:$ELASTICSEARCH_IMAGE_VERSION
     hostname: elastic
@@ -157,9 +156,6 @@ services:
       memlock:
         soft: -1
         hard: -1
-    x-hits:
-      - curl -i http://localhost:9200/_cluster/health
-    x-info: https://devdocs.magento.com/guides/v2.3/config-guide/elasticsearch/es-overview.html
   redis:
     image: redis
     hostname: redis
@@ -172,22 +168,11 @@ services:
       nofile:
         soft: 20000
         hard: 40000
-    x-hints:
-      - redis-cli monitor
-      - telnet localhost 6379
-    x-setup:
-    x-info: https://devdocs.magento.com/guides/v2.3/config-guide/redis/config-redis.html
   rabbit:
     image: rabbitmq:management
     hostname: rabbitmq
     ports:
       - "${RABBIT_PORT}:15672"
-    x-hints:
-      - bin/magento queue:consumers:list
-      - bin/magento queue:consumers:start
-      - "http://localhost:15672/ user:guest pass:guest"
-    x-setup:
-    x-info: https://devdocs.magento.com/guides/v2.3/config-guide/mq/manage-message-queues.html
 #  mail:
 #    image: mailhog/mailhog
 #    hostname: mail
