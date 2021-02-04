@@ -12,8 +12,8 @@ services:
 #    command: sh -c 'npm ci && npm run build && ./bin/magento-graphql start '
 #    tty: true
 #    working_dir: /var/www/graphql
-#    depends_on:
-#      - app
+#    env_file:
+#      - .env
 #    volumes:
 #      - code:/var/www
 #    environment:
@@ -70,11 +70,12 @@ services:
     ports:
       - "223:22" #ssh
     stop_signal: SIGKILL
+    env_file:
+      - .env
     volumes:
       - code:/var/www
       - ./etc/php/auth.json:/var/www/storefront-message-broker/auth.json:ro
       - ./etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
-      - .:/var/www/magento-docker
       - ./etc/php/tools:/usr/local/bin/magento2:ro
       - ./etc/php/php.ini:/usr/local/etc/php/php.ini:ro
       - ./etc/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
@@ -91,6 +92,8 @@ services:
     ports:
       - "225:22" #ssh
     stop_signal: SIGKILL
+    env_file:
+      - .env
     volumes:
       - code:/var/www
       - ./etc/php/auth.json:/var/www/storefront-pricing-ce/auth.json:ro
@@ -112,6 +115,8 @@ services:
     ports:
       - "226:22" #ssh
     stop_signal: SIGKILL
+    env_file:
+      - .env
     volumes:
       - code:/var/www
       - ./etc/php/auth.json:/var/www/storefront-search-ce/auth.json:ro
@@ -133,6 +138,8 @@ services:
     ports:
       - "227:22" #ssh
     stop_signal: SIGKILL
+    env_file:
+      - .env
     volumes:
       - code:/var/www
       - ./etc/php/auth.json:/var/www/storefront-product-reviews-ce/auth.json:ro
@@ -155,6 +162,8 @@ services:
       - "228:22" #ssh
       - "9002:9001" # grpc
     stop_signal: SIGKILL
+    env_file:
+      - .env
     volumes:
       - code:/var/www
       - ./etc/php/auth.json:/var/www/catalog-storefront/auth.json:ro
@@ -183,10 +192,12 @@ services:
       - elastic
       - db
     stop_signal: SIGKILL
+    env_file:
+      - .env
     volumes:
       - code:/var/www
+      - ./etc/php/storefront-env.php:/var/www/magento-docker/etc/php/storefront-env.php
       - ./etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
-      - .:/var/www/magento-docker
       - ./etc/php/tools:/usr/local/bin/magento2:ro
       #      - ./etc/php/tideways.ini:/usr/local/etc/php/conf.d/tideways.ini
       #      - ./etc/php/profiler.php:/usr/local/lib/php/header.php
@@ -204,10 +215,6 @@ services:
       COMPOSER_HOME: /var/www/.composer
       PHP_IDE_CONFIG: serverName=magento.test
     command: sh -c 'service ssh start; php-fpm -R'
-    x-hints:
-      - magento reinstall ee
-    x-setup:
-    x-info: https://devdocs.magento.com/
   elastic:
     image: elasticsearch:$ELASTICSEARCH_IMAGE_VERSION
     hostname: elastic
@@ -222,9 +229,6 @@ services:
       memlock:
         soft: -1
         hard: -1
-    x-hits:
-      - curl -i http://localhost:9200/_cluster/health
-    x-info: https://devdocs.magento.com/guides/v2.3/config-guide/elasticsearch/es-overview.html
   redis:
     image: redis
     hostname: redis
@@ -237,22 +241,11 @@ services:
       nofile:
         soft: 20000
         hard: 40000
-    x-hints:
-      - redis-cli monitor
-      - telnet localhost 6379
-    x-setup:
-    x-info: https://devdocs.magento.com/guides/v2.3/config-guide/redis/config-redis.html
   rabbit:
     image: rabbitmq:management
     hostname: rabbitmq
     ports:
       - "${RABBIT_PORT}:15672"
-    x-hints:
-      - bin/magento queue:consumers:list
-      - bin/magento queue:consumers:start
-      - "http://localhost:15672/ user:guest pass:guest"
-    x-setup:
-    x-info: https://devdocs.magento.com/guides/v2.3/config-guide/mq/manage-message-queues.html
 #  mail:
 #    image: mailhog/mailhog
 #    hostname: mail

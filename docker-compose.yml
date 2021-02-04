@@ -5,8 +5,8 @@ services:
   #    command: sh -c './bin/magento-graphql start '
   #    tty: true
   #    working_dir: /usr/src/app
-  #    depends_on:
-  #      - app
+  #    env_file:
+  #      - .env
   #    volumes:
   #      - ${MAGENTO_PATH}/graphql:/usr/src/app:${FILE_SYNC}
   #    environment:
@@ -21,7 +21,7 @@ services:
     image: nginx:alpine
     hostname: web
     volumes:
-      - ${MAGENTO_PATH}:/var/www:${FILE_SYNC}
+      - code:/var/www
       - ./etc/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./etc/nginx/server.crt:/etc/nginx/server.crt
       - ./etc/nginx/server.key:/etc/nginx/server.key

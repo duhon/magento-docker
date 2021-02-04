@@ -2,8 +2,6 @@
 shopt -s extglob
 
 DB_HOST=db
-source /var/www/magento-docker/.env
-export $(cut -s -d= -f1 /var/www/magento-docker/.env)
 
 # for mutagen installation:
 # cp /var/www/magento-docker/etc/php/tools/* /usr/local/bin 2>/dev/null || :
