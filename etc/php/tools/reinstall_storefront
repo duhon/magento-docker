@@ -21,7 +21,15 @@ for edition in ${INSTALLED_REPOS}; do
    #apply edition
    dst="/var/www/magento2ce"
 
-   if [[ ${edition} == "magento2ce" ]] || [[ ${edition} == "storefront-libraries" ]] || [[ ${edition} == "graphql" ]] || [[ ${edition} == "storefront-message-broker" ]] || [[ ${edition} == "storefront-search-ce" ]] || [[ ${edition} == "storefront-pricing-ce" ]]; then
+   if [[ ${edition} == "magento2ce" ]] ||\
+      [[ ${edition} == "graphql" ]] ||\
+      [[ ${edition} == "storefront-libraries" ]] ||\
+      [[ ${edition} == "storefront-message-broker" ]] ||\
+      [[ ${edition} == "storefront-search-ce" ]] ||\
+      [[ ${edition} == "storefront-pricing-ce" ]] ||\
+      [[ ${edition} == "storefront-product-reviews-ce" ]] ||\
+      [[ ${edition} == "catalog-storefront" ]]; then
+      # skip copying, linking for standalone applications
       continue
    fi
 
@@ -64,12 +72,17 @@ done
 
 #install magento
 
-if [ -f dev/tools/install-dependencies.php  ]; then
+composer global require hirak/prestissimo
+composer install
+
+if [[ -f ../catalog-storefront/dev/tools/install-dependencies.php ]] && [[ ! -f dev/tools/install-dependencies.php ]]; then
+  cp ../catalog-storefront/dev/tools/install-dependencies.php dev/tools/install-dependencies.php
+fi
+
+if [[ -f dev/tools/install-dependencies.php ]]; then
   echo 'install module dependencies'
   php dev/tools/install-dependencies.php .
 fi
-
-composer install
 
 mysql -uroot -h${DB_HOST} -e "DROP DATABASE IF EXISTS magento; create database magento;"
 rm -rf generated/* var/* app/etc/env.php app/etc/config.php
@@ -98,7 +111,6 @@ bin/magento setup:install \
   --amqp-password=guest
 
 bin/magento config:set web/secure/base_url http://${MAGENTO_DOMAIN}/
-
 
 #do x-setup lines
 #IFS=$'\n' setup=($(yq read /var/www/magento-docker/docker-compose.yml services.*.x-setup | grep -oP '^(?:\s*\-\s)+(?!null)\K.*'))

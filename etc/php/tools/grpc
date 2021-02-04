@@ -9,6 +9,11 @@ if [ -f magento.proto ] && [ -h magento.proto ]; then
   cp /var/www/catalog-storefront/magento.proto .
 fi
 
+# allow to pass gRPC service classes as list of parameters without changes into .env
+if [[ ! -z "$*" ]]; then
+  GRPC_SERVICE_CLASS="$*"
+fi
+
 echo 'Start gRPC initialization...'
 if [[ ! -f bin/magento ]] ; then
   echo 'Using bin/command for standalone apps'
