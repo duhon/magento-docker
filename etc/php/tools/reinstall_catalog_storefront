@@ -1,12 +1,10 @@
 #!/bin/bash
 shopt -s extglob
 
-source /var/www/magento-docker/.env
-export $(cut -s -d= -f1 /var/www/magento-docker/.env)
-
 rm -rf app/etc/env.php app/etc/config.php
 
 bash dev/tools/make_standalone_app.sh
+composer config repositories.libraries path "/var/www/storefront-libraries/modules/*"
 composer install
 
 bin/command storefront:init \

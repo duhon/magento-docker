@@ -4,7 +4,7 @@ shopt -s extglob
 rm -rf app/etc/env.php app/etc/config.php
 
 bash dev/tools/make_standalone_app.sh
-
+composer config repositories.libraries path "/var/www/storefront-libraries/modules/*"
 composer global require hirak/prestissimo
 composer install
 
