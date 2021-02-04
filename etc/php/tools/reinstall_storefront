@@ -11,9 +11,6 @@ export $(cut -s -d= -f1 /var/www/magento-docker/.env)
 # remove links
 find  . -type l -delete
 
-#apply edition
-dst="/var/www/magento2ce"
-
 #clean project dir (not for mutagen)
 if [[ -d .git ]]; then
    git clean -dfx -e '.idea' $(mount | grep -oP '/var/www/magento2ce/\K\S*' | xargs -rn 1 echo '-e ')
@@ -21,6 +18,8 @@ if [[ -d .git ]]; then
 fi
 
 for edition in ${INSTALLED_REPOS}; do
+   #apply edition
+   dst="/var/www/magento2ce"
 
    if [[ ${edition} == "magento2ce" ]] || [[ ${edition} == "storefront-libraries" ]] || [[ ${edition} == "graphql" ]] || [[ ${edition} == "storefront-message-broker" ]] || [[ ${edition} == "storefront-search-ce" ]] || [[ ${edition} == "storefront-pricing-ce" ]]; then
       continue
