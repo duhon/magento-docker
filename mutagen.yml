@@ -7,6 +7,7 @@ beforeCreate:
 # Set up the main services after creating sessions. At this point, sessions will
 # have been established and code pushed to the shared volume.
 afterCreate:
+  - docker-compose pull
   - docker-compose up --build --detach
   - bash reinstall
 
@@ -45,7 +46,7 @@ sync:
       defaultFileMode: 0666
       defaultDirectoryMode: 0777
   code:
-    alpha: "/Users/andrii/code/others/storefront/repos"
+    alpha: "/Users/ruslankostiv/projects/storefront/repos"
     beta: "docker://web-mutagen/var/www"
     mode: "two-way-resolved"
     ignore:
