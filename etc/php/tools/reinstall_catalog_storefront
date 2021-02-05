@@ -5,8 +5,7 @@ rm -rf app/etc/env.php app/etc/config.php
 
 bash dev/tools/make_standalone_app.sh
 composer config repositories.libraries path "/var/www/storefront-libraries/modules/*"
-composer global require hirak/prestissimo
 composer install
 
-bin/command storefront:pricing:init \
-  --db-host=db --db-name=magento --db-user=root --db-password= --db-table-prefix=
+bin/command storefront:init \
+  --es-engine=elasticsearch7 --es-hostname=elastic --es-index-prefix=catalog_storefront_

@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 
-source /var/www/magento-docker/.env
-export $(cut -s -d= -f1 /var/www/magento-docker/.env)
-
 if [ -f magento.proto ] && [ -h magento.proto ]; then
   echo 'magento.proto must be not a link. Copying from catalog-storefront'
   unlink magento.proto
   cp /var/www/catalog-storefront/magento.proto .
+fi
+
+# allow to pass gRPC service classes as list of parameters without changes into .env
+if [[ ! -z "$*" ]]; then
+  GRPC_SERVICE_CLASS="$*"
 fi
 
 echo 'Start gRPC initialization...'

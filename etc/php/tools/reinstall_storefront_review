@@ -8,5 +8,5 @@ composer config repositories.libraries path "/var/www/storefront-libraries/modul
 composer global require hirak/prestissimo
 composer install
 
-bin/command storefront:pricing:init \
-  --db-host=db --db-name=magento --db-user=root --db-password= --db-table-prefix=
+bin/command storefront:review:init \
+    --es-engine=elasticsearch7 --es-hostname=elastic --es-index-prefix=magento2_reviews_

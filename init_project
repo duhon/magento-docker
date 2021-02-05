@@ -6,12 +6,6 @@ source ./.env
 export $(cut -s -d= -f1 ./.env)
 DOCKER_PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-
- if [[ ! -f ./etc/php/auth.json ]] ; then
-   echo 'auth.json nothing found. Please, add ./etc/php/auth.json'
-   exit
- fi
-
 # for Mutagen installation: Update Magento path in mutagen.yml
 sed -ie "s|alpha: .*|alpha: \"$MAGENTO_PATH\"|" $DOCKER_PROJECT_DIR/mutagen.yml
 

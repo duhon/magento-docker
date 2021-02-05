@@ -1,12 +1,11 @@
 #!/bin/bash
 shopt -s extglob
 
-source /var/www/magento-docker/.env
-export $(cut -s -d= -f1 /var/www/magento-docker/.env)
-
 rm -rf app/etc/env.php app/etc/config.php
 
 bash dev/tools/make_standalone_app.sh
+composer config repositories.libraries path "/var/www/storefront-libraries/modules/*"
+composer global require hirak/prestissimo
 composer install
 
 bin/command message-broker:install \
@@ -15,14 +14,20 @@ bin/command message-broker:install \
     --consumers_wait_for_messages=0
 
 bin/command message-broker:grpc-connection:add \
-    --grpc-host=app --grpc-port=9001 --name=catalog
+    --grpc-host=app-catalog-storefront --grpc-port=9001 --name=catalog
+
+bin/command message-broker:grpc-connection:add \
+    --grpc-host=app-catalog-storefront --grpc-port=9001 --name=variants
+
+bin/command message-broker:grpc-connection:add \
+    --grpc-host=app-product-reviews --grpc-port=9001 --name=reviews
 
 # start consumers
   nohup bash -c "bin/command queue:consumers:start catalog.product.export.consumer&" &
   nohup bash -c "bin/command queue:consumers:start catalog.category.export.consumer&" &
   nohup bash -c "bin/command queue:consumers:start catalog.product.variants.export.consumer&"
 # uncomment if `storefront-product-reviews-ce` installed
-#  nohup bash -c "bin/command queue:consumers:start export.product.reviews.consumer&"
-#  nohup bash -c "bin/command queue:consumers:start export.rating.metadata.consumer&"
+  nohup bash -c "bin/command queue:consumers:start export.product.reviews.consumer&"
+  nohup bash -c "bin/command queue:consumers:start export.rating.metadata.consumer&"
 # uncomment if `storefront-pricing-ce` installed
 #  nohup bash -c "bin/command queue:consumers:start product.prices.export.queue&"

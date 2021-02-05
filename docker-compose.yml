@@ -1,22 +1,22 @@
 version: '3.7'
 services:
-#  graphql:
-#    image: node:12.14.1-buster-slim
-#    command: sh -c './bin/magento-graphql start '
-#    tty: true
-#    working_dir: /usr/src/app
-#    depends_on:
-#      - app
-#    volumes:
-#      - ${MAGENTO_PATH}/graphql:/usr/src/app:${FILE_SYNC}
-#    environment:
-#      - MONOLITH_GRAPHQL_URL=http://magento.test/graphql
-#      - LOG_FILE=/usr/src/app/app.log
-#      - ENABLE_CATALOG_STOREFRONT=true
-#      - CATALOG_STOREFRONT_HOST=app
-#      - CATALOG_STOREFRONT_PORT=9001
-#    ports:
-#      - 8008:8008
+  #  graphql:
+  #    image: node:12.14.1-buster-slim
+  #    command: sh -c './bin/magento-graphql start '
+  #    tty: true
+  #    working_dir: /usr/src/app
+  #    depends_on:
+  #      - app
+  #    volumes:
+  #      - ${MAGENTO_PATH}/graphql:/usr/src/app:${FILE_SYNC}
+  #    environment:
+  #      - MONOLITH_GRAPHQL_URL=http://magento.test/graphql
+  #      - LOG_FILE=/usr/src/app/app.log
+  #      - ENABLE_CATALOG_STOREFRONT=true
+  #      - CATALOG_STOREFRONT_HOST=app
+  #      - CATALOG_STOREFRONT_PORT=9001
+  #    ports:
+  #      - 8008:8008
   web:
     image: nginx:alpine
     hostname: web
@@ -79,9 +79,9 @@ services:
   app:
     image: rkostiv/php-with-rr-grpc
     # to re-build image with gRPC use the following docker file:
-#    build:
-#      context: .
-#      dockerfile: build/php/fpm-grpc
+    #    build:
+    #      context: .
+    #      dockerfile: build/php/fpm-grpc
     hostname: app
     ports:
       - "${SSH_PORT}:22"
@@ -93,7 +93,7 @@ services:
     volumes:
       - ${MAGENTO_PATH}:/var/www:${FILE_SYNC}
       - ./:/var/www/magento-docker:${FILE_SYNC}
-#      - ./etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+      #      - ./etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
       - ./etc/php/tools:/usr/local/bin/magento2:ro
       #      - ./etc/php/tideways.ini:/usr/local/etc/php/conf.d/tideways.ini
       #      - ./etc/php/profiler.php:/usr/local/lib/php/header.php
@@ -180,7 +180,7 @@ services:
 #      - "8082:8080"
 #    volumes:
 #      - ${MAGENTO_PATH}/storefront-pricing-ce:/var/www/magento2ce
-#    entrypoint: ["grpcui", "-plaintext", "-proto", "magento.proto", "-port", "8080", "-bind", "0.0.0.0", "-import-path", "/var/www/magento2ce", "app-pricing:9001"]
+#    entrypoint: ["grpcui", "-plaintext", "-proto", "pricing.proto", "-port", "8080", "-bind", "0.0.0.0", "-import-path", "/var/www/magento2ce", "app-pricing:9001"]
 
 networks:
   default:
