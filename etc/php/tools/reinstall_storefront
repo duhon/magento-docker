@@ -109,7 +109,3 @@ bin/magento setup:install \
   --amqp-password=guest
 
 bin/magento config:set web/secure/base_url http://${MAGENTO_DOMAIN}/
-
-#do x-setup lines
-#IFS=$'\n' setup=($(yq read /var/www/magento-docker/docker-compose.yml services.*.x-setup | grep -oP '^(?:\s*\-\s)+(?!null)\K.*'))
-#for i in ${setup[*]}; do eval "${i}"; done

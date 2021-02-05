@@ -98,7 +98,6 @@ services:
       - code:/var/www
       - ./etc/php/auth.json:/var/www/storefront-pricing-ce/auth.json:ro
       - ./etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
-      - .:/var/www/magento-docker
       - ./etc/php/tools:/usr/local/bin/magento2:ro
       - ./etc/php/php.ini:/usr/local/etc/php/php.ini:ro
       - ./etc/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
@@ -121,7 +120,6 @@ services:
       - code:/var/www
       - ./etc/php/auth.json:/var/www/storefront-search-ce/auth.json:ro
       - ./etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
-      - .:/var/www/magento-docker
       - ./etc/php/tools:/usr/local/bin/magento2:ro
       - ./etc/php/php.ini:/usr/local/etc/php/php.ini:ro
       - ./etc/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
@@ -144,7 +142,6 @@ services:
       - code:/var/www
       - ./etc/php/auth.json:/var/www/storefront-product-reviews-ce/auth.json:ro
       - ./etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
-      - .:/var/www/magento-docker
       - ./etc/php/tools:/usr/local/bin/magento2:ro
       - ./etc/php/php.ini:/usr/local/etc/php/php.ini:ro
       - ./etc/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
@@ -168,7 +165,6 @@ services:
       - code:/var/www
       - ./etc/php/auth.json:/var/www/catalog-storefront/auth.json:ro
       - ./etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
-      - .:/var/www/magento-docker
       - ./etc/php/tools:/usr/local/bin/magento2:ro
       - ./etc/php/php.ini:/usr/local/etc/php/php.ini:ro
       - ./etc/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
@@ -196,7 +192,7 @@ services:
       - .env
     volumes:
       - code:/var/www
-      - ./etc/php/storefront-env.php:/var/www/magento-docker/etc/php/storefront-env.php
+      - ./etc/php/storefront-env.php:/tmp/storefront-env.php
       - ./etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
       - ./etc/php/tools:/usr/local/bin/magento2:ro
       #      - ./etc/php/tideways.ini:/usr/local/etc/php/conf.d/tideways.ini
