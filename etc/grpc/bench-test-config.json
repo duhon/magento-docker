@@ -1,0 +1,20 @@
+{
+  "proto": "/test/test.proto",
+  "call": "magento.catalogStorefrontApi.proto.Catalog.getProducts",
+  "duration": "10s",
+  "concurrency": 1,
+  "insecure":true,
+  "duration-stop": "ignore",
+  "data": {
+    "ids": ["1"],
+    "store": "default",
+    "attribute_codes": ["name", "sku"]
+  },
+  "skipFirst": 10,
+  "metadata": {
+    "foo": "bar",
+    "trace_id": "{{.RequestNumber}}",
+    "timestamp": "{{.TimestampUnix}}"
+  },
+  "host": "host.docker.internal:9001"
+}

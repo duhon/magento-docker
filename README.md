@@ -60,6 +60,13 @@ Note, for the first installation (when you don't have cloned repositories yes) p
     MAGENTO_EDITION=EE                              # EE|B2B
     Notices:
 
+### gRPC performance testing
+Preconditions:
+- Product with id "1" is created
+- Verify `DOCKER_PATH` in the `.env` file
+Ro run gRPC benchmark run `mutagen project run grpc-run-bench` or `docker-compose -f bundles/grpc-testing.yml up`
+Change test scenario if needed in magento-docker/etc/grpc/bench-test-config.json 
+
 ### Troubleshooting
    1. Add MAGENTO_PATH path to Docker sharing folders (Docker preferences) in case docker-error
 

@@ -1,0 +1,10 @@
+version: '3.7'
+services:
+  # run gRPC test with given configuration. See available options https://ghz.sh/docs/usage
+  grpc-testing:
+    image: mslabko/grpc-testing-ghz
+    volumes:
+      - ${MAGENTO_PATH}/catalog-storefront/magento.proto:/test/test.proto
+      - ${DOCKER_PATH}/etc/grpc/bench-test-config.json:/test/ghz_config.json
+    entrypoint: "/go/bin/ghz"
+    command: "--config=test/ghz_config.json -O summary"

@@ -31,6 +31,7 @@ commands:
   xdebug-enable: sed -ie "s|#zend_extension=xdebug.so|zend_extension=xdebug.so|" ./etc/php/xdebug.ini && docker-compose restart app app-message-broker
   xdebug-disable: sed -ie "s|zend_extension=xdebug.so|#zend_extension=xdebug.so|" ./etc/php/xdebug.ini && docker-compose restart app app-message-broker
   grpc-server-start: docker-compose exec app magento grpc
+  grpc-run-bench: docker-compose -f bundles/grpc-testing.yml up
 
 # Synchronize code to the shared Docker volume via the Mutagen service.
 sync:
