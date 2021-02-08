@@ -17,6 +17,9 @@ if [[ "" != "$GIT_CLONE_DEPTH" ]]; then
 fi
 
 if [[ "yes" == "$RECLONE" ]]; then
+  if [ ! -d $MAGENTO_PATH ]; then
+      mkdir $MAGENTO_PATH
+  fi
   cd $MAGENTO_PATH
   for edition in $INSTALLED_REPOS; do
      cd $MAGENTO_PATH
@@ -45,7 +48,7 @@ if [[ "yes" == "$RECLONE" ]]; then
 
      chmod g+s .
 
-    git clone ${GIT_CLONE_DEPTH} ${github_repo} ${path} -b ${!branch}
+    git clone ${GIT_CLONE_DEPTH} ${github_repo} ${path} -b ${!branch} --origin=${!org}
   done
 else
  cd $MAGENTO_PATH/magento2ce

@@ -114,36 +114,6 @@ services:
 #    ports:
 #      - "1025:1025"
 #      - "8025:8025"
-# Uncomment after gRPC server executed.
-#  grpcui-pricing:
-#    image: wongnai/grpcui
-#    ports:
-#      - "8082:8080"
-#    volumes:
-#      - ${MAGENTO_PATH}/storefront-pricing-ce:/var/www/magento2ce
-#    entrypoint: ["grpcui", "-plaintext", "-proto", "pricing.proto", "-port", "8080", "-bind", "0.0.0.0", "-import-path", "/var/www/magento2ce", "app-pricing:9001"]
-#  grpcui-search:
-#    image: wongnai/grpcui
-#    ports:
-#      - "8083:8080"
-#    volumes:
-#      - ${MAGENTO_PATH}/storefront-search-ce:/var/www/magento2ce
-#    entrypoint: ["grpcui", "-plaintext", "-proto", "search.proto", "-port", "8080", "-bind", "0.0.0.0", "-import-path", "/var/www/magento2ce", "app-search:9001"]
-#  grpcui-product-reviews:
-#    image: wongnai/grpcui
-#    ports:
-#      - "8084:8080"
-#    volumes:
-#      - ${MAGENTO_PATH}/storefront-product-reviews-ce:/var/www/magento2ce
-#    entrypoint: ["grpcui", "-plaintext", "-proto", "reviews.proto", "-port", "8080", "-bind", "0.0.0.0", "-import-path", "/var/www/magento2ce", "app-product-reviews:9001"]
-#  grpcui-catalog-storefront:
-#    image: wongnai/grpcui
-#    ports:
-#      - "8085:8080"
-#    volumes:
-#      - ${MAGENTO_PATH}/catalog-storefront:/var/www/magento2ce
-#    entrypoint: ["grpcui", "-plaintext", "-proto", "magento.proto", "-port", "8080", "-bind", "0.0.0.0", "-import-path", "/var/www/magento2ce", "app-catalog-storefront:9001"]
-
 networks:
   default:
     driver: bridge
