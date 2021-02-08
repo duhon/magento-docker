@@ -22,6 +22,8 @@ bin/command message-broker:grpc-connection:add \
 bin/command message-broker:grpc-connection:add \
     --grpc-host=app-product-reviews --grpc-port=9001 --name=reviews
 
+bin/command storefront:cache:setup --cache-backend redis
+
 pkill -f queue:consumers:start
 
 # start consumers

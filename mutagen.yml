@@ -1,12 +1,12 @@
 # Set up the Mutagen service and code volume before creating sessions.
 beforeCreate:
   - bash init_project
-  - docker-compose -f bundles/storefront.yml up --build --detach mutagen
+  - docker-compose -f bundles/monolith.yml up --build  --force-recreate --detach mutagen
 # Set up the main services (monolith, db, redis, elastic) after creating sessions. At this point, sessions will
 # have been established and code pushed to the shared volume.
 # Specific service will be up and run during reinstall phase
 afterCreate:
-  - docker-compose -f bundles/storefront.yml up --build --detach
+  - docker-compose -f bundles/monolith.yml up --build --detach
   - bash reinstall.sh
 
 # Pause services after pausing sessions.
@@ -22,7 +22,7 @@ beforeTerminate:
 # hack to prevent hangs during termination session
   - rm -rf ~/.mutagen/*
 afterTerminate:
-  - docker-compose down --volumes
+  - docker-compose down --volumes --remove-orphans
   - echo y | docker-compose rm -s
 
 # Define common utility commands.
@@ -34,11 +34,11 @@ commands:
   xdebug-disable: sed -ie "s|zend_extension=xdebug.so|#zend_extension=xdebug.so|" ./etc/php/xdebug.ini && docker-compose restart app app-message-broker
   grpc-server-start-monolith: docker-compose exec app magento grpc
   grpc-run-bench: docker-compose -f bundles/grpc-testing.yml up
-  grpcui-monolith: docker-compose -f bundles/grpcui.yml -f bundles/storefront.yml up grpcui-monolith
-  grpcui-catalog: docker-compose -f bundles/grpcui.yml -f bundles/storefront.yml up grpcui-catalog
-  grpcui-pricing: docker-compose -f bundles/grpcui.yml -f bundles/storefront.yml up grpcui-pricing
-  grpcui-search: docker-compose -f bundles/grpcui.yml -f bundles/storefront.yml up grpcui-search
-  grpcui-product-reviews: docker-compose -f bundles/grpcui.yml -f bundles/storefront.yml up grpcui-product-reviews
+  grpcui-monolith: docker-compose -f bundles/grpcui.yml -f bundles/monolith.yml up grpcui-monolith
+  grpcui-catalog: docker-compose -f bundles/grpcui.yml -f bundles/monolith.yml up grpcui-catalog
+  grpcui-pricing: docker-compose -f bundles/grpcui.yml -f bundles/monolith.yml up grpcui-pricing
+  grpcui-search: docker-compose -f bundles/grpcui.yml -f bundles/monolith.yml up grpcui-search
+  grpcui-product-reviews: docker-compose -f bundles/grpcui.yml -f bundles/monolith.yml up grpcui-product-reviews
 
 # Synchronize code to the shared Docker volume via the Mutagen service.
 sync:

@@ -1,22 +1,21 @@
 #!/usr/bin/env bash
 
-if [ -f magento.proto ] && [ -h magento.proto ]; then
-  echo 'magento.proto must be not a link. Copying from catalog-storefront'
-  unlink magento.proto
-  cp /var/www/catalog-storefront/magento.proto .
-fi
-
-# allow to pass gRPC service classes as list of parameters without changes into .env
-if [[ ! -z "$*" ]]; then
-  GRPC_SERVICE_CLASS="$*"
+if [ ${MONOLITHIC_INSTALLATION} == "YES" ]; then
+  if [ -f magento.proto ] && [ -h magento.proto ]; then
+    echo 'magento.proto must be not a link. Copying from catalog-storefront'
+    unlink magento.proto
+    cp /var/www/catalog-storefront/magento.proto .
+  fi
 fi
 
 echo 'Start gRPC initialization...'
+
+proto=$(tr '\n' ' ' < proto/services | sed -e 's/\\/\\\\/g' $1)
 if [[ ! -f bin/magento ]] ; then
   echo 'Using bin/command for standalone apps'
-  bin/command storefront:grpc:init ${GRPC_SERVICE_CLASS}
+  bin/command storefront:grpc:init $proto
 else
-  bin/magento storefront:grpc:init ${GRPC_SERVICE_CLASS}
+  bin/magento storefront:grpc:init $proto
 fi
 
 echo 'End of gRPC initialization'

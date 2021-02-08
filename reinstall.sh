@@ -12,17 +12,24 @@ if [ ! -f ./etc/php/auth.json ]; then
     exit
 fi
 
-cd $MAGENTO_PATH/magento2ce
-
-if [ ${MUTAGEN_INSTALLATION} == "YES" ] && [[ -d .git ]]; then
-    git clean -dxf -e '.idea' -e 'vendor' -e 'magento2*'
-    git reset --hard
-    git apply $DOCKER_PROJECT_DIR/etc/php/path-validator.patch
-fi
-
 cd $DOCKER_PROJECT_DIR
 
-# monolith installation
+# reinit docker container state
+if [ ${MONOLITHIC_INSTALLATION} == "YES" ]; then
+    docker-compose -f bundles/monolith.yml up -d
+else
+    docker-compose \
+    -f bundles/monolith.yml \
+    -f bundles/message-broker.yml \
+    -f bundles/catalog.yml \
+    -f bundles/search.yml \
+    -f bundles/product-review.yml \
+    -f bundles/pricing.yml  \
+    up -d
+fi
+
+
+# monolith installation with Commerce Data export
 docker-compose exec app magento prepare_monolith_installation
 docker-compose exec app magento reinstall_monolith ${INSTALLED_REPOS}
 docker-compose exec app magento config_setup
@@ -44,28 +51,28 @@ if [ ${MONOLITHIC_INSTALLATION} == "NO" ]; then
 
     if [[ $INSTALLED_REPOS == *"storefront-message-broker"* ]]; then
         docker-compose exec app-message-broker magento reinstall_message_broker
+        docker-compose exec app-message-broker magento grpc &
+
     fi
 
     if [[ $INSTALLED_REPOS == *"catalog-storefront"* ]]; then
-        docker-compose -f bundles/catalog.yml -d
         docker-compose exec app-catalog-storefront magento reinstall_catalog_storefront
         # start gRPC server on standalone application
-        docker-compose exec app-catalog-storefront magento grpc
+        docker-compose exec app-catalog-storefront magento grpc &
     fi
 
     if [[ $INSTALLED_REPOS == *"storefront-product-reviews"* ]]; then
-        docker-compose -f bundles/product-review.yml -d
         docker-compose exec app-product-reviews magento reinstall_storefront_review
     fi
 
     if [[ $INSTALLED_REPOS == *"storefront-pricing-ce"* ]]; then
-        docker-compose -f bundles/pricing -d
         docker-compose exec app-pricing magento reinstall_storefront_pricing
+        docker-compose exec app-pricing magento grpc &
     fi
 
     if [[ $INSTALLED_REPOS == *"storefront-search-ce"* ]]; then
-        docker-compose -f bundles/search -d
         docker-compose exec app-search magento reinstall_storefront_search
+        docker-compose exec app-search magento grpc &
     fi
 fi
 
@@ -74,7 +81,7 @@ echo y | docker-compose rm redis
 docker-compose up -d redis
 
  docker-compose \
-    -f bundles/storefront.yml\
+    -f bundles/monolith.yml\
     -f bundles/message-broker.yml \
     -f bundles/catalog.yml \
     -f bundles/search.yml \

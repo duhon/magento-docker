@@ -9,3 +9,5 @@ composer install
 
 bin/command storefront:init \
   --es-engine=elasticsearch7 --es-hostname=elastic --es-index-prefix=catalog_storefront_
+
+bin/command storefront:cache:setup --cache-backend redis
