@@ -32,6 +32,12 @@
         <const name="TESTS_WEB_API_ADAPTER" value="rest"/>
         <!-- Webserver URL -->
         <const name="TESTS_BASE_URL" value="http://magento.test"/>
+
+        <!--
+           To be able execute back REST request to obtain data.
+           see \Magento\MessageBroker\HttpClient\RestClient::resolveDefaultMagentoUrl in Message Broker
+        -->
+        <const name="MONOLITH_BACK_URL" value="http://magento.test"/>
         <!-- Webserver API user -->
         <const name="TESTS_WEBSERVICE_USER" value="admin"/>
         <!-- Webserver API key -->
@@ -58,5 +64,6 @@
     <!-- Test listeners -->
     <listeners>
         <listener class="Magento\TestFramework\Event\PhpUnit"/>
+        <listener class="Magento\TestFramework\Listener\DiCompile"/>
     </listeners>
 </phpunit>
