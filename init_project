@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+if [ ! -f .env ]; then
+    echo "ERROR: need to create .env from .env.dist"
+    exit
+fi
+
 
 set -ex
 

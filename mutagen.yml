@@ -54,7 +54,7 @@ sync:
       defaultFileMode: 0666
       defaultDirectoryMode: 0777
   code:
-    alpha: "/tmp/storefront_repos_test1"
+    alpha: "~/projects/storefront/repos"
     beta: "docker://web-mutagen/var/www"
     mode: "two-way-resolved"
     ignore:
