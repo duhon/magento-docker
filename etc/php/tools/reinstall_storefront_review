@@ -11,4 +11,5 @@ composer install
 bin/command storefront:review:init \
     --es-engine=elasticsearch7 --es-hostname=elastic --es-index-prefix=magento2_reviews_
 
-bin/command storefront:cache:setup --cache-backend redis
+# issue: SFAPP-307
+# bin/command storefront:cache:setup --cache-backend redis

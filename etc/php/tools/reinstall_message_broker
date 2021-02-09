@@ -24,8 +24,6 @@ bin/command message-broker:grpc-connection:add \
 
 bin/command storefront:cache:setup --cache-backend redis
 
-pkill -f queue:consumers:start
-
 # start consumers
   nohup bash -c "bin/command queue:consumers:start catalog.product.export.consumer&" &
   nohup bash -c "bin/command queue:consumers:start catalog.category.export.consumer&" &
@@ -35,3 +33,7 @@ pkill -f queue:consumers:start
   nohup bash -c "bin/command queue:consumers:start export.rating.metadata.consumer&"
 # uncomment if `storefront-pricing-ce` installed
 #  nohup bash -c "bin/command queue:consumers:start product.prices.export.queue&"
+
+bin/command storefront:cache:setup --cache-backend redis
+bin/command storefront:deploy:mode:show
+bin/command storefront:di:compile

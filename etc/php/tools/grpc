@@ -10,7 +10,7 @@ fi
 
 echo 'Start gRPC initialization...'
 
-proto=$(tr '\n' ' ' < proto/services | sed -e 's/\\/\\\\/g' $1)
+proto=$(tr '\n' ' ' < proto/services)
 if [[ ! -f bin/magento ]] ; then
   echo 'Using bin/command for standalone apps'
   bin/command storefront:grpc:init $proto

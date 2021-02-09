@@ -12,7 +12,7 @@ services:
     env_file:
       - ../.env
     volumes:
-  #    - code:/var/www
+      - code:/var/www
       - ../etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
       - ../etc/php/tools:/usr/local/bin/magento2:ro
       - ../etc/php/php.ini:/usr/local/etc/php/php.ini:ro

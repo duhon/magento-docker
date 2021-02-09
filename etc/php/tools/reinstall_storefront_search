@@ -12,4 +12,5 @@ bin/command storefront:search:init \
   --magento-db-host=db --magento-db-name=magento --magento-db-user=root --magento-db-password= --magento-db-table-prefix=\
   --magento-es-engine=elasticsearch7 --magento-es-hostname=localhost --magento-es-index-prefix=magento2_search_
 
-bin/command storefront:cache:setup --cache-backend redis
+# issue: SFAPP-307
+# bin/command storefront:cache:setup --cache-backend redis
