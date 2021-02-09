@@ -1,9 +1,9 @@
 version: '3.7'
 services:
   # Storefront Search app container (magento/storefront-search-ce repo)
-  app-search:
+  search:
     image: rkostiv/php-with-rr-grpc
-    hostname: app-search
+    hostname: search
     working_dir: /var/www/storefront-search-ce
     ports:
       - "226:22" #ssh
@@ -18,5 +18,5 @@ services:
       - ../etc/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
     environment:
       COMPOSER_HOME: /var/www/.composer
-      PHP_IDE_CONFIG: serverName=app-search
+      PHP_IDE_CONFIG: serverName=search
     command: sh -c 'service ssh start; php-fpm -R'

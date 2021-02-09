@@ -14,13 +14,13 @@ bin/command message-broker:install \
     --consumers_wait_for_messages=0
 
 bin/command message-broker:grpc-connection:add \
-    --grpc-host=app-catalog-storefront --grpc-port=9001 --name=catalog
+    --grpc-host=catalog --grpc-port=9001 --name=catalog
 
 bin/command message-broker:grpc-connection:add \
-    --grpc-host=app-catalog-storefront --grpc-port=9001 --name=variants
+    --grpc-host=catalog --grpc-port=9001 --name=variants
 
 bin/command message-broker:grpc-connection:add \
-    --grpc-host=app-product-reviews --grpc-port=9001 --name=reviews
+    --grpc-host=product-reviews --grpc-port=9001 --name=reviews
 
 bin/command storefront:cache:setup --cache-backend redis
 

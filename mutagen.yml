@@ -30,8 +30,8 @@ commands:
   logs: docker-compose logs --follow
   reindex: docker-compose exec app magento reindex
   reinstall: bash reinstall.sh
-  xdebug-enable: sed -ie "s|#zend_extension=xdebug.so|zend_extension=xdebug.so|" ./etc/php/xdebug.ini && docker-compose restart app app-message-broker
-  xdebug-disable: sed -ie "s|zend_extension=xdebug.so|#zend_extension=xdebug.so|" ./etc/php/xdebug.ini && docker-compose restart app app-message-broker
+  xdebug-enable: sed -ie "s|#zend_extension=xdebug.so|zend_extension=xdebug.so|" ./etc/php/xdebug.ini && docker-compose restart app message-broker
+  xdebug-disable: sed -ie "s|zend_extension=xdebug.so|#zend_extension=xdebug.so|" ./etc/php/xdebug.ini && docker-compose restart app message-broker
   grpc-server-start-monolith: docker-compose exec app magento grpc
   grpc-run-bench: docker-compose -f bundles/grpc-testing.yml up
   grpcui-monolith: docker-compose -f bundles/grpcui.yml -f bundles/monolith.yml up grpcui-monolith
@@ -39,6 +39,8 @@ commands:
   grpcui-pricing: docker-compose -f bundles/grpcui.yml -f bundles/monolith.yml up grpcui-pricing
   grpcui-search: docker-compose -f bundles/grpcui.yml -f bundles/monolith.yml up grpcui-search
   grpcui-product-reviews: docker-compose -f bundles/grpcui.yml -f bundles/monolith.yml up grpcui-product-reviews
+  # usage: `app=<service-name> mutagen project run ssh`, e.g. app=app mutagen project run ssh
+  ssh: docker-compose -f bundles/message-broker.yml -f bundles/catalog.yml -f bundles/search.yml -f bundles/product-review.yml -f bundles/pricing.yml -f bundles/monolith.yml exec $app bash
 
 # Synchronize code to the shared Docker volume via the Mutagen service.
 sync:
@@ -52,7 +54,7 @@ sync:
       defaultFileMode: 0666
       defaultDirectoryMode: 0777
   code:
-    alpha: "~/projects/storefront/repos"
+    alpha: "/tmp/storefront_repos_test1"
     beta: "docker://web-mutagen/var/www"
     mode: "two-way-resolved"
     ignore:

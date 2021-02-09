@@ -1,9 +1,9 @@
 version: '3.7'
 services:
   # Storefront Product Review app container (magento/storefront-product-reviews-ce repo)
-  app-product-reviews:
+  product-reviews:
     image: rkostiv/php-with-rr-grpc
-    hostname: app-product-reviews
+    hostname: product-reviews
     working_dir: /var/www/storefront-product-reviews-ce
     ports:
       - "227:22" #ssh
@@ -18,6 +18,6 @@ services:
       - ../etc/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
     environment:
       COMPOSER_HOME: /var/www/.composer
-      PHP_IDE_CONFIG: serverName=app-product-reviews
+      PHP_IDE_CONFIG: serverName=product-reviews
     command: sh -c 'service ssh start; php-fpm -R'
 

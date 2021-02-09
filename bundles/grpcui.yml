@@ -14,7 +14,7 @@ services:
       - "8081:8081"
     volumes:
       - code:/var/www
-    entrypoint: ["grpcui", "-plaintext", "-proto", "magento.proto", "-port", "8081", "-bind", "0.0.0.0", "-import-path", "/var/www/magento2ce", "app-catalog-storefront:9001"]
+    entrypoint: ["grpcui", "-plaintext", "-proto", "magento.proto", "-port", "8081", "-bind", "0.0.0.0", "-import-path", "/var/www/magento2ce", "catalog:9001"]
 
   grpcui-search:
     image: wongnai/grpcui
@@ -22,7 +22,7 @@ services:
       - "8082:8082"
     volumes:
       - ${MAGENTO_PATH}/storefront-search-ce:/var/www/app
-    entrypoint: ["grpcui", "-plaintext", "-proto", "search.proto", "-port", "8082", "-bind", "0.0.0.0", "-import-path", "/var/www/storefront-search-ce", "app-search:9001"]
+    entrypoint: ["grpcui", "-plaintext", "-proto", "search.proto", "-port", "8082", "-bind", "0.0.0.0", "-import-path", "/var/www/storefront-search-ce", "search:9001"]
 
   grpcui-product-reviews:
     image: wongnai/grpcui
@@ -30,7 +30,7 @@ services:
       - "8083:8083"
     volumes:
       - ${MAGENTO_PATH}/storefront-product-reviews-ce:/var/www/app
-    entrypoint: ["grpcui", "-plaintext", "-proto", "reviews.proto", "-port", "8083", "-bind", "0.0.0.0", "-import-path", "/var/www/app", "app-product-reviews:9001"]
+    entrypoint: ["grpcui", "-plaintext", "-proto", "reviews.proto", "-port", "8083", "-bind", "0.0.0.0", "-import-path", "/var/www/app", "product-reviews:9001"]
 
 
   grpcui-pricing:
@@ -39,5 +39,5 @@ services:
       - "8084:8084"
     volumes:
       - ${MAGENTO_PATH}/storefront-pricing-ce:/var/www/app
-    entrypoint: ["grpcui", "-plaintext", "-proto", "pricing.proto", "-port", "8084", "-bind", "0.0.0.0", "-import-path", "/var/www/app", "app-product-reviews:9001"]
+    entrypoint: ["grpcui", "-plaintext", "-proto", "pricing.proto", "-port", "8084", "-bind", "0.0.0.0", "-import-path", "/var/www/app", "product-reviews:9001"]
 
