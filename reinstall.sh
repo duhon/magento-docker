@@ -36,7 +36,7 @@ docker-compose -f bundles/monolith.yml exec app magento config_setup
 docker-compose -f bundles/monolith.yml exec app magento storefront
 
 if [ ${MONOLITHIC_INSTALLATION} == "YES" ]; then
-   docker-compose -f bundles/monolith.yml exec app magento grpc &
+   docker-compose -f bundles/monolith.yml exec app magento grpc
 fi
 
 # standalone installations
@@ -56,22 +56,22 @@ if [ ${MONOLITHIC_INSTALLATION} == "NO" ]; then
     if [[ $INSTALLED_REPOS == *"catalog-storefront"* ]]; then
         docker-compose -f bundles/catalog.yml -f bundles/monolith.yml exec app-catalog-storefront magento reinstall_catalog_storefront
         # start gRPC server on standalone application
-        docker-compose -f bundles/catalog.yml -f bundles/monolith.yml exec app-catalog-storefront magento grpc &
+        docker-compose -f bundles/catalog.yml -f bundles/monolith.yml exec app-catalog-storefront magento grpc
     fi
 
     if [[ $INSTALLED_REPOS == *"storefront-product-reviews"* ]]; then
         docker-compose -f bundles/product-review.yml -f bundles/monolith.yml exec app-product-reviews magento reinstall_storefront_review
-        docker-compose -f bundles/product-review.yml -f bundles/monolith.yml exec app-product-reviews magento grpc &
+        docker-compose -f bundles/product-review.yml -f bundles/monolith.yml exec app-product-reviews magento grpc
     fi
 
     if [[ $INSTALLED_REPOS == *"storefront-pricing-ce"* ]]; then
         docker-compose -f bundles/pricing.yml -f bundles/monolith.yml exec app-pricing magento reinstall_storefront_pricing
-        docker-compose -f bundles/pricing.yml -f bundles/monolith.yml exec app-pricing magento grpc &
+        docker-compose -f bundles/pricing.yml -f bundles/monolith.yml exec app-pricing magento grpc
     fi
 
     if [[ $INSTALLED_REPOS == *"storefront-search-ce"* ]]; then
         docker-compose -f bundles/search.yml -f bundles/monolith.yml exec app-search magento reinstall_storefront_search
-        docker-compose -f bundles/search.yml -f bundles/monolith.yml exec app-search magento grpc &
+        docker-compose -f bundles/search.yml -f bundles/monolith.yml exec app-search magento grpc
     fi
 fi
 
