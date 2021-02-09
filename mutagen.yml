@@ -36,7 +36,7 @@ commands:
   grpcui-search: docker-compose -f bundles/grpcui.yml -f bundles/monolith.yml up grpcui-search
   grpcui-product-reviews: docker-compose -f bundles/grpcui.yml -f bundles/monolith.yml up grpcui-product-reviews
   # usage: `app=<service-name> mutagen project run ssh`, e.g. app=app mutagen project run ssh
-  ssh: docker-compose -f bundles/message-broker.yml -f bundles/catalog.yml -f bundles/search.yml -f bundles/product-review.yml -f bundles/pricing.yml -f bundles/monolith.yml exec $app bash
+  ssh: docker-compose -f bundles/message-broker.yml -f bundles/catalog.yml -f bundles/search.yml -f bundles/product-reviews.yml -f bundles/pricing.yml -f bundles/monolith.yml exec $app bash
 
 # Synchronize code to the shared Docker volume via the Mutagen service.
 sync:

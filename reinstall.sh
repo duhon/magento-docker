@@ -21,9 +21,9 @@ if [ ${MONOLITHIC_INSTALLATION} == "NO" ]; then
     -f bundles/message-broker.yml \
     -f bundles/catalog.yml \
     -f bundles/search.yml \
-    -f bundles/product-review.yml \
+    -f bundles/product-reviews.yml \
     -f bundles/pricing.yml  \
-    up --force-recreate -d message-broker catalog search product-review pricing
+    up --force-recreate -d message-broker catalog search product-reviews pricing
 fi
 
 
@@ -58,8 +58,8 @@ if [ ${MONOLITHIC_INSTALLATION} == "NO" ]; then
     fi
 
     if [[ $INSTALLED_REPOS == *"storefront-product-reviews"* ]]; then
-        docker-compose -f bundles/product-review.yml -f bundles/monolith.yml exec product-reviews magento reinstall_storefront_review
-        docker-compose -f bundles/product-review.yml -f bundles/monolith.yml exec product-reviews magento grpc &
+        docker-compose -f bundles/product-reviews.yml -f bundles/monolith.yml exec product-reviews magento reinstall_storefront_review
+        docker-compose -f bundles/product-reviews.yml -f bundles/monolith.yml exec product-reviews magento grpc &
     fi
 
     if [[ $INSTALLED_REPOS == *"storefront-pricing-ce"* ]]; then
@@ -82,6 +82,6 @@ docker-compose up -d redis
 #    -f bundles/message-broker.yml \
 #    -f bundles/catalog.yml \
 #    -f bundles/search.yml \
-#    -f bundles/product-review.yml \
+#    -f bundles/product-reviews.yml \
 #    -f bundles/pricing.yml  \
 # logs -f
