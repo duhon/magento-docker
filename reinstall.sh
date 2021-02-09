@@ -14,10 +14,8 @@ fi
 
 cd $DOCKER_PROJECT_DIR
 
-# reinit docker container state
-if [ ${MONOLITHIC_INSTALLATION} == "YES" ]; then
-    docker-compose -f bundles/monolith.yml up -d
-else
+# start docker container for standalone installation
+if [ ${MONOLITHIC_INSTALLATION} == "NO" ]; then
     docker-compose \
     -f bundles/monolith.yml \
     -f bundles/message-broker.yml \
@@ -25,7 +23,7 @@ else
     -f bundles/search.yml \
     -f bundles/product-review.yml \
     -f bundles/pricing.yml  \
-    up --force-recreate -d
+    up --force-recreate -d catalog search pricing product-reviews
 fi
 
 
