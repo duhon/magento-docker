@@ -22,5 +22,5 @@ echo 'End of gRPC initialization'
 
 echo 'Starting gRPC server...';
 # Run gRPC server
-./vendor/bin/grpc-server &
+./vendor/bin/grpc-server
 echo 'gRPC server started';
