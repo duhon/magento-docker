@@ -6,6 +6,7 @@ beforeCreate:
 # have been established and code pushed to the shared volume.
 # Specific service will be up and run during reinstall phase
 afterCreate:
+  - docker-compose pull
   - docker-compose -f bundles/monolith.yml up --build --detach
   - bash reinstall.sh
 
