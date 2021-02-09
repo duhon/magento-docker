@@ -23,7 +23,7 @@ if [ ${MONOLITHIC_INSTALLATION} == "NO" ]; then
     -f bundles/search.yml \
     -f bundles/product-review.yml \
     -f bundles/pricing.yml  \
-    up --force-recreate -d catalog search pricing product-reviews
+    up --force-recreate -d message-broker catalog search product-review pricing
 fi
 
 

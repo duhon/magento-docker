@@ -19,11 +19,7 @@ beforeResume:
 
 # Tear down all services and remove the code volume after terminating sessions.
 beforeTerminate:
-# hack to prevent hangs during termination session
-  - rm -rf ~/.mutagen/*
-afterTerminate:
   - docker-compose down --volumes --remove-orphans
-  - echo y | docker-compose rm -s
 
 # Define common utility commands.
 commands:
