@@ -11,53 +11,55 @@ if [[ -d .git ]]; then
    git checkout composer.lock composer.json
 fi
 
-if [ ${MONOLITHIC_INSTALLATION} == "YES" ]; then
-    for edition in ${INSTALLED_REPOS}; do
-       #apply edition
-       dst="/var/www/magento2ce"
+for edition in ${INSTALLED_REPOS}; do
+   #apply edition
+   dst="/var/www/magento2ce"
+   if [ ${MONOLITHIC_INSTALLATION} == "NO" ] && [[ ${edition} != *"commerce-data-export"* ]]; then
+      continue;
+   fi
 
-       if [[ -d ../${edition} ]] || [[ -d ../magento2ce/${edition} ]]; then
 
-         source=/var/www/${edition}
+   if [[ -d ../${edition} ]] || [[ -d ../magento2ce/${edition} ]]; then
 
-         # copy into app/code/Magento
-         if [[ ${edition} == "inventory" ]]; then
-            dst="/var/www/magento2ce/app/code/Magento"
-         fi
+     source=/var/www/${edition}
 
-         if [[ ${edition} == "storefront-libraries" ]]; then
-            dst="/var/www/magento2ce/app/code/Magento"
-            source="${source}/modules"
-         fi
+     # copy into app/code/Magento
+     if [[ ${edition} == "inventory" ]]; then
+        dst="/var/www/magento2ce/app/code/Magento"
+     fi
 
-         # copy into app/code/Magento
-         if [[ ${edition} == "module-grpc" ]]; then
-            mkdir -p /var/www/magento2ce/app/code/Magento/Grpc
-            dst="/var/www/magento2ce/app/code/Magento/Grpc"
-         fi
+     if [[ ${edition} == "storefront-libraries" ]]; then
+        dst="/var/www/magento2ce/app/code/Magento"
+        source="${source}/modules"
+     fi
 
-         if [ ${MUTAGEN_INSTALLATION} == "NO" ]; then
-           cp -rlf ${source}/!(.git|vendor|..|.) ${dst}
-         else
-           if [[ ${edition} == "*magento2*" ]]; then
-             cp -rlf /var/www/magento2ee/composer* ${dst} 2>/dev/null
-           fi
-           if [[ ${edition} == *"storefront"* ]]; then
-             set +ex;
-             cp -rf /var/www/${edition}/dev ${dst} 2>/dev/null
-             set -ex;
-           fi
-           if [[ ${edition} == *"commerce-data-export"* ]]; then
-             set +ex;
-             cp -rf /var/www/${edition}/dev ${dst} 2>/dev/null
-             set -ex;
-           fi
+     # copy into app/code/Magento
+     if [[ ${edition} == "module-grpc" ]]; then
+        mkdir -p /var/www/magento2ce/app/code/Magento/Grpc
+        dst="/var/www/magento2ce/app/code/Magento/Grpc"
+     fi
 
-           php /var/www/commerce-data-export/dev/tools/build-sc.php --command link --exclude true --ce-source ${dst} --ee-source ${source}
-         fi
+     if [ ${MUTAGEN_INSTALLATION} == "NO" ]; then
+       cp -rlf ${source}/!(.git|vendor|..|.) ${dst}
+     else
+       if [[ ${edition} == "*magento2*" ]]; then
+         cp -rlf /var/www/magento2ee/composer* ${dst} 2>/dev/null
        fi
-    done
-fi
+       if [[ ${edition} == *"storefront"* ]]; then
+         set +ex;
+         cp -rf /var/www/${edition}/dev ${dst} 2>/dev/null
+         set -ex;
+       fi
+       if [[ ${edition} == *"commerce-data-export"* ]]; then
+         set +ex;
+         cp -rf /var/www/${edition}/dev ${dst} 2>/dev/null
+         set -ex;
+       fi
+
+       php /var/www/commerce-data-export/dev/tools/build-sc.php --command link --exclude true --ce-source ${dst} --ee-source ${source}
+     fi
+   fi
+done
 
 # no need auth.json here
 rm -rf /var/www/magento2ce/auth.json
