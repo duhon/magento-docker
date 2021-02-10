@@ -24,7 +24,7 @@
     ~/projects/storefront/repos             # directory with repositories
 ```
 
-2. Update MAGENTO_PATH in .env with recently created directory path
+2. Copy .env.dist into .env and update MAGENTO_PATH in .env with recently created directory path
 
 3. Add $MAGENTO_DOMAIN from .env to hosts, e.g.:
 
@@ -35,15 +35,9 @@
 4. Add Magento authentication keys to access the Magento Commerce repository
  * copy the contents of `etc/php/auth.json.dist` to new `etc/php/auth.json` file and replace placeholders with your credentials
 
-You have two options to install the project
-#### docker-compose based installation
-This approach will use only docker-compose to install Storefront project. Files between the host and guest are synced with "delegated" options (see FILE_SYNC in .env) 
- - RUN `git checkout docker-compose.yml` - optional: reset changes if any present in docker-compose.yml
- - RUN `bash ./init_project` - clone repos (if RECLONE=YES in .evn)
- - RUN `docker-compose up -d` - up services
- - RUN `bash ./reinstall` - install/reinstall Magento with repositories provided in INSTALLED_REPOS (see .env)
+At the moment there is one option to install the project via mutagen
  
-#### mutagen based installation
+#### Mutagen based installation
 This approach will use mutagen service to share code between the host and guest.
 Mutagen will significantly speedup work of Magento instance 
 
@@ -73,7 +67,7 @@ Change test scenario if needed in magento-docker/etc/grpc/bench-test-config.json
 ## Scenarios
 
 ### 1. Enter container
-* Run `docker-compose exec app bash`.
+* Run `docker-compose -f bundles/catalog.yml -f bundles/monolith.yml exec catalog bash`.
 
 ### 2. Relaunch container
 * Run `docker-compose scale <container_name>=0 && docker-compose scale <container_name>=1`. For example: `docker-compose scale app=0 && docker-compose scale app=1`.
