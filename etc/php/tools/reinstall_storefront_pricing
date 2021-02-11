@@ -11,5 +11,4 @@ composer install
 bin/command storefront:pricing:init \
   --db-host=db --db-name=magento --db-user=root --db-password= --db-table-prefix=
 
-# issue: SFAPP-307
-# bin/command storefront:cache:setup --cache-backend redis
+bin/command storefront:cache:setup --cache-backend redis

@@ -34,6 +34,5 @@ bin/command storefront:cache:setup --cache-backend redis
 # uncomment if `storefront-pricing-ce` installed
 #  nohup bash -c "bin/command queue:consumers:start product.prices.export.queue&"
 
-bin/command storefront:cache:setup --cache-backend redis
 bin/command storefront:deploy:mode:show
 bin/command storefront:di:compile

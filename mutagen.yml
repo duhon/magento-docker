@@ -22,6 +22,9 @@ beforeResume:
 beforeTerminate:
   - docker-compose down --volumes --remove-orphans
 
+afterTerminate:
+  - docker volume prune --force
+
 # Define common utility commands.
 commands:
   logs: docker-compose logs --follow
@@ -51,7 +54,7 @@ sync:
       defaultFileMode: 0666
       defaultDirectoryMode: 0777
   code:
-    alpha: "~/projects/storefront/repos"
+    alpha: "/Users/andrii/code/others/storefront/repos"
     beta: "docker://web-mutagen/var/www"
     mode: "two-way-resolved"
     ignore:
