@@ -164,6 +164,10 @@ GRPC_SERVICE_CLASS="\\Magento\\PricingStorefrontApi\\Api\\PriceBookServiceProxyS
 `docker-compose up grpcui-pricing`
 4. Open `http://0.0.0.0:8082/` in browser. `magento.pricingStorefrontApi.proto.PriceBookService` service must be present in services list.
  
+### Aliases
+
+To simplify work with DevBox containers it is recommended to add command [aliases](aliases) to your `~/.bash_profile` file.  
+ 
 ### Q/A
  1. Unable to start `grpcui`.
  

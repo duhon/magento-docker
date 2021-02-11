@@ -1,0 +1,25 @@
+alias sf-stop="docker-compose -f bundles/message-broker.yml -f bundles/catalog.yml -f bundles/search.yml -f bundles/product-reviews.yml -f bundles/pricing.yml -f bundles/monolith.yml stop"
+alias sf-up="docker-compose -f bundles/message-broker.yml -f bundles/catalog.yml -f bundles/search.yml -f bundles/product-reviews.yml -f bundles/pricing.yml -f bundles/monolith.yml up -d"
+
+alias sf-stop-message-broker="docker-compose -f bundles/message-broker.yml -f bundles/monolith.yml stop message-broker"
+alias sf-stop-catalog="docker-compose -f bundles/catalog.yml -f bundles/monolith.yml stop catalog"
+alias sf-stop-search="docker-compose -f bundles/search.yml -f bundles/monolith.yml stop search"
+alias sf-stop-product-reviews="docker-compose -f bundles/product-reviews.yml -f bundles/monolith.yml stop product-reviews"
+alias sf-stop-pricing="docker-compose -f bundles/pricing.yml -f bundles/monolith.yml stop pricing"
+
+alias sf-ssh-catalog="docker-compose -f bundles/catalog.yml -f bundles/monolith.yml exec catalog bash"
+alias sf-ssh-message-broker="docker-compose -f bundles/message-broker.yml -f bundles/monolith.yml exec message-broker bash"
+alias sf-ssh-reviews="docker-compose -f bundles/product-reviews.yml -f bundles/monolith.yml exec product-reviews bash"
+alias sf-ssh-pricing="docker-compose -f bundles/pricing.yml -f bundles/monolith.yml exec pricing bash"
+alias sf-ssh-search="docker-compose -f bundles/search.yml -f bundles/monolith.yml exec search bash"
+alias sf-ssh-app="docker-compose -f bundles/monolith.yml exec app bash"
+
+alias sf-grpc-catalog="docker-compose -f bundles/message-broker.yml -f bundles/catalog.yml -f bundles/search.yml -f bundles/product-reviews.yml -f bundles/pricing.yml -f bundles/monolith.yml exec catalog magento grpc"
+alias sf-grpc-reviews="docker-compose -f bundles/product-reviews.yml -f bundles/monolith.yml exec product-reviews magento grpc"
+alias sf-grpc-pricing="docker-compose -f bundles/pricing.yml -f bundles/monolith.yml exec pricing magento grpc"
+alias sf-grpc-search="docker-compose -f bundles/search.yml -f bundles/monolith.yml exec search magento grpc"
+
+alias sf-grpcui-catalog="docker-compose -f bundles/grpcui.yml -f bundles/monolith.yml up grpcui-catalog"
+alias sf-grpcui-reviews="docker-compose -f bundles/product-reviews.yml -f bundles/monolith.yml up grpcui-reviews"
+alias sf-grpcui-pricing="docker-compose -f bundles/pricing.yml -f bundles/monolith.yml up grpcui-pricing"
+alias sf-grpcui-search="docker-compose -f bundles/catalog.yml -f bundles/monolith.yml up grpcui-search"
