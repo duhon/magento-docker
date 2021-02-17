@@ -85,3 +85,11 @@ docker-compose up -d redis
 #    -f bundles/product-reviews.yml \
 #    -f bundles/pricing.yml  \
 # logs -f
+
+echo "|----------------------------------------------------------|"
+echo "|----------------------------------------------------------|"
+echo "| To start gGRPC server for service for catalog service run the following command:|"
+echo "| docker-compose -f bundles/catalog.yml -f bundles/monolith.yml exec catalog bash|"
+echo "| It is recommended to use aliases from "aliases" file " |
+echo "|----------------------------------------------------------|"
+echo "|----------------------------------------------------------|"
