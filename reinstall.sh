@@ -13,6 +13,13 @@ if [ ! -f ./etc/php/auth.json ]; then
 fi
 
 cd $DOCKER_PROJECT_DIR
+if [ ${CLEAN_UP} == "YES" ]; then
+   for repo in ../repos/*/; do
+       cd $repo
+       git clean -dfx
+       cd $DOCKER_PROJECT_DIR
+   done
+fi
 
 # start docker container for standalone installation
 if [ ${MONOLITHIC_INSTALLATION} == "NO" ]; then
