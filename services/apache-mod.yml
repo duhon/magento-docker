@@ -2,16 +2,16 @@ version: '2'
 services:
   app:
     build:
-      context: ${MAGENTO_PATH}/docker-magento
+      context: ${MAGENTO_PATH}/magento-docker
       dockerfile: build/php/apache-mod
     image: apache-mod
     expose:
       - "80"
     volumes:
       - ${MAGENTO_PATH}:/var/www:z
-      - ${MAGENTO_PATH}/docker-magento/etc/php/tools:/usr/local/bin/magento2:ro
-      - ${MAGENTO_PATH}/docker-magento/etc/php/php.ini:/usr/local/etc/php/php.ini:ro
-      - ${MAGENTO_PATH}/docker-magento/etc/apache/virtual_host.conf:/etc/apache2/sites-enabled/000-default.conf:ro
+      - ${MAGENTO_PATH}/magento-docker/etc/php/tools:/usr/local/bin/magento2:ro
+      - ${MAGENTO_PATH}/magento-docker/etc/php/php.ini:/usr/local/etc/php/php.ini:ro
+      - ${MAGENTO_PATH}/magento-docker/etc/apache/virtual_host.conf:/etc/apache2/sites-enabled/000-default.conf:ro
     environment:
       APACHE_RUN_USER: "www-data"
       APACHE_RUN_GROUP: "root"
