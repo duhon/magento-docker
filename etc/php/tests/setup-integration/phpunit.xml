@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 /**
- * PHPUnit configuration for GraphQL web API functional tests.
- *
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
@@ -13,54 +11,41 @@
          columns="max"
          beStrictAboutTestsThatDoNotTestAnything="false"
          bootstrap="./framework/bootstrap.php"
-         testSuiteLoaderClass="Magento\TestFramework\ApiSuiteLoader"
-         testSuiteLoaderFile="framework/Magento/TestFramework/ApiSuiteLoader.php"
+         stderr="true"
 >
     <!-- Test suites definition -->
     <testsuites>
-        <testsuite name="Magento GraphQL web API functional tests">
-            <file>testsuite/Magento/WebApiTest.php</file>
-        </testsuite>
-        <testsuite name="Magento GraphQL web API functional tests real suite">
-            <directory>testsuite/Magento/GraphQl</directory>
+        <testsuite name="Magento Setup/Upgrade Tests">
+            <directory>testsuite</directory>
         </testsuite>
     </testsuites>
-
+    <!-- Code coverage filters -->
+    <filter>
+        <whitelist>
+            <directory suffix=".php">../../../app/code/Magento</directory>
+            <directory suffix=".php">../../../lib/internal/Magento</directory>
+        </whitelist>
+    </filter>
     <!-- PHP INI settings and constants definition -->
     <php>
-        <includePath>./testsuite</includePath>
-        <const name="TESTS_INSTALL_CONFIG_FILE" value="config/install-config-mysql.php"/>
-        <const name="TESTS_GLOBAL_CONFIG_FILE" value="config/config-global.php"/>
-        <!-- Webserver URL -->
-        <const name="TESTS_BASE_URL" value="http://magento.test/graphql"/>
-        <!-- Webserver API user -->
-        <const name="TESTS_WEBSERVICE_USER" value="admin"/>
-        <!-- Webserver API key -->
-        <const name="TESTS_WEBSERVICE_APIKEY" value="123123q"/>
-        <!-- Define if debugger should be started using XDEBUG_SESSION cookie -->
-        <const name="TESTS_XDEBUG_ENABLED" value="false"/>
-        <!-- Define XDEBUG_SESSION cookie value-->
-        <const name="TESTS_XDEBUG_SESSION" value="phpstorm" />
-
+        <includePath>.</includePath>
+        <includePath>testsuite</includePath>
         <ini name="date.timezone" value="America/Los_Angeles"/>
-
-        <!-- Semicolon-separated 'glob' patterns, that match global XML configuration files -->
+        <ini name="xdebug.max_nesting_level" value="200"/>
+        <const name="TESTS_INSTALL_CONFIG_FILE" value="etc/install-config-mysql.php"/>
+        <const name="TESTS_GLOBAL_CONFIG_FILE" value="etc/config-global.php"/>
         <const name="TESTS_GLOBAL_CONFIG_DIR" value="../../../app/etc"/>
-        <!-- Whether to cleanup the application before running tests or not -->
         <const name="TESTS_CLEANUP" value="enabled"/>
-        <!--Defines if Magento should be installed before tests execution-->
-        <const name="TESTS_MAGENTO_INSTALLATION" value="disabled"/>
-        <!-- Magento mode for tests execution. Possible values are "default", "developer" and "production". -->
-        <const name="TESTS_MAGENTO_MODE" value="default"/>
-        <const name="USE_OVERRIDE_CONFIG" value="enabled"/>
+        <const name="TESTS_MAGENTO_MODE" value="developer"/>
+        <const name="TESTS_ERROR_LOG_LISTENER_LEVEL" value="1"/>
     </php>
-
     <!-- Test listeners -->
     <listeners>
         <listener class="Magento\TestFramework\Event\PhpUnit"/>
+        <listener class="Magento\TestFramework\ErrorLog\Listener"/>
         <listener class="Yandex\Allure\Adapter\AllureAdapter">
             <arguments>
-                <string>var/allure-results</string> <!-- XML files output folder -->
+                <string>var/allure-results</string> <!-- XML files output directory -->
                 <boolean>true</boolean> <!-- Whether to delete previous results on rerun -->
                 <array> <!-- A list of custom annotations to ignore (optional) -->
                     <element key="codingStandardsIgnoreStart">
@@ -102,11 +87,14 @@
                     <element key="magentoIndexerDimensionMode">
                         <string>magentoIndexerDimensionMode</string>
                     </element>
-                    <element key="magentoApiDataFixture">
-                        <string>magentoApiDataFixture</string>
+                    <element key="moduleName">
+                        <string>moduleName</string>
                     </element>
-                    <element key="Override">
-                        <string>Override</string>
+                    <element key="dataProviderFromFile">
+                        <string>dataProviderFromFile</string>
+                    </element>
+                    <element key="magentoSchemaFixture">
+                        <string>magentoSchemaFixture</string>
                     </element>
                 </array>
             </arguments>

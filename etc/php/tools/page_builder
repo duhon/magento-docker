@@ -7,6 +7,7 @@ if [ -d .git ]; then
         git --work-tree=../magento2-page-builder-ee --git-dir=../magento2-page-builder-ee/.git clean -dfx
         cp -rlf ../magento2-page-builder-ee/!(.git|vendor|..|.) .
     fi
+    composer require magento/dom:2.1.7
 else
     echo 'TODO install page-builder from composer'
 fi

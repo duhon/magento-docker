@@ -64,7 +64,9 @@ In `.env` file environment variables are declared. Here you can change your `MAG
     echo never | tee /sys/kernel/mm/transparent_hugepage/enabled
     echo never | tee /sys/kernel/mm/transparent_hugepage/defrag
     ```
-2. [Optimization for MacOS](https://gist.github.com/tombigel/d503800a282fcadbee14b537735d202c)
+2. Optimization for MacOS
+* https://gist.github.com/tombigel/d503800a282fcadbee14b537735d202c
+* https://markshust.com/2018/01/30/performance-tuning-docker-mac/
 
 ### FAQ
 1. If docker containers do not go up, check errors in console, run `docker-compose down`, fix issue and run `docker-compose up` again.
@@ -72,8 +74,4 @@ In `.env` file environment variables are declared. Here you can change your `MAG
 3. If magento installation fails, run `docker-compose exec app magento reinstall`
 
 ### TODO list
-
-1. To create a cross platform installer that will check for dependencies, create a folder with the project and 
-download the Magento (see install.sh)
-2. The default creation of the project for phpstorm (see etc/phpstorm)
-3. A single point of running tests with the preparation (magento prepare_tests) of Magento
+https://github.com/duhon/magento-docker/projects
