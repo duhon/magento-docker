@@ -160,6 +160,7 @@ Other services are optional (`pricing`, `search`, `reviews`) and can be started 
 `docker-compose exec pricing bash`
 
 To start `grpc-server` within pricing application do the following:
+FIXME
 1. Navigate to `.env` file and set `GRPC_SERVICE_CLASS` to the value [mentioned in the example](https://github.com/duhon/magento-docker/blob/6437cac1dc6c97c7c66ef46aacdbcd983ece269c/.env#L13):
 ```
 GRPC_SERVICE_CLASS="\\Magento\\PricingStorefrontApi\\Api\\PriceBookServiceProxyServer"

@@ -4,6 +4,11 @@ if [ ! -f .env ]; then
     exit
 fi
 
+if [ ! -f ./etc/php/auth.json ]; then
+    echo "Can't find ./etc/php/auth.json"
+    exit
+fi
+
 
 set -ex
 
@@ -33,6 +38,14 @@ if [[ "yes" == "$RECLONE" ]]; then
      branch=$(echo "GIT_BRANCH_${edition}" | sed "s|-|_|g")
      github_repo="git@github.com:${!org}/${!repo}.git"
      path=$edition
+
+      if [ ${edition} == 'magento24' ]; then
+          mkdir -p $MAGENTO_PATH/magento2ce
+          rm -rf $MAGENTO_PATH/magento2ce/app/code $MAGENTO_PATH/magento2ce/var/*
+          cp -R $DOCKER_PROJECT_DIR/etc/magento24/* $MAGENTO_PATH/magento2ce
+          cp -R $DOCKER_PROJECT_DIR/etc/php/auth.json $MAGENTO_PATH/magento2ce/auth.json
+          continue ;
+      fi
 
    if [[ -d ./${edition} ]] || [[ -d "./magento2ce/${edition}" ]]; then
 #       repo exists, reset working tree and set correct branch

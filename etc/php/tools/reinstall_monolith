@@ -8,17 +8,13 @@ DB_HOST=db
 
 #install magento
 
-composer global require hirak/prestissimo
+#composer global require hirak/prestissimo
 composer install
 
-if [[ -f ../catalog-storefront/dev/tools/install-dependencies.php ]] && [[ ! -f dev/tools/install-dependencies.php ]]; then
-  cp ../catalog-storefront/dev/tools/install-dependencies.php dev/tools/install-dependencies.php
-fi
-
-if [[ -f dev/tools/install-dependencies.php ]]; then
-  echo 'install module dependencies'
-  php dev/tools/install-dependencies.php .
-fi
+#if [[ -f dev/tools/install-dependencies.php ]]; then
+#  echo 'install module dependencies'
+#  php dev/tools/install-dependencies.php .
+#fi
 
 mysql -uroot -h${DB_HOST} -e "DROP DATABASE IF EXISTS magento; create database magento;"
 rm -rf generated/* var/* app/etc/env.php app/etc/config.php
@@ -41,9 +37,6 @@ bin/magento setup:install \
   --session-save-redis-db=0 \
   --cache-backend=redis \
   --cache-backend-redis-server=redis \
-  --cache-backend-redis-db=1 \
-  --amqp-host=rabbit \
-  --amqp-user=guest \
-  --amqp-password=guest
+  --cache-backend-redis-db=1
 
 bin/magento config:set web/secure/base_url http://${MAGENTO_DOMAIN}/
