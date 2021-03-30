@@ -17,7 +17,7 @@ composer install
 #fi
 
 mysql -uroot -h${DB_HOST} -e "DROP DATABASE IF EXISTS magento; create database magento;"
-rm -rf generated/* var/* app/etc/env.php app/etc/config.php
+rm -rf generated/* var/* app/etc/env.php
 
 # echo y | bin/magento setup:uninstall
 bin/magento setup:install \
@@ -40,3 +40,7 @@ bin/magento setup:install \
   --cache-backend-redis-db=1
 
 bin/magento config:set web/secure/base_url http://${MAGENTO_DOMAIN}/
+
+bin/magento -f setup:static-content:deploy
+# bin/magento module:disable Magento_TwoFactorAuth
+# rm -rf generated/

@@ -37,15 +37,9 @@ if [[ "yes" == "$RECLONE" ]]; then
      repo=$(echo "GIT_REPO_${edition}" | sed "s|-|_|g")
      branch=$(echo "GIT_BRANCH_${edition}" | sed "s|-|_|g")
      github_repo="git@github.com:${!org}/${!repo}.git"
+     clone_depth=$(echo "GIT_CLONE_DEPTH_${edition}")
      path=$edition
 
-      if [ ${edition} == 'magento24' ]; then
-          mkdir -p $MAGENTO_PATH/magento2ce
-          rm -rf $MAGENTO_PATH/magento2ce/app/code $MAGENTO_PATH/magento2ce/var/*
-          cp -R $DOCKER_PROJECT_DIR/etc/magento24/* $MAGENTO_PATH/magento2ce
-          cp -R $DOCKER_PROJECT_DIR/etc/php/auth.json $MAGENTO_PATH/magento2ce/auth.json
-          continue ;
-      fi
 
    if [[ -d ./${edition} ]] || [[ -d "./magento2ce/${edition}" ]]; then
 #       repo exists, reset working tree and set correct branch
@@ -66,7 +60,7 @@ if [[ "yes" == "$RECLONE" ]]; then
 
      chmod g+s .
 
-    git clone ${GIT_CLONE_DEPTH} ${github_repo} ${path} -b ${!branch} --origin=${!org}
+    git clone ${!clone_depth} ${github_repo} ${path} -b ${!branch} --origin=${!org}
   done
 else
  cd $MAGENTO_PATH/magento2ce
