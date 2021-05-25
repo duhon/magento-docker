@@ -32,17 +32,16 @@ if [[ "yes" == "$RECLONE" ]]; then
   fi
   cd $MAGENTO_PATH
   for edition in $INSTALLED_REPOS; do
-     cd $MAGENTO_PATH
-     org=$(echo "GIT_ORG_${edition}" | sed "s|-|_|g")
-     repo=$(echo "GIT_REPO_${edition}" | sed "s|-|_|g")
-     branch=$(echo "GIT_BRANCH_${edition}" | sed "s|-|_|g")
-     github_repo="git@github.com:${!org}/${!repo}.git"
-     clone_depth=$(echo "GIT_CLONE_DEPTH_${edition}")
-     path=$edition
+    cd $MAGENTO_PATH
+    org=$(echo "GIT_ORG_${edition}" | sed "s|-|_|g")
+    repo=$(echo "GIT_REPO_${edition}" | sed "s|-|_|g")
+    branch=$(echo "GIT_BRANCH_${edition}" | sed "s|-|_|g")
+    github_repo="git@github.com:${!org}/${!repo}.git"
+    clone_depth=$(echo "GIT_CLONE_DEPTH_${edition}")
+    path=$edition
 
-
-   if [[ -d ./${edition} ]] || [[ -d "./magento2ce/${edition}" ]]; then
-#       repo exists, reset working tree and set correct branch
+    if [[ -d ./${edition} ]] || [[ -d "./magento2ce/${edition}" ]]; then
+    #       repo exists, reset working tree and set correct branch
       # continue
       cd $MAGENTO_PATH/$edition
       git clean -dfx -e '.idea' -e 'vendor' -e 'magento2*'
@@ -56,9 +55,9 @@ if [[ "yes" == "$RECLONE" ]]; then
       git checkout -B ${!branch} ${!org}/${!branch}
       git pull
       continue
-   fi
+    fi
 
-     chmod g+s .
+    chmod g+s .
 
     git clone ${!clone_depth} ${github_repo} ${path} -b ${!branch} --origin=${!org}
   done
