@@ -15,7 +15,7 @@ composer install
 #  echo 'install module dependencies'
 #  php dev/tools/install-dependencies.php .
 #fi
-
+sleep 10s
 mysql -uroot -h${DB_HOST} -e "DROP DATABASE IF EXISTS magento; create database magento;"
 rm -rf generated/* var/* app/etc/env.php
 

@@ -15,8 +15,8 @@
         "magento/composer-root-update-plugin": "~1.1",
         "magento/module-catalog-storefront-graph-ql": "*@dev",
         "magento/module-storefront-graph-ql": "*@dev",
-        "magento/services-connector": "^1.0.10",
-        "magento/module-services-id": "^2.0.2"
+        "magento/commerce-data-export-ee": "@dev",
+        "magento/saas-export": "@dev"
     },
     "autoload": {
         "exclude-from-classmap": [
@@ -77,7 +77,7 @@
         },
         {
             "type": "path",
-            "url": "../storefront-graphql-proxy/*"
+            "url": "../*/*"
         }
     ],
     "extra": {
