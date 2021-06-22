@@ -72,6 +72,7 @@ In `.env` file environment variables are declared. Here you can change your `MAG
 1. If docker containers do not go up, check errors in console, run `docker-compose down`, fix issue and run `docker-compose up` again.
 2. If `Overwrite the existing configuration for db-ssl-verify?[Y/n]` prompts in console, type `Y`.
 3. If magento installation fails, run `docker-compose exec app magento reinstall`
+4. If there is 404 error on /admin page, clean cache by running `bin/magento cache:clean` command inside `app` container.
 
 ### TODO list
 https://github.com/duhon/magento-docker/projects
