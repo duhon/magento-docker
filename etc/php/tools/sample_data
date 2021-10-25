@@ -3,7 +3,7 @@
 #TODO: need update like
 shopt -s extglob
 #def or git
-method='def'
+method='git'
 if [[ -d .git ]]; then
     method='git'
 fi

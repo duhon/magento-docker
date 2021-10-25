@@ -1,7 +1,7 @@
 #!/bin/bash
 shopt -s extglob
 
-cp /var/www/magento-docker/etc/php/tools/* /usr/local/sbin
+#cp /var/www/magento-docker/etc/php/tools/* /usr/local/sbin
 
 #clean project dir
 if [[ -d .git ]]; then
@@ -9,35 +9,53 @@ if [[ -d .git ]]; then
    git checkout composer.lock composer.json
 fi
 
+rm -rf generated/* var/* app/etc/env.php
+
 # remove links
 find  . -type l -delete
 
+php /var/www/magento2ee/dev/tools/build-ee.php --command unlink
 
 #apply edition
 dst="/var/www/magento2ce"
-for edition in "$@"; do
+for edition in $INSTALLED_REPOS; do
    if ! [[ -d ../${edition} ]]; then
       edition=magento2${edition}
    fi
-   if [[ ${edition} == "data-solutions-services-id" ]]; then
+  if [[ ${edition} == "magento2ce" ]]; then
+      continue;
+   fi
+   if [[ ! ${edition} == "magento2ce" ]] &&
+      [[ ! ${edition} == "magento2ee" ]] &&
+      [[ ! ${edition} == "magento2-sample-data" ]] &&
+      [[ ! ${edition} == "magento2-sample-data-ee" ]];
+       then
       dst="/var/www/magento2ce/app/code/Magento"
    fi
+
    if [[ -d ../${edition} ]]; then
-     php /var/www/${edition}/dev/tools/build-ee.php -- --command unlink --exclude true --ce-source ${dst} --ee-source /var/www/${edition}
-     php /var/www/${edition}/dev/tools/build-ee.php -- --command link --exclude true --ce-source ${dst} --ee-source /var/www/${edition}
+     php /var/www/magento2ee/dev/tools/build-ee.php --command link --exclude true --ce-source ${dst} --ee-source /var/www/${edition}
      if [[ ${edition} == "magento2ee" ]] || [[ ${edition} == "magento2b2b" ]]; then
        cp -rlf /var/www/${edition}/composer* ${dst} 2>/dev/null
        cp -rlf /var/www/${edition}/setup /var/www/magento2ce/setup 2>/dev/null
      fi
-     if [[ ${edition} == *"storefront"* ]]; then
-       set +ex;
-       cp -rf /var/www/${edition}/dev ${dst} 2>/dev/null
-       set -ex;
-     fi
+     set +ex;
+     cp -rf /var/www/${edition}/dev ${dst} 2>/dev/null
+     set -ex;
    fi
 done
 
+
+# Install live-search graphql dependency
+composer global require gmostafa/php-graphql-client
+
+# Install live-search graphql dependency
+composer global require gmostafa/php-graphql-client
+
+# Clone search repo to extensions directories
+#git clone git@github.com:magento-commerce/magento-live-search.git extensions/magento-live-search
 composer global require hirak/prestissimo
+
 #install magento
 composer install
 echo y | bin/magento setup:uninstall
@@ -54,6 +72,26 @@ bin/magento setup:install \
    --elasticsearch-host=elastic \
    --db-prefix=m2_
 
+#bin/magento module:disable Magento_TwoFactorAuth
+
+bin/magento module:enable --all
+
+if [[ "$MAGENTO_EDITION" == 'CE' ]]; then
+  bin/magento module:disable Magento_Elasticsearch Magento_Elasticsearch6 Magento_Elasticsearch7 Magento_AdvancedSearch
+else
+  bin/magento module:disable Magento_Elasticsearch Magento_Elasticsearch6 Magento_Elasticsearch7 Magento_ElasticsearchCatalogPermissions Magento_AdvancedSearch #Magento_InventoryElasticsearch
+fi
+
+# add QA environment to env.php, https://github.com/magento-commerce/magento-live-search#connecting-to-qa-environment
+php -r '$sC = include "/tmp/livesearch-env.php"; $env = include "app/etc/env.php"; $env = array_replace_recursive($env, $sC); $contents = var_export($env, true); file_put_contents("app/etc/env.php", "<?php\n return $contents; \n");'
+
+echo "Compiling Magento with changes..."
+bin/magento setup:upgrade
+bin/magento setup:di:compile
+bin/magento cache:flush
+
+git apply /tmp/path-validator.patch
+
 #do x-setup lines
-IFS=$'\n' setup=($(yq read /var/www/magento-docker/docker-compose.yml services.*.x-setup | grep -oP '^(?:\s*\-\s)+(?!null)\K.*'))
-for i in ${setup[*]}; do eval "${i}"; done
+#IFS=$'\n' setup=($(yq read /var/www/magento-docker/docker-compose.yml services.*.x-setup | grep -oP '^(?:\s*\-\s)+(?!null)\K.*'))
+#for i in ${setup[*]}; do eval "${i}"; done

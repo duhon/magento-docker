@@ -36,6 +36,7 @@ if [[ "yes" == "$RECLONE" ]]; then
     org=$(echo "GIT_ORG_${edition}" | sed "s|-|_|g")
     repo=$(echo "GIT_REPO_${edition}" | sed "s|-|_|g")
     branch=$(echo "GIT_BRANCH_${edition}" | sed "s|-|_|g")
+    tag=$(echo "GIT_TAG_${edition}" | sed "s|-|_|g")
     github_repo="git@github.com:${!org}/${!repo}.git"
     clone_depth=$(echo "GIT_CLONE_DEPTH_${edition}")
     path=$edition
@@ -52,8 +53,17 @@ if [[ "yes" == "$RECLONE" ]]; then
         git fetch ${!org}
       fi
 
-      git checkout -B ${!branch} ${!org}/${!branch}
-      git pull
+      echo ${!tag}
+      echo ${tag}
+
+      if [[ "" != ${!tag}  ]]; then
+        git checkout tags/${!tag} -B ${!tag}
+        tag=""
+      else
+        git checkout -B ${!branch} ${!org}/${!branch}
+        git pull
+      fi
+
       continue
     fi
 

@@ -14,6 +14,11 @@ fi
 
 cd $DOCKER_PROJECT_DIR
 
-# composer based installation
-docker-compose exec app magento reinstall_monolith
+if [ ${MONOLITHIC_INSTALLATION} == "YES" ]; then
+  # composer based installation
+    docker-compose exec app magento reinstall_monolith
+  else
+    docker-compose exec app magento reinstall
+fi
+
 docker-compose exec app magento config_setup
