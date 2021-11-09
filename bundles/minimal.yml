@@ -35,7 +35,7 @@ services:
     x-setup:
       - bin/magento config:set catalog/search/engine elasticsearch7
   app:
-    image: duhon/php:7.4-fpm
+    image: duhon/php:7.4-fpm-2.4.2
     hostname: app
     volumes:
       - ${MAGENTO_PATH}:/var/www:${FILE_SYNC}

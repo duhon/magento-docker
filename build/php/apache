@@ -47,8 +47,8 @@ COPY --from=duhon/tideways /usr/lib/tideways/tideways-php-$MIN_PHP_VERSION.so /t
 COPY --from=source_php_ext *.so /tmp/ext/
 COPY --from=source_php_ext /usr/local/share/misc/php-spx/assets/web-ui /usr/local/share/misc/php-spx/assets/web-ui
 ADD https://github.com/mailhog/mhsendmail/releases/download/v0.2.0/mhsendmail_linux_amd64 /usr/local/bin/mhsendmail
-ADD https://github.com/mikefarah/yq/releases/download/3.4.0/yq_linux_amd64 /usr/local/bin/yq
-COPY --from=composer /usr/bin/composer /usr/local/bin/
+ADD https://github.com/mikefarah/yq/releases/download/v4.9.6/yq_linux_amd64 /usr/local/bin/yq
+COPY --from=composer:2 /usr/bin/composer /usr/local/bin/
 COPY --from=duhon/tideways /usr/bin/tideways /usr/local/bin/
 COPY --from=blackfire/blackfire /usr/local/bin/blackfire /usr/local/bin/
 
