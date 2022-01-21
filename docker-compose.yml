@@ -7,7 +7,7 @@ services:
     volumes:
       - code:/var/www
   web:
-    image: nginx:alpine
+    image: nginx:1.20-alpine
     hostname: web
     volumes:
       - code:/var/www
