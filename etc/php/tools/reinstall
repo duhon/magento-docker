@@ -45,15 +45,12 @@ for edition in $INSTALLED_REPOS; do
    fi
 done
 
-
 # Install live-search graphql dependency
 composer global require gmostafa/php-graphql-client
-
-# Install live-search graphql dependency
-composer global require gmostafa/php-graphql-client
+# Install live-search firebase/php-jwt dependency
+composer global require firebase/php-jwt
 
 # Clone search repo to extensions directories
-#git clone git@github.com:magento-commerce/magento-live-search.git extensions/magento-live-search
 composer global require hirak/prestissimo
 
 #install magento
@@ -70,7 +67,7 @@ bin/magento setup:install \
    --db-name=magento \
    --db-host=db \
    --elasticsearch-host=elastic \
-   --db-prefix=m2_
+   --db-prefix=
 
 #bin/magento module:disable Magento_TwoFactorAuth
 

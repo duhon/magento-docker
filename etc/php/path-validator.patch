@@ -20,3 +20,17 @@
          }
      }
  }
+
+===================================================================
+--- ./lib/internal/Magento/Framework/View/Element/Template/File/Validator.php	(revision 4c36116dcf878e127059d9be9566a119783583f2)
++++ ./lib/internal/Magento/Framework/View/Element/Template/File/Validator.php	(date 1642812649996)
+@@ -120,8 +120,7 @@
+                 ($this->isPathInDirectories($filename, $this->_compiledDir)
+                     || $this->isPathInDirectories($filename, $this->moduleDirs)
+                     || $this->isPathInDirectories($filename, $this->_themesDir)
+-                    || $this->_isAllowSymlinks)
+-                && $this->getRootDirectory()->isFile($this->getRootDirectory()->getRelativePath($filename));
++                    || $this->_isAllowSymlinks);
+         }
+         return $this->_templatesValidationResults[$filename];
+     }
