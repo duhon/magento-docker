@@ -46,10 +46,9 @@ for edition in $INSTALLED_REPOS; do
 done
 
 # Install live-search graphql dependency
-composer global require gmostafa/php-graphql-client
+composer require gmostafa/php-graphql-client
 # Install live-search firebase/php-jwt dependency
-composer global require firebase/php-jwt
-
+composer require firebase/php-jwt
 # Clone search repo to extensions directories
 composer global require hirak/prestissimo
 
@@ -88,6 +87,7 @@ bin/magento setup:di:compile
 bin/magento cache:flush
 
 git apply /tmp/path-validator.patch
+git apply /tmp/livesearch-qa.patch
 
 #do x-setup lines
 #IFS=$'\n' setup=($(yq read /var/www/magento-docker/docker-compose.yml services.*.x-setup | grep -oP '^(?:\s*\-\s)+(?!null)\K.*'))

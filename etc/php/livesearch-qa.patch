@@ -1,0 +1,63 @@
+Index: ../data-services/DataServices/view/frontend/requirejs-config.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- ../data-services/DataServices/view/frontend/requirejs-config.js	(revision 85dd35905e8a24e27302138b8b1c6e22487f6a9e)
++++ ../data-services/DataServices/view/frontend/requirejs-config.js	(date 1642732114218)
+@@ -1,8 +1,8 @@
+ var config = {
+     paths: {
+-        dataServicesBase: ['https://commerce.adobedtm.com/v6/ds.min', 'Magento_DataServices/js/noopDs'],
+-        dataServicesDiscount: ['https://commerce.adobedtm.com/v6/discount.min', 'Magento_DataServices/js/noopDiscount'],
+-        magentoStorefrontEvents: ['https://unpkg.com/@adobe/magento-storefront-events-sdk@^1/dist/index', 'Magento_DataServices/js/noopSdk'],
+-        magentoStorefrontEventCollector: ['https://unpkg.com/@adobe/magento-storefront-event-collector@^1/dist/index', 'Magento_DataServices/js/noopCollector'],
++        dataServicesBase: ['https://js.magento-datasolutions.com/qa/snowplow/events/v6/ds.min', 'Magento_DataServices/js/noopDs'],
++        dataServicesDiscount: ['https://js.magento-datasolutions.com/qa/snowplow/events/v6/discount.min', 'Magento_DataServices/js/noopDiscount'],
++        magentoStorefrontEvents: ['https://unpkg.com/@adobe/magento-storefront-events-sdk@qa/dist/index', 'Magento_DataServices/js/noopSdk'],
++        magentoStorefrontEventCollector: ['https://unpkg.com/@adobe/magento-storefront-event-collector@qa/dist/index', 'Magento_DataServices/js/noopCollector'],
+     }
+ }
+\ No newline at end of file
+Index: ../services-id/ServicesId/etc/csp_whitelist.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- ../services-id/ServicesId/etc/csp_whitelist.xml	(revision 20403710ab0f86f60bf2d09adc4ae10d2cc1b8c2)
++++ ../services-id/ServicesId/etc/csp_whitelist.xml	(date 1642732114264)
+@@ -10,8 +10,8 @@
+     <policies>
+         <policy id="connect-src">
+             <values>
+-                <value id="servicesid_api_gateway" type="host">api.magento.com</value>
+-                <value id="servicesid_adobe_io" type="host">commerce.adobe.io</value>
++                <value id="servicesid_api_gateway" type="host">qa-api.magedevteam.com</value>
++                <value id="servicesid_adobe_io" type="host">commerce-int.adobe.io</value>
+             </values>
+         </policy>
+     </policies>
+Index: ../data-services/DataServices/etc/csp_whitelist.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- ../data-services/DataServices/etc/csp_whitelist.xml	(revision 85dd35905e8a24e27302138b8b1c6e22487f6a9e)
++++ ../data-services/DataServices/etc/csp_whitelist.xml	(date 1642732114277)
+@@ -11,13 +11,13 @@
+         <policy id="script-src">
+             <values>
+                 <value id="acdl_scripts" type="host">unpkg.com</value>
+-                <value id="data_services_script" type="host">commerce.adobedtm.com</value>
++                <value id="data_services_script" type="host">js.magento-datasolutions.com</value>
+             </values>
+         </policy>
+         <policy id="connect-src">
+             <values>
+-                <value id="data_services_connect" type="host">commerce.adobedtm.com</value>
+-                <value id="snowplow_js" type="host">commerce.adobedc.net</value>
++                <value id="data_services_connect" type="host">js.magento-datasolutions.com</value>
++                <value id="snowplow_js" type="host">com-magento-qa1.collector.snplow.net</value>
+             </values>
+         </policy>
+     </policies>

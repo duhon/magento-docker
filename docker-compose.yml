@@ -67,6 +67,7 @@ services:
       - ./etc/php/livesearch-env.php:/tmp/livesearch-env.php
       - ./etc/php/storefront-env.php:/tmp/storefront-env.php
       - ./etc/php/path-validator.patch:/tmp/path-validator.patch
+      - ./etc/php/livesearch-qa.patch:/tmp/livesearch-qa.patch
       - ./etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
       - ./etc/php/tools:/usr/local/bin/magento2:ro
       - ./etc/php/php.ini:/usr/local/etc/php/php.ini:ro
