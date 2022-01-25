@@ -85,7 +85,7 @@ php -r '$sC = include "/tmp/livesearch-env.php"; $env = include "app/etc/env.php
 
 # add config, so search would use QA environment
 cd '/var/www/'
-php -r '$filesConfig = include "/tmp/livesearch-qa-config.php"; foreach ($filesConfig as $file => $config) { var_dump(file_exists($file)); file_put_contents($file, strtr(file_get_contents($file), $config)); };'
+php -r '$filesConfig = include "/tmp/livesearch-qa-config.php"; foreach ($filesConfig as $file => $config) { file_put_contents($file, strtr(file_get_contents($file), $config)); };'
 cd '/var/www/magento2ce/'
 
 echo "Compiling Magento with changes..."
