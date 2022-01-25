@@ -14,7 +14,9 @@ rm -rf generated/* var/* app/etc/env.php
 # remove links
 find  . -type l -delete
 
-php /var/www/magento2ee/dev/tools/build-ee.php --command unlink
+cp -r /tmp/build.php /var/www/magento2ce/dev/tools/build.php
+# build.php is a copy /var/www/magento2ee/dev/tools/build-ee.php
+php /var/www/magento2ce/dev/tools/build.php --command unlink
 
 #apply edition
 dst="/var/www/magento2ce"
@@ -34,7 +36,7 @@ for edition in $INSTALLED_REPOS; do
    fi
 
    if [[ -d ../${edition} ]]; then
-     php /var/www/magento2ee/dev/tools/build-ee.php --command link --exclude true --ce-source ${dst} --ee-source /var/www/${edition}
+     php /var/www/magento2ce/dev/tools/build.php --command link --exclude true --ce-source ${dst} --ee-source /var/www/${edition}
      if [[ ${edition} == "magento2ee" ]] || [[ ${edition} == "magento2b2b" ]]; then
        cp -rlf /var/www/${edition}/composer* ${dst} 2>/dev/null
        cp -rlf /var/www/${edition}/setup /var/www/magento2ce/setup 2>/dev/null
