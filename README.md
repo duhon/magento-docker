@@ -59,7 +59,7 @@ After installation [set up](https://docs.magento.com/user-guide/live-search/inst
 
 #### Container operations
 
-* enter container (see `docker-composer.yml` for app name - `web`, `db`, `app`, etc.)  
+* enter the container (see `docker-composer.yml` for app name - `web`, `db`, `app`, etc.)  
 `docker-compose exec <app_name> bash` -> `docker-compose exec app bash`
 
 * stop all containers  
