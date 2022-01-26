@@ -95,7 +95,7 @@ After installation [set up](https://docs.magento.com/user-guide/live-search/inst
 * Disable: `mutagen project run xdebug-disable`
 
 :warning: Enabled Xdebug may slow your environment. 
-:notice: port `9003` is used for debug. 
+:exclamation: port `9003` is used for debug. 
 
 #### Magento (Re)-Installation
 
