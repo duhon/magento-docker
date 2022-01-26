@@ -41,9 +41,9 @@ Note, for the first installation (when you don't have cloned repositories yes) p
 
 ### Configuration
 
-    MAGENTO_PATH=/magento/magento-docker-install    # local directory to clone repos into
-    RECLONE=no                                      # flag indicate whether do re-clon of all repos or no
-    MAGENTO_EDITION=EE                              # EE|B2B
+    MAGENTO_PATH=~/projects/livesearch/reposl       # local directory to clone repos into
+    RECLONE=yes                                     # flag indicate whether do re-clon of all repos or no, set yes to clone at first time
+    MAGENTO_EDITION=CE                              # CE|EE|B2B
     Notices:
 
 ### Project install
