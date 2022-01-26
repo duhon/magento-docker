@@ -21,22 +21,21 @@
     Proposed structure:
 ```
     ~/projects/livesearch/magento-docker    # this repo
-    ~/projects/livesearch/repos             # directory with repositories
+    ~/projects/livesearch/repos             # directory with repositories - MAGENTO_PATH in scripts
 ```
 
-2. Copy .env.dist in .env and update MAGENTO_PATH recently created directory path
+2. Copy `.env.dist` in `.env` and update `MAGENTO_PATH` with recently created repos path.
 
-3. Add $MAGENTO_DOMAIN from .env to hosts, e.g.:
+3. Add `$MAGENTO_DOMAIN` from .env to hosts, e.g.:
 
 ```
     sudo -- sh -c "echo '127.0.0.1 magento.test >> /etc/hosts"
 ```
 
-4. Add Magento authentication keys to access the Magento Commerce repository
- * copy the contents of `etc/php/auth.json.dist` to new `etc/php/auth.json` file and replace placeholders with your credentials
+4. Add [Magento authentication](https://marketplace.magento.com/customer/accessKeys/) keys to access the Magento Commerce repository
+ * copy the contents of `etc/php/auth.json.dist` to new `etc/php/auth.json` file and replace placeholders with your credentials.
 
 ### Project start
-Before run, set `MUTAGEN_INSTALLATION=YES` in .env  
 
 Note, for the first installation (when you don't have cloned repositories yes) please change settings "RECLONE" to "yes" in ".env" file
 
@@ -47,20 +46,39 @@ Note, for the first installation (when you don't have cloned repositories yes) p
     MAGENTO_EDITION=EE                              # EE|B2B
     Notices:
 
+### Project install
+
 RUN `mutagen project start`
 
 ### Troubleshooting
-   1. Add MAGENTO_PATH path to Docker sharing folders (Docker preferences) in case docker-error
+   * Add MAGENTO_PATH path to Docker sharing folders (Docker preferences) in case docker-error
 
 ## Scenarios
 
-### 1. Enter container 
-* Run `docker-compose exec app bash`.
+#### Container operations
 
-### 2. Relaunch container
-* Run `docker-compose scale <container_name>=0 && docker-compose scale <container_name>=1`. For example: `docker-compose scale app=0 && docker-compose scale app=1`.
+* enter container (see `docker-composer.yml` for app name - `web`, `db`, `app`, etc.)  
+`docker-compose exec <app_name> bash` -> `docker-compose exec app bash`
 
-### 3. Run tests
+* stop all containers  
+`docker-compose stop`
+
+* start all containers in background:  
+`docker-compose up -d`
+
+* restart all containers:   
+`docker-compose restart` 
+
+* stop container:  
+`docker-compose stop <app_name>`
+
+* start container in background:  
+`docker-compose up -d <app_name>`
+
+* restart container:  
+`docker-compose restart <app_name>`
+
+#### Run tests 
 
 1. `docker-compose exec app magento prepare_tests`
 2. `docker-compose exec app bin/magento dev:tests:run (unit, integration)`
@@ -69,19 +87,18 @@ RUN `mutagen project start`
 5. `cd dev/tests/functional/ and vendor/bin/phpunit run (mtf)`
 6. `vnc://localhost:5900 pass:secret (mftf or mtf)`
 
-### 4. Enable/disable Xdebug
+#### Enable/disable Xdebug
 
 * Enable: `mutagen project run xdebug-enable`
 * Disable: `mutagen project run xdebug-disable`
 
-
 :warning: Enabled Xdebug may slow your environment. 
 
-### 5. Magento (Re)-Installation
+#### Magento (Re)-Installation
 
 * `docker-compose exec app magento reinstall`
 
-### 6. Optimization host
+#### Optimization host
 
 1. Redis optimization 
     ```
@@ -91,10 +108,11 @@ RUN `mutagen project start`
     ```
 2. [Optimization for MacOS](https://gist.github.com/tombigel/d503800a282fcadbee14b537735d202c)
 
+#### Project termination (:!: proceed with caution, removes all containers and volumes)
+
+RUN `mutagen project terminate`
+
 ### FAQ
 1. If docker containers do not go up, check errors in console, run `docker-compose down`, fix issue and run `docker-compose up` again.
-2. If `Overwrite the existing configuration for db-ssl-verify?[Y/n]` prompts in console, type `Y`.
+2. If `Overwrite the existing configuration for db-ssl-verify?[Y/n]` prompts in the console, type `Y`.
 3. If magento installation fails, run `docker-compose exec app magento reinstall`
-
-### TODO list
-https://github.com/duhon/magento-docker/projects

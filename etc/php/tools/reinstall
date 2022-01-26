@@ -1,6 +1,7 @@
 #!/bin/bash
 shopt -s extglob
 
+source /tmp/.env
 #cp /var/www/magento-docker/etc/php/tools/* /usr/local/sbin
 
 #clean project dir
@@ -20,7 +21,16 @@ php /var/www/magento2ce/dev/tools/build.php --command unlink
 
 #apply edition
 dst="/var/www/magento2ce"
-for edition in $INSTALLED_REPOS; do
+
+repos=$INSTALLED_REPOS
+if [[ ${MAGENTO_EDITION} == 'EE' ]]; then
+  repos=${INSTALLED_REPOS_EE}
+fi
+if [[ ${MAGENTO_EDITION} == 'B2B' ]]; then
+  repos=${INSTALLED_REPOS_B2B}
+fi
+
+for edition in $repos; do
    if ! [[ -d ../${edition} ]]; then
       edition=magento2${edition}
    fi
@@ -74,10 +84,12 @@ bin/magento setup:install \
 
 bin/magento module:enable --all
 
-if [[ "$MAGENTO_EDITION" == 'CE' ]]; then
-  bin/magento module:disable Magento_Elasticsearch Magento_Elasticsearch6 Magento_Elasticsearch7 Magento_AdvancedSearch
-else
-  bin/magento module:disable Magento_Elasticsearch Magento_Elasticsearch6 Magento_Elasticsearch7 Magento_ElasticsearchCatalogPermissions Magento_AdvancedSearch #Magento_InventoryElasticsearch
+if [[ "$INSTALL_LIVESEARCH" == 'yes' ]]; then
+  if [[ "$MAGENTO_EDITION" == 'CE' ]]; then
+    bin/magento module:disable Magento_Elasticsearch Magento_Elasticsearch6 Magento_Elasticsearch7 Magento_AdvancedSearch
+  else
+    bin/magento module:disable Magento_Elasticsearch Magento_Elasticsearch6 Magento_Elasticsearch7 Magento_ElasticsearchCatalogPermissions Magento_AdvancedSearch #Magento_InventoryElasticsearch
+  fi
 fi
 
 # add QA environment to env.php, https://github.com/magento-commerce/magento-live-search#connecting-to-qa-environment
@@ -93,7 +105,11 @@ bin/magento setup:upgrade
 bin/magento setup:di:compile
 bin/magento cache:flush
 
-git apply /tmp/path-validator.patch
+echo "Magento 2 Successfully installed!"
+echo "To open it navigate to $MAGENTO_DOMAIN"
+echo "Ignore git apply errors."
+
+git apply --check /tmp/path-validator.patch
 
 #do x-setup lines
 #IFS=$'\n' setup=($(yq read /var/www/magento-docker/docker-compose.yml services.*.x-setup | grep -oP '^(?:\s*\-\s)+(?!null)\K.*'))
