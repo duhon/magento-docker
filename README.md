@@ -50,6 +50,8 @@ Note, for the first installation (when you don't have cloned repositories yes) p
 
 RUN `mutagen project start`
 
+After installation [set up](https://docs.magento.com/user-guide/live-search/install.html) API Keys for Live Search > [Configure API keys](https://docs.magento.com/user-guide/live-search/install.html#configure-api-keys) section
+
 ### Troubleshooting
    * Add MAGENTO_PATH path to Docker sharing folders (Docker preferences) in case docker-error
 
