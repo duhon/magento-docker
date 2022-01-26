@@ -80,7 +80,7 @@ After installation [set up](https://docs.magento.com/user-guide/live-search/inst
 * restart container:  
 `docker-compose restart <app_name>`
 
-#### Run tests 
+#### Run tests (in progress, can be not stable)
 
 1. `docker-compose exec app magento prepare_tests`
 2. `docker-compose exec app bin/magento dev:tests:run (unit, integration)`
@@ -89,7 +89,7 @@ After installation [set up](https://docs.magento.com/user-guide/live-search/inst
 5. `cd dev/tests/functional/ and vendor/bin/phpunit run (mtf)`
 6. `vnc://localhost:5900 pass:secret (mftf or mtf)`
 
-#### Enable/disable Xdebug
+#### Enable/disable Xdebug 
 
 * Enable: `mutagen project run xdebug-enable`
 * Disable: `mutagen project run xdebug-disable`
