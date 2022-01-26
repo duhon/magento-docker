@@ -31,7 +31,16 @@ if [[ "yes" == "$RECLONE" ]]; then
       mkdir $MAGENTO_PATH
   fi
   cd $MAGENTO_PATH
-  for edition in $INSTALLED_REPOS; do
+
+  repos=$INSTALLED_REPOS
+  if [[ ${MAGENTO_EDITION} == 'EE' ]]; then
+    repos=${INSTALLED_REPOS_EE}
+  fi
+  if [[ ${MAGENTO_EDITION} == 'B2B' ]]; then
+    repos=${INSTALLED_REPOS_B2B}
+  fi
+
+  for edition in $repos; do
     cd $MAGENTO_PATH
     org=$(echo "GIT_ORG_${edition}" | sed "s|-|_|g")
     repo=$(echo "GIT_REPO_${edition}" | sed "s|-|_|g")

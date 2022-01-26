@@ -19,9 +19,6 @@ cp -r /tmp/build.php /var/www/magento2ce/dev/tools/build.php
 # build.php is a copy /var/www/magento2ee/dev/tools/build-ee.php
 php /var/www/magento2ce/dev/tools/build.php --command unlink
 
-#apply edition
-dst="/var/www/magento2ce"
-
 repos=$INSTALLED_REPOS
 if [[ ${MAGENTO_EDITION} == 'EE' ]]; then
   repos=${INSTALLED_REPOS_EE}
@@ -31,14 +28,19 @@ if [[ ${MAGENTO_EDITION} == 'B2B' ]]; then
 fi
 
 for edition in $repos; do
-   if ! [[ -d ../${edition} ]]; then
-      edition=magento2${edition}
-   fi
+  echo "Applying $edition edition"
+
+  #apply edition
+  dst="/var/www/magento2ce"
+  #if ! [[ -d ../${edition} ]]; then
+  #  edition=magento2${edition}
+  #fi
   if [[ ${edition} == "magento2ce" ]]; then
       continue;
    fi
    if [[ ! ${edition} == "magento2ce" ]] &&
       [[ ! ${edition} == "magento2ee" ]] &&
+      [[ ! ${edition} == "magento2b2b" ]] &&
       [[ ! ${edition} == "magento2-sample-data" ]] &&
       [[ ! ${edition} == "magento2-sample-data-ee" ]];
        then
@@ -54,6 +56,11 @@ for edition in $repos; do
      set +ex;
      cp -rf /var/www/${edition}/dev ${dst} 2>/dev/null
      set -ex;
+   else
+      echo "!!!!!!!!!!!!"
+      echo "ERROR: Directory for '${edition}' edition doesn't exist"
+      echo "!!!!!!!!!!!!"
+      exit
    fi
 done
 
@@ -105,11 +112,17 @@ bin/magento setup:upgrade
 bin/magento setup:di:compile
 bin/magento cache:flush
 
+#taken from config_setup
+bin/magento config:set web/seo/use_rewrites 1
+bin/magento config:set dev/template/allow_symlink 1
+bin/magento config:set admin/security/admin_account_sharing 1
+bin/magento config:set admin/security/session_lifetime 31536000
+
 echo "Magento 2 Successfully installed!"
 echo "To open it navigate to $MAGENTO_DOMAIN"
-echo "Ignore git apply errors."
+echo "Ignore git apply errors if they occur."
 
-git apply --check /tmp/path-validator.patch
+git apply /tmp/path-validator.patch
 
 #do x-setup lines
 #IFS=$'\n' setup=($(yq read /var/www/magento-docker/docker-compose.yml services.*.x-setup | grep -oP '^(?:\s*\-\s)+(?!null)\K.*'))
