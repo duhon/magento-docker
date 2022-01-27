@@ -110,16 +110,17 @@ cd '/var/www/'
 php -r '$filesConfig = include "/tmp/livesearch-qa-config.php"; foreach ($filesConfig as $file => $config) { file_put_contents($file, strtr(file_get_contents($file), $config)); };'
 cd '/var/www/magento2ce/'
 
+
+
 echo "Compiling Magento with changes..."
 bin/magento setup:upgrade
 bin/magento setup:di:compile
 bin/magento cache:flush
 
+# apply Magento configs
+php -f /tmp/magento_config_setup.php
+
 #taken from config_setup
-bin/magento config:set web/seo/use_rewrites 1
-bin/magento config:set dev/template/allow_symlink 1
-bin/magento config:set admin/security/admin_account_sharing 1
-bin/magento config:set admin/security/session_lifetime 31536000
 bin/magento config:set web/secure/base_url https://${MAGENTO_DOMAIN}/
 
 echo "Magento 2 Successfully installed!"

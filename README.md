@@ -59,6 +59,13 @@ Note, for the first installation (when you don't have cloned repositories yes) p
 
 ## Scenarios
 
+#### SaaS connector credentials setup
+
+* After first project install you can automate pre-filling of SaaS credentials (pretty useful if you reinstall Magento often)
+* Navigate to `etc/php/magento-config.php` (copy from `/tmp/magento-config.php.dist` if not exists) 
+* find node `services_connector` and fill sub-nodes according to the values from `Commerce Services Connector`. 
+* See comments regarding each config value. 
+
 #### Container operations
 
 * enter the container (see `docker-composer.yml` for app name - `web`, `db`, `app`, etc.)  
