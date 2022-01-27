@@ -82,7 +82,7 @@ bin/magento setup:install \
    --admin-lastname=Admin \
    --admin-firstname=Admin \
    --admin-email=magento@mailinator.com \
-   --base-url=http://${MAGENTO_DOMAIN}/ \
+   --base-url=https://${MAGENTO_DOMAIN}/ \
    --admin-user=${ADMIN_USER} \
    --admin-password=${ADMIN_PASSWORD} \
    --db-name=magento \
@@ -120,7 +120,7 @@ bin/magento config:set web/seo/use_rewrites 1
 bin/magento config:set dev/template/allow_symlink 1
 bin/magento config:set admin/security/admin_account_sharing 1
 bin/magento config:set admin/security/session_lifetime 31536000
-bin/magento config:set web/secure/base_url http://${MAGENTO_DOMAIN}/
+bin/magento config:set web/secure/base_url https://${MAGENTO_DOMAIN}/
 
 echo "Magento 2 Successfully installed!"
 echo "To open it navigate to $MAGENTO_DOMAIN"
