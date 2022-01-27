@@ -50,7 +50,9 @@ for edition in $repos; do
    if [[ -d ../${edition} ]]; then
      php /var/www/magento2ce/dev/tools/build.php --command link --exclude true --ce-source ${dst} --ee-source /var/www/${edition}
      if [[ ${edition} == "magento2ee" ]] || [[ ${edition} == "magento2b2b" ]]; then
-       cp -rlf /var/www/${edition}/composer* ${dst} 2>/dev/null
+       if [[ ${edition} == "magento2ee" ]]; then
+        cp -rlf /var/www/${edition}/composer* ${dst} 2>/dev/null
+       fi
        cp -rlf /var/www/${edition}/setup /var/www/magento2ce/setup 2>/dev/null
      fi
      set +ex;
