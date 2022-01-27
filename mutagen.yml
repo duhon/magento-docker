@@ -43,7 +43,7 @@ sync:
       defaultFileMode: 0666
       defaultDirectoryMode: 0777
   code:
-    alpha: "/Users/ruslankostiv/projects/webonix/repos"
+    alpha: "~/projects/livesearch/repos"
     beta: "docker://web-mutagen/var/www"
     mode: "two-way-resolved"
     ignore:

@@ -82,8 +82,8 @@ bin/magento setup:install \
    --admin-lastname=Admin \
    --admin-firstname=Admin \
    --admin-email=magento@mailinator.com \
-   --admin-user=admin \
-   --admin-password=123123q \
+   --admin-user=${ADMIN_USER} \
+   --admin-password=${ADMIN_PASSWORD} \
    --db-name=magento \
    --db-host=db \
    --elasticsearch-host=elastic \
