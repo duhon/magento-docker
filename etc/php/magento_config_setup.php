@@ -23,9 +23,5 @@ function setMagentoConfig($path, $value) {
     }
 }
 
-$filesConfig = include "/tmp/magento-config.php";
-if (false === $filesConfig) {
-    exec("cp /tmp/magento-config.php.dist /tmp/magento-config.php");
-    $filesConfig = include "/tmp/magento-config.php";
-}
-applyConfig($filesConfig);
+$magentoConfig = include "/tmp/magento-config.php";
+applyConfig($magentoConfig);

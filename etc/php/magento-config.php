@@ -22,9 +22,9 @@ return [
     'services_connector' => [
         // get QA API credentials  https://account-stage.magedevteam.com/apiportal/index/index/
         'services_connector_integration' => [
-            'sandbox_private_key' => '',
-            'sandbox_api_key' =>
-<<< KEY
+            'sandbox_api_key' => '',
+            'sandbox_private_key' =>
+                <<< KEY
 -----BEGIN PRIVATE KEY-----
 replace with private key
 -----END PRIVATE KEY-----
