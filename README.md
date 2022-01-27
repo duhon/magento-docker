@@ -48,9 +48,11 @@ Note, for the first installation (when you don't have cloned repositories yes) p
 
 ### Project install
 
-RUN `mutagen project start`
-
-After installation [set up](https://docs.magento.com/user-guide/live-search/install.html) API Keys for Live Search > [Configure API keys](https://docs.magento.com/user-guide/live-search/install.html#configure-api-keys) section
+* RUN `mutagen project start` to start project (repositories clone, linking, configuration)
+* Log in to the Admin UI (use `ADMIN_USER`/`ADMIN_PASSWORD` from `.env`), 
+* Navigate to Stores > Configuration > Services > Commerce Services Connector
+* Get your QA API credentials from [API Portal](https://account-stage.magedevteam.com/apiportal/index/index/) with Environment as QA and save them in Admin UI.
+* Refer to [this](https://devdocs.magento.com/live-search/config-connect.html) document for additional information.
 
 ### Troubleshooting
    * Add MAGENTO_PATH path to Docker sharing folders (Docker preferences) in case docker-error
