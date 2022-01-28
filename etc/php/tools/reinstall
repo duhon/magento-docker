@@ -1,8 +1,6 @@
 #!/bin/bash
 shopt -s extglob
 
-echo "$(date +"%T") Magento Installation START"
-
 source /tmp/.env
 #cp /var/www/magento-docker/etc/php/tools/* /usr/local/sbin
 
@@ -28,6 +26,8 @@ fi
 if [[ ${MAGENTO_EDITION} == 'B2B' ]]; then
   repos=${INSTALLED_REPOS_B2B}
 fi
+
+echo "$(date +"%T") Magento ${MAGENTO_EDITION} Installation START"
 
 for edition in $repos; do
   echo "Applying $edition edition"
@@ -129,7 +129,7 @@ echo "Magento 2 Successfully installed!"
 echo "To open it navigate to $MAGENTO_DOMAIN"
 echo "Ignore git apply errors if they occur."
 
-echo "$(date +"%T") Magento Installation END"
+echo "$(date +"%T") Magento ${MAGENTO_EDITION} Installation END"
 git apply /tmp/path-validator.patch
 
 #do x-setup lines
