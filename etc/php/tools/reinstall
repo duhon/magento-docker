@@ -1,6 +1,8 @@
 #!/bin/bash
 shopt -s extglob
 
+echo "$(date +"%T") Magento Installation START"
+
 source /tmp/.env
 #cp /var/www/magento-docker/etc/php/tools/* /usr/local/sbin
 
@@ -127,6 +129,7 @@ echo "Magento 2 Successfully installed!"
 echo "To open it navigate to $MAGENTO_DOMAIN"
 echo "Ignore git apply errors if they occur."
 
+echo "$(date +"%T") Magento Installation END"
 git apply /tmp/path-validator.patch
 
 #do x-setup lines
