@@ -56,7 +56,7 @@ Note, for the first installation (when you don't have cloned repositories yes) p
 
 ### Troubleshooting
    * Add MAGENTO_PATH path to Docker sharing folders (Docker preferences) in case docker-error
-
+   * If you see certificate errors. Make `https://magento.test` certificate trusted with [these steps](https://support.pkware.com/home/sfd/15.7/macos/macos-how-to/macos-trusting-a-ssl-certificate).
 ## Scenarios
 
 #### SaaS connector credentials setup
