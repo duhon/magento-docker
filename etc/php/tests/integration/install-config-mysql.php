@@ -18,10 +18,5 @@ return [
     'admin-email' => \Magento\TestFramework\Bootstrap::ADMIN_EMAIL,
     'admin-firstname' => \Magento\TestFramework\Bootstrap::ADMIN_FIRSTNAME,
     'admin-lastname' => \Magento\TestFramework\Bootstrap::ADMIN_LASTNAME,
-    'amqp-host' => 'rabbit',
-    'amqp-port' => '5672',
-    'amqp-user' => 'guest',
-    'amqp-password' => 'guest',
     'document-root-is-pub'   => 'true',
-    'consumers-wait-for-messages' => '0',
 ];

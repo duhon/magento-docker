@@ -93,6 +93,8 @@ Note, for the first installation (when you don't have cloned repositories yes) p
 
 1. `docker-compose exec app magento prepare_tests`
 2. `docker-compose exec app bin/magento dev:tests:run (unit, integration)`
+   (:!:) (make sure db `magento_integration_tests` created before integration tests run)
+
 3. `docker-compose exec app bash`
 4. `cd dev/tests/acceptance/ and vendor/bin/codecept run (mftf)`
 5. `cd dev/tests/functional/ and vendor/bin/phpunit run (mtf)`
