@@ -72,8 +72,6 @@ done
 composer require gmostafa/php-graphql-client
 # Install live-search firebase/php-jwt dependency
 composer require firebase/php-jwt
-# Clone search repo to extensions directories
-composer global require hirak/prestissimo
 
 #install magento
 composer install
