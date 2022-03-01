@@ -20,7 +20,6 @@ done
 composer config minimum-stability dev
 composer config repositories.composer '{"type": "composer", "url": "https://repo.magento.com/", "canonical": false}'
 composer config repositories.path '{"type": "path","url": "../*/*", "canonical": false}'
-rm -rf composer.lock
 composer install
 bin/magento setup:install \
    --cleanup-database \
