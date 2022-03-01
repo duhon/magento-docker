@@ -1,0 +1,7 @@
+version: '3'
+services:
+  logger:
+    image: busybox
+    volumes:
+      - ${MAGENTO_PATH}:/var/www:${FILE_SYNC}
+    command: /bin/sh -c "tail -n+1 -F /var/www/magento2ce/var/log/*.log"

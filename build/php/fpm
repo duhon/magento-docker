@@ -1,5 +1,5 @@
-ARG MIN_PHP_VERSION=8.0
-ARG BLACKFIRE_PHP_VERSION=80
+ARG MIN_PHP_VERSION=8.1
+ARG BLACKFIRE_PHP_VERSION=81
 ARG NEWRELIC_PHP_VERSION=20190902
 
 FROM busybox AS source_blackfire
@@ -47,7 +47,7 @@ COPY --from=source_newrelic newrelic.so /tmp/ext/
 COPY --from=source_php_ext *.so /tmp/ext/
 COPY --from=source_php_ext /usr/local/share/misc/php-spx/assets/web-ui /usr/local/share/misc/php-spx/assets/web-ui
 ADD https://github.com/mailhog/mhsendmail/releases/download/v0.2.0/mhsendmail_linux_amd64 /usr/local/bin/mhsendmail
-ADD https://github.com/mikefarah/yq/releases/download/v4.14.1/yq_linux_amd64 /usr/local/bin/yq
+ADD https://github.com/mikefarah/yq/releases/download/v4.16.2/yq_linux_amd64 /usr/local/bin/yq
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/
 COPY --from=blackfire/blackfire /usr/local/bin/blackfire /usr/local/bin/
 

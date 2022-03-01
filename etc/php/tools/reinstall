@@ -16,7 +16,10 @@ for edition in "$@"; do
 done
 
 #install magento
-composer install
+composer config minimum-stability dev
+composer config repositories.git '{"type": "path","url": "../*/*", "canonical": false}'
+composer config repositories.magento '{"type": "composer", "url": "https://repo.magento.com/", "canonical": false}'
+composer update
 bin/magento setup:install \
    --cleanup-database \
    --backend-frontname=admin \
