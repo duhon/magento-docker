@@ -54,7 +54,8 @@ RUN apt-get update \
 
 RUN apt update \
     && apt install -y libicu-dev \
-    && docker-php-ext-install intl
+    && docker-php-ext-install intl \
+    && pecl install -f xdebug
 
 WORKDIR /var/www/magento2ce
 

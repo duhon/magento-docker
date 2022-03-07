@@ -96,9 +96,9 @@ bin/magento module:enable --all
 
 if [[ "$INSTALL_LIVESEARCH" == 'yes' ]]; then
   if [[ "$MAGENTO_EDITION" == 'CE' ]]; then
-    bin/magento module:disable Magento_Elasticsearch Magento_Elasticsearch6 Magento_Elasticsearch7 Magento_AdvancedSearch
+    bin/magento module:disable Magento_Elasticsearch Magento_Elasticsearch6 Magento_Elasticsearch7 # Magento_AdvancedSearch
   else
-    bin/magento module:disable Magento_Elasticsearch Magento_Elasticsearch6 Magento_Elasticsearch7 Magento_ElasticsearchCatalogPermissions Magento_AdvancedSearch #Magento_InventoryElasticsearch
+    bin/magento module:disable Magento_Elasticsearch Magento_Elasticsearch6 Magento_Elasticsearch7 Magento_ElasticsearchCatalogPermissions # Magento_AdvancedSearch #Magento_InventoryElasticsearch
   fi
 fi
 

@@ -47,7 +47,7 @@ services:
 
   # Magento 2 container with commerce-data-export repo
   app:
-    image: rkostiv/php:8.1.0 # 7.4.0 | 8.1.0 are available at the moment
+    image: rkostiv/php-fpm:8.1.0 # 7.4.0 | 8.1.0 are available at the moment
     # to re-build image with gRPC use the following docker file:
 #    build:
 #      context: .
