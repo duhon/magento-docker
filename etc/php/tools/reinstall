@@ -102,14 +102,15 @@ if [[ "$INSTALL_LIVESEARCH" == 'yes' ]]; then
   fi
 fi
 
-# add QA environment to env.php, https://github.com/magento-commerce/magento-live-search#connecting-to-qa-environment
-php -r '$sC = include "/tmp/livesearch-env.php"; $env = include "app/etc/env.php"; $env = array_replace_recursive($env, $sC); $contents = var_export($env, true); file_put_contents("app/etc/env.php", "<?php\n return $contents; \n");'
+if [[ "$INSTALL_LIVESEARCH" == 'yes' ]]; then
+  # add QA environment to env.php, https://github.com/magento-commerce/magento-live-search#connecting-to-qa-environment
+  php -r '$sC = include "/tmp/livesearch-env.php"; $env = include "app/etc/env.php"; $env = array_replace_recursive($env, $sC); $contents = var_export($env, true); file_put_contents("app/etc/env.php", "<?php\n return $contents; \n");'
 
-# add config, so search would use QA environment
-cd '/var/www/'
-php -r '$filesConfig = include "/tmp/livesearch-qa-config.php"; foreach ($filesConfig as $file => $config) { file_put_contents($file, strtr(file_get_contents($file), $config)); };'
-cd '/var/www/magento2ce/'
-
+  # add config, so search would use QA environment
+  cd '/var/www/'
+  php -r '$filesConfig = include "/tmp/livesearch-qa-config.php"; foreach ($filesConfig as $file => $config) { file_put_contents($file, strtr(file_get_contents($file), $config)); };'
+  cd '/var/www/magento2ce/'
+fi
 
 
 echo "Compiling Magento with changes..."
