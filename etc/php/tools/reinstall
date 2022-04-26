@@ -4,7 +4,7 @@ shopt -s extglob
 #clean project dir
 if [[ -d .git ]]; then
    git clean -dfx -e '.idea' $(mount | grep -oP '/var/www/magento2ce/\K\S*' | xargs -rn 1 echo '-e ')
-   git checkout composer.lock composer.json
+   git checkout composer.json
 fi
 
 #apply edition
@@ -12,14 +12,16 @@ for edition in "$@"; do
    if ! [[ -d ../${edition} ]]; then
       edition=magento2${edition}
    fi
+   git -C ../"${edition}" checkout composer.json
    cp -rlf ../"${edition}"/!(.git|vendor|..|.) .
 done
 
 #install magento
 composer config minimum-stability dev
-composer config repositories.git '{"type": "path","url": "../*/*", "canonical": false}'
-composer config repositories.magento '{"type": "composer", "url": "https://repo.magento.com/", "canonical": false}'
-composer update
+composer config repositories.composer '{"type": "composer", "url": "https://repo.magento.com/", "canonical": false}'
+composer config repositories.path '{"type": "path","url": "../*/*", "canonical": false}'
+rm -rf composer.lock
+composer install
 bin/magento setup:install \
    --cleanup-database \
    --backend-frontname=admin \
@@ -31,6 +33,7 @@ bin/magento setup:install \
    --db-name=magento \
    --db-host=db \
    --elasticsearch-host=elastic \
+   --enable-modules=all \
    --db-prefix=m2_
 
 #do x-setup lines

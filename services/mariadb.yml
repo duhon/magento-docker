@@ -1,0 +1,12 @@
+version: '2'
+services:
+  db:
+    image: mysql:5.7
+    hostname: db
+    # volumes:
+       # - /tmp/:/var/lib/mysql
+    tmpfs:
+      - /tmp
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: "magento"
