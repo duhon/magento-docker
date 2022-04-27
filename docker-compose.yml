@@ -27,6 +27,12 @@ services:
     #    command: nginx-debug -g 'daemon off;'
     x-hint: uncomment the line above and change error_log in nginx.conf
     x-info: https://devdocs.magento.com/guides/v2.3/install-gde/prereq/nginx.html
+  # the mailhog server, use http://localhost:8025/ to open mailbox
+  mail:
+    image: mailhog/mailhog:latest
+    ports:
+      - "1025:1025"
+      - "8025:8025"
   db:
     image: mysql:8
     hostname: db
