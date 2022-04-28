@@ -53,6 +53,16 @@ Note, for the first installation (when you don't have cloned repositories yes) p
 * Navigate to Stores > Configuration > Services > Commerce Services Connector
 * Get your QA API credentials from [API Portal](https://account-stage.magedevteam.com/apiportal/index/index/) with Environment as QA and save them in Admin UI.
 * Refer to [this](https://devdocs.magento.com/live-search/config-connect.html) document for additional information.
+* to sync products to SaaS run the following commands:
+```
+bin/magento saas:resync --feed productattributes
+bin/magento saas:resync --feed products
+```
+* to sync product updates simply run
+```
+bin/magento cron:run
+bin/magento cron:run
+```
 
 ### Troubleshooting
    * Add MAGENTO_PATH path to Docker sharing folders (Docker preferences) in case docker-error
