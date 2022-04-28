@@ -1,7 +1,8 @@
-===================================================================
---- ./lib/internal/Magento/Framework/Filesystem/Directory/PathValidator.php	(revision 4c36116dcf878e127059d9be9566a119783583f2)
-+++ ./lib/internal/Magento/Framework/Filesystem/Directory/PathValidator.php	(date 1635117780782)
-@@ -57,12 +57,12 @@
+diff --git a/lib/internal/Magento/Framework/Filesystem/Directory/PathValidator.php b/lib/internal/Magento/Framework/Filesystem/Directory/PathValidator.php
+index 9ecbfa6c9d2..0f2b7233e44 100644
+--- a/lib/internal/Magento/Framework/Filesystem/Directory/PathValidator.php
++++ b/lib/internal/Magento/Framework/Filesystem/Directory/PathValidator.php
+@@ -57,12 +57,12 @@ class PathValidator implements PathValidatorInterface
          if (mb_strpos($actualPath, $realDirectoryPath) !== 0
              && rtrim($path, DIRECTORY_SEPARATOR) !== $realDirectoryPath
          ) {
@@ -20,11 +21,24 @@
          }
      }
  }
+diff --git a/lib/internal/Magento/Framework/Filesystem/Directory/Read.php b/lib/internal/Magento/Framework/Filesystem/Directory/Read.php
+index d16fab37818..63edfdd8084 100644
+--- a/lib/internal/Magento/Framework/Filesystem/Directory/Read.php
++++ b/lib/internal/Magento/Framework/Filesystem/Directory/Read.php
+@@ -277,6 +277,8 @@ class Read implements ReadInterface
+         $this->validatePath($path);
 
-===================================================================
---- ./lib/internal/Magento/Framework/View/Element/Template/File/Validator.php	(revision 4c36116dcf878e127059d9be9566a119783583f2)
-+++ ./lib/internal/Magento/Framework/View/Element/Template/File/Validator.php	(date 1642812649996)
-@@ -120,8 +120,7 @@
+         $absolutePath = $this->driver->getAbsolutePath($this->path, $path);
++        // fix for email templates
++        $absolutePath = preg_replace('/(\/var\/www\/magento2ce\/var\/www\/.*\/)/iSU', '/var/www/magento2b2b/', $absolutePath);
+         return $this->driver->fileGetContents($absolutePath, $flag, $context);
+     }
+
+diff --git a/lib/internal/Magento/Framework/View/Element/Template/File/Validator.php b/lib/internal/Magento/Framework/View/Element/Template/File/Validator.php
+index 8f0310af0a3..39529d6828d 100644
+--- a/lib/internal/Magento/Framework/View/Element/Template/File/Validator.php
++++ b/lib/internal/Magento/Framework/View/Element/Template/File/Validator.php
+@@ -120,8 +120,7 @@ class Validator
                  ($this->isPathInDirectories($filename, $this->_compiledDir)
                      || $this->isPathInDirectories($filename, $this->moduleDirs)
                      || $this->isPathInDirectories($filename, $this->_themesDir)
