@@ -89,6 +89,10 @@ Note, for the first installation (when you don't have cloned repositories yes) p
 * restart container:  
 `docker-compose restart <app_name>`
 
+#### Emails sending
+
+MailHog is used to receive emails sent by Magento, navigate to http://localhost:8025/ to see them.
+
 #### Run tests (in progress, can be not stable)
 
 1. `docker-compose exec app magento prepare_tests`
@@ -114,13 +118,7 @@ Note, for the first installation (when you don't have cloned repositories yes) p
 
 #### Optimization host
 
-1. Redis optimization 
-    ```
-    docker run -it --rm --privileged ubuntu /bin/bash
-    echo never | tee /sys/kernel/mm/transparent_hugepage/enabled
-    echo never | tee /sys/kernel/mm/transparent_hugepage/defrag
-    ```
-2. [Optimization for MacOS](https://gist.github.com/tombigel/d503800a282fcadbee14b537735d202c)
+1. [Optimization for MacOS](https://gist.github.com/tombigel/d503800a282fcadbee14b537735d202c)
 
 #### Project termination (:!: proceed with caution, removes all containers and volumes)
 
