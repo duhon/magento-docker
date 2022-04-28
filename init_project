@@ -57,6 +57,7 @@ if [[ "yes" == "$RECLONE" ]]; then
       git clean -dfx -e '.idea' -e 'vendor' -e 'magento2*'
       git reset --hard
 
+      git remote rm ${!org} || echo "."
       git remote add ${!org} ${github_repo} || echo "."
       if [ $? -eq 0 ]; then
         git fetch ${!org}
