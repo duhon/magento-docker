@@ -19,4 +19,8 @@ return [
     'magento-live-search/LiveSearchStorefrontPopover/etc/config.xml' => [
         'livesearch-autocomplete.magento-ds.com' => 'searchautocompleteqa.magento-datasolutions.com'
     ],
+    'services-id/ServicesId/etc/config.xml' => [
+        // temporary, until v1 released
+        'services-connector-ui.magento-ds.com/v1/index.js' => 'services-connector-qa.magento-datasolutions.com/v0/index.js'
+    ]
 ];

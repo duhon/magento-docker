@@ -24,10 +24,15 @@ return [
         'services_connector_integration' => [
             'sandbox_api_key' => '',
             'sandbox_private_key' =>
-                <<< KEY
+<<< KEY
 -----BEGIN PRIVATE KEY-----
 replace with private key
 -----END PRIVATE KEY-----
+KEY,
+            'production_api_key' => '',
+            'production_private_key' =>
+<<< KEY
+replace with private key
 KEY
         ],
         // services_id node can be filled after initial install and keys setup
