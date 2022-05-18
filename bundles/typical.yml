@@ -6,7 +6,7 @@ services:
       - ${MAGENTO_PATH}:/var/www:${FILE_SYNC}
     command: /bin/sh -c "tail -n+1 -F /var/www/magento2ce/var/log/*.log"
   web:
-    image: nginx:alpine
+    image: nginx:1.20.0-alpine
     hostname: web
     volumes:
       - ${MAGENTO_PATH}:/var/www:${FILE_SYNC}
