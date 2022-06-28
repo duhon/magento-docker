@@ -1,12 +1,26 @@
 version: '2'
 services:
   db:
-    image: mysql:5.7
+    image: docker.io/bitnami/mariadb:10.4
     hostname: db
-    # volumes:
-       # - /tmp/:/var/lib/mysql
-    tmpfs:
-      - /tmp
+    ports:
+      - "${DB_PORT}:3306"
     environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-      MYSQL_DATABASE: "magento"
+      - MARIADB_REPLICATION_MODE=master
+      - MARIADB_REPLICATION_USER=repl_user
+      - MARIADB_REPLICATION_PASSWORD=repl_password
+      - MARIADB_DATABASE=magento
+      - ALLOW_EMPTY_PASSWORD=yes
+  db-slave:
+    image: docker.io/bitnami/mariadb:10.4
+    hostname: db-slave
+    ports:
+      - 3307:3307
+    environment:
+      - MARIADB_REPLICATION_MODE=slave
+      - MARIADB_REPLICATION_USER=repl_user
+      - MARIADB_REPLICATION_PASSWORD=repl_password
+      - MARIADB_DATABASE=magento
+      - MARIADB_MASTER_HOST=db
+      - MARIADB_MASTER_PORT_NUMBER=3306
+      - ALLOW_EMPTY_PASSWORD=yes

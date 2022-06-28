@@ -1,33 +1,12 @@
 version: '2'
 services:
-  mariadb-master:
-    image: docker.io/bitnami/mariadb:10.4
-    hostname: master
-    ports:
-      - '3306'
-    volumes:
-      - 'mariadb_master_data:/bitnami/mariadb'
+  db:
+    image: mysql:5.7
+    hostname: db
+      # volumes:
+    # - /tmp/:/var/lib/mysql
+    tmpfs:
+      - /tmp
     environment:
-      - MARIADB_REPLICATION_MODE=master
-#      - MARIADB_REPLICATION_USER=repl_user
-#      - MARIADB_USER=my_user
-      - MARIADB_DATABASE=magento
-      - MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=yes
-#      - MARIADB_ROOT_PASSWORD=my_root_password
-  mariadb-slave:
-    image: docker.io/bitnami/mariadb:10.4
-    hostname: slave
-    ports:
-      - '3307'
-    depends_on:
-      - mariadb-master
-    environment:
-      - MARIADB_REPLICATION_MODE=slave
-#      - MARIADB_REPLICATION_USER=repl_user
-#      - MARIADB_USER=my_user
-      - MARIADB_DATABASE=magento
-      - MARIADB_MASTER_HOST=mariadb-master
-      - MARIADB_MASTER_PORT_NUMBER=3306
-#      - MARIADB_MASTER_ROOT_PASSWORD=my_root_password
-      - MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=yes
-      - MARIADB_EXTRA_FLAGS=--read-only=1
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: "magento"
