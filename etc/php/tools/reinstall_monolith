@@ -8,8 +8,29 @@ DB_HOST=db
 
 #install magento
 
+find  . -type l -delete
+
+
+
+cp  /var/www/magento2ee/composer*  /var/www/magento2ce/
+
+
+
+#install magento
+#yes Y | composer global require hirak/prestissimo
+yes Y | composer update --lock
+yes Y | composer install
+
+php /var/www/magento2ee/dev/tools/build-ee.php --command link --ce-source /var/www/magento2ce --ee-source /var/www/magento2ee
+php /var/www/magento2ee/dev/tools/build-ee.php --command link --ce-source /var/www/magento2ce/app/code/Magento --ee-source /var/www/inventory
+php /var/www/magento2ee/dev/tools/build-ee.php --command link --ce-source /var/www/magento2ce/app/code/Magento --ee-source /var/www/commerce-data-export
+php /var/www/magento2ee/dev/tools/build-ee.php --command link --ce-source /var/www/magento2ce/app/code/Magento --ee-source /var/www/commerce-data-export-ee
+php /var/www/magento2ee/dev/tools/build-ee.php --command link --ce-source /var/www/magento2ce/app/code/Magento --ee-source /var/www/saas-export
+
+
+
 #composer global require hirak/prestissimo
-composer install
+#yes Y | composer global require hirak/prestissimo
 
 #if [[ -f dev/tools/install-dependencies.php ]]; then
 #  echo 'install module dependencies'
