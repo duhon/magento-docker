@@ -47,7 +47,7 @@ if [[ "yes" == "$RECLONE" ]]; then
     branch=$(echo "GIT_BRANCH_${edition}" | sed "s|-|_|g")
     tag=$(echo "GIT_TAG_${edition}" | sed "s|-|_|g")
     github_repo="git@github.com:${!org}/${!repo}.git"
-    clone_depth=$(echo "GIT_CLONE_DEPTH_${edition}")
+    clone_depth=$(echo "GIT_CLONE_DEPTH_${edition}" | sed "s|-|_|g")
     path=$edition
 
     if [[ -d ./${edition} ]] || [[ -d "./magento2ce/${edition}" ]]; then
