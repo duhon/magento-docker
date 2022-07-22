@@ -29,7 +29,7 @@
 3. Add `$MAGENTO_DOMAIN` from .env to hosts, e.g.:
 
 ```
-    sudo -- sh -c "echo '127.0.0.1 magento.test >> /etc/hosts"
+    sudo -- sh -c "echo '127.0.0.1 magento.test' >> /etc/hosts"
 ```
 
 4. Add [Magento authentication](https://marketplace.magento.com/customer/accessKeys/) keys to access the Magento Commerce repository
