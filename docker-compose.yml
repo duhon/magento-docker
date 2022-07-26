@@ -7,7 +7,7 @@ services:
     volumes:
       - code:/var/www
   web:
-    image: nginx:1.20-alpine
+    image: nginx:1.21.4-alpine
     hostname: web
     volumes:
       - code:/var/www
@@ -35,6 +35,7 @@ services:
       - "8025:8025"
   db:
     image: mysql:8
+    platform: linux/x86_64
     hostname: db
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
@@ -94,6 +95,7 @@ services:
   elastic:
     image: elasticsearch:$ELASTICSEARCH_IMAGE_VERSION
     hostname: elastic
+    platform: linux/x86_64
     ports:
       - "${ELASTIC_PORT}:9200"
     environment:

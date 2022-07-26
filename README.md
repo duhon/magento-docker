@@ -9,7 +9,7 @@
 * [Docker Compose](https://docs.docker.com/compose/install/)
 * Setup SSH-keys on your github account. (see [docs](https://help.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)  for [help](https://help.github.com/en/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account))
 
-* (optional - for Mutagen installation only) Install Mutagen [docs](https://mutagen.io/documentation/introduction/installation)
+* Install Mutagen [docs](https://mutagen.io/documentation/introduction/installation)
 * Ensure you do not have `dnsmasq` installed/enabled locally (will be auto-installed if you've use Valet+ to install Magento)
 
 
@@ -29,7 +29,7 @@
 3. Add `$MAGENTO_DOMAIN` from .env to hosts, e.g.:
 
 ```
-    sudo -- sh -c "echo '127.0.0.1 magento.test >> /etc/hosts"
+    sudo -- sh -c "echo '127.0.0.1 magento.test' >> /etc/hosts"
 ```
 
 4. Add [Magento authentication](https://marketplace.magento.com/customer/accessKeys/) keys to access the Magento Commerce repository
