@@ -129,7 +129,6 @@ MailHog is used to receive emails sent by Magento, navigate to http://localhost:
 - Then, create a new Run/Debug Configuration with path mapping:
 ![alt text](https://user-images.githubusercontent.com/2975006/181730715-7d8cacd2-4810-4a0a-934b-35acc298b057.png)
 
-
 #### Magento (Re)-Installation
 
 * `docker-compose exec app magento reinstall`
