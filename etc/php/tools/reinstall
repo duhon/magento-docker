@@ -27,6 +27,9 @@ if [[ ${MAGENTO_EDITION} == 'B2B' ]]; then
   repos=${INSTALLED_REPOS_B2B}
 fi
 
+# if working with repos not yet in github, add them here
+#repos="${repos} ${NEW_REPOS}"
+
 echo "$(date +"%T") Magento ${MAGENTO_EDITION} Installation START"
 
 for edition in $repos; do
