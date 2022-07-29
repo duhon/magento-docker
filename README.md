@@ -122,6 +122,14 @@ MailHog is used to receive emails sent by Magento, navigate to http://localhost:
 :warning: Enabled Xdebug may slow your environment.  
 :exclamation: port `9003` is used for debug. 
 
+# How to configure PHPSTORM to use debugger for CLI commands:
+- Once xdebug in enabled, create a new PHP CLI Interpretor with SSH Configuration:
+![alt text](https://user-images.githubusercontent.com/2975006/181732593-507e7c09-e99f-40ec-b70e-a1403d13184e.png)
+
+- Then, create a new Run/Debug Configuration with path mapping:
+![alt text](https://user-images.githubusercontent.com/2975006/181730715-7d8cacd2-4810-4a0a-934b-35acc298b057.png)
+
+
 #### Magento (Re)-Installation
 
 * `docker-compose exec app magento reinstall`
