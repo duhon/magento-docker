@@ -9,12 +9,13 @@ ADMIN_PASSWORD=123123q
 # if no - Magento_Elasticsearch Magento_Elasticsearch6 Magento_Elasticsearch7 Magento_AdvancedSearch modules will not be disabled (incompatible with LS modules)
 INSTALL_LIVESEARCH=yes
 
-# CE|EE|B2B, CE version is ligthweight in comparison with EE/B2B and should be enough for most cases
+# CE|EE|B2B|B2B_PERF
 MAGENTO_EDITION=EE
 
 INSTALLED_REPOS="magento2ce inventory magento2-sample-data services-connector data-services services-id saas-export commerce-data-export magento-live-search data-solutions-magento-bff"
 INSTALLED_REPOS_EE="magento2ce inventory magento2ee magento2-sample-data magento2-sample-data-ee services-connector data-services services-id saas-export commerce-data-export commerce-data-export-ee magento-live-search data-solutions-magento-bff"
 INSTALLED_REPOS_B2B="magento2ce inventory magento2ee magento2b2b magento2-sample-data magento2-sample-data-ee services-connector data-services services-id saas-export commerce-data-export commerce-data-export-ee magento-live-search data-solutions-magento-bff"
+INSTALLED_REPOS_B2B_PERF="magento2ce inventory magento2ee magento2b2b saas-performance-toolkit services-connector data-services services-id saas-export commerce-data-export commerce-data-export-ee magento-live-search data-solutions-magento-bff"
 
 # if working with repos not yet in github, add them here
 #NEW_REPOS=""
@@ -111,3 +112,7 @@ GIT_BRANCH_magento2_sample_data_ee=2.4.5-p1-develop
 GIT_ORG_data_solutions_magento_bff=magento-commerce
 GIT_REPO_data_solutions_magento_bff=data-solutions-magento-bff
 GIT_BRANCH_data_solutions_magento_bff=main
+
+GIT_ORG_saas_performance_toolkit=magento-commerce
+GIT_REPO_data_saas_performance_toolkit=saas-performance-toolkit
+GIT_BRANCH_saas_performance_toolkit=main

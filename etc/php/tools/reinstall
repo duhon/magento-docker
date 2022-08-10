@@ -26,7 +26,9 @@ fi
 if [[ ${MAGENTO_EDITION} == 'B2B' ]]; then
   repos=${INSTALLED_REPOS_B2B}
 fi
-
+if [[ ${MAGENTO_EDITION} == 'B2B_PERF' ]]; then
+  repos=${INSTALLED_REPOS_B2B_PERF}
+fi
 # if working with repos not yet in github, add them here
 #repos="${repos} ${NEW_REPOS}"
 
