@@ -58,6 +58,7 @@ Note, for the first installation (when you don't have cloned repositories yes) p
 ```
 bin/magento saas:resync --feed productattributes
 bin/magento saas:resync --feed products
+bin/magento saas:resync --feed productoverrides
 ```
 * to sync product updates simply run
 ```
