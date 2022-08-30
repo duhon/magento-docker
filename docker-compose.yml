@@ -40,7 +40,7 @@ services:
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: "magento"
-    shm_size: '2gb'
+    shm_size: '4gb'
     command: --default-authentication-plugin=mysql_native_password
     volumes:
       - ./etc/mysql/my.cnf:/etc/mysql/conf.d/mysql.cnf
@@ -93,7 +93,7 @@ services:
       PHP_IDE_CONFIG: serverName=magento.test
     command: sh -c 'service ssh start; php-fpm -R'
   elastic:
-    image: elasticsearch:$ELASTICSEARCH_IMAGE_VERSION
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTICSEARCH_IMAGE_VERSION}
     hostname: elastic
     platform: linux/x86_64
     ports:
@@ -102,6 +102,7 @@ services:
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
       - discovery.type=single-node
+      - xpack.security.enabled=false
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
       memlock:

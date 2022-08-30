@@ -48,16 +48,3 @@ index 8f0310af0a3..39529d6828d 100644
          }
          return $this->_templatesValidationResults[$filename];
      }
-
-diff --git a/app/code/Magento/Elasticsearch/Setup/Validator.php b/app/code/Magento/Elasticsearch/Setup/Validator.php
---- a/app/code/Magento/Elasticsearch/Setup/Validator.php
-+++ b/app/code/Magento/Elasticsearch/Setup/Validator.php
-@@ -43,7 +43,7 @@
-                     . ' Verify that the Elasticsearch host and port are configured correctly.';
-             }
-         } catch (\Exception $e) {
--            $errors[] = 'Could not validate a connection to Elasticsearch. ' . $e->getMessage();
-+//            $errors[] = 'Could not validate a connection to Elasticsearch. ' . $e->getMessage();
-         }
-         return $errors;
-     }

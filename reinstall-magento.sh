@@ -20,5 +20,3 @@ if [ ${MONOLITHIC_INSTALLATION} == "YES" ]; then
   else
     docker-compose exec app magento reinstall
 fi
-
-docker-compose exec app magento config_setup

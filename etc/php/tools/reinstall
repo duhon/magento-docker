@@ -128,6 +128,11 @@ php -f /tmp/magento_config_setup.php
 
 #taken from config_setup
 bin/magento config:set web/secure/base_url https://${MAGENTO_DOMAIN}/
+bin/magento config:set web/seo/use_rewrites 1
+bin/magento config:set dev/template/allow_symlink 1
+bin/magento config:set admin/security/admin_account_sharing 1
+bin/magento config:set admin/security/session_lifetime 31536000
+
 
 echo "Magento 2 Successfully installed!"
 echo "To open it navigate to $MAGENTO_DOMAIN"
