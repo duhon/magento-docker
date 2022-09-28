@@ -95,7 +95,7 @@ services:
   elastic:
     image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTICSEARCH_IMAGE_VERSION}
     hostname: elastic
-    platform: linux/x86_64
+    platform: linux/arm64/v8
     ports:
       - "${ELASTIC_PORT}:9200"
     environment:
