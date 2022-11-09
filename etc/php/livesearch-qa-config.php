@@ -21,6 +21,6 @@ return [
     ],
     'services-id/ServicesId/etc/config.xml' => [
         // temporary, until v1 released
-        'services-connector-ui.magento-ds.com/v1/index.js' => 'services-connector-qa.magento-datasolutions.com/v0/index.js'
+        'services-connector-ui.magento-ds.com/v1/index.js' => 'services-connector-qa.magento-datasolutions.com/v1/index.js'
     ]
 ];
