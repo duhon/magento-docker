@@ -1,5 +1,5 @@
-ARG MIN_PHP_VERSION=8.1
-ARG BLACKFIRE_PHP_VERSION=81
+ARG MIN_PHP_VERSION=8.2
+ARG BLACKFIRE_PHP_VERSION=82
 ARG NEWRELIC_PHP_VERSION=20190902
 
 FROM busybox AS source_blackfire
@@ -18,7 +18,7 @@ FROM alpine/git AS source_git
 RUN git clone -b 'master' --depth=1 https://github.com/NoiseByNorthwest/php-spx.git \
     && mv * /
 
-FROM php:$MIN_PHP_VERSION AS source_php_ext
+FROM arm64v8/php:$MIN_PHP_VERSION AS source_php_ext
 COPY --from=source_git php-spx /usr/src/php/ext/spx
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -28,7 +28,6 @@ RUN apt-get update \
         libsodium-dev \
         libicu-dev \
         libxslt-dev \
-        libicu-dev \
         gnupg \
         libssl-dev \
         libgringotts-dev \
@@ -40,7 +39,7 @@ RUN apt-get update \
     && pecl install -f xdebug xhprof apcu msgpack libsodium runkit7 \
     && mv $(php-config --extension-dir)/*.so /
 
-FROM php:$MIN_PHP_VERSION-fpm
+FROM arm64v8/php:$MIN_PHP_VERSION-fpm
 ARG MIN_PHP_VERSION
 COPY --from=source_blackfire blackfire.so /tmp/ext/
 COPY --from=source_newrelic newrelic.so /tmp/ext/

@@ -1,0 +1,26 @@
+#!/usr/bin/env php
+<?php
+$mailPath = '/var/www/magento2ce/var/tmp/mails/';
+
+if (!file_exists($mailPath)) {
+    mkdir($mailPath, 0777, true);
+}
+
+$logFile = $mailPath . date('Y-m-d H:i:s') . '.htm';
+
+$logOutput = "<p>****" . date('Y-m-d H:i:s') . "****</p>" . PHP_EOL;
+$handle = fopen('php://stdin', 'r');
+$line = 0;
+
+while(!feof($handle)) {
+    $line++;
+    $buffer = trim(fgets($handle));
+    if ($line <= 9) {
+        $logOutput .= $line . ": " . quoted_printable_decode($buffer) . "<br>". PHP_EOL;
+    } else {
+        $logOutput .= quoted_printable_decode($buffer);
+    }
+}
+
+
+file_put_contents($logFile, $logOutput, FILE_APPEND);

@@ -1,5 +1,7 @@
 <?php
 /**
+ * Magento console installer options for Web API functional tests. Are used in functional tests bootstrap.
+ *
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
@@ -11,10 +13,6 @@ return [
     'db-name'                      => 'magento_integration_tests',
     'db-user'                      => 'root',
     'db-password'                  => '',
-//    'db-prefix'                    => 'api_graphql_', // need rewrite many tests
-    'search-engine'                => 'elasticsearch7',
-    'elasticsearch-host'           => 'elastic',
-    'elasticsearch-port'           => '9200',
     'backend-frontname'            => 'backend',
     'base-url'                     => 'http://magento.test/',
     'use-secure'                   => '0',
@@ -29,6 +27,9 @@ return [
     'sales-order-increment-prefix' => time(),
     'session-save'                 => 'db',
     'cleanup-database'             => true,
+    'search-engine'                => 'opensearch',
+    'opensearch-host'              => 'opensearch',
+    'opensearch-port'              => '9200',
     'amqp-host'                    => 'rabbit',
     'amqp-port'                    => '5672',
     'amqp-user'                    => 'guest',

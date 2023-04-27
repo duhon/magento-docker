@@ -12,7 +12,9 @@ for edition in "$@"; do
    if ! [[ -d ../${edition} ]]; then
       edition=magento2${edition}
    fi
-   git -C ../"${edition}" checkout composer.json
+   if [[ -f ../${edition}/composer.json ]]; then
+      git -C ../"${edition}" checkout composer.json
+   fi
    cp -rlf ../"${edition}"/!(.git|vendor|..|.) .
 done
 
@@ -20,8 +22,9 @@ done
 composer config minimum-stability dev
 composer config repositories.composer '{"type": "composer", "url": "https://repo.magento.com/", "canonical": false}'
 composer config repositories.path '{"type": "path","url": "../*/*", "canonical": false}'
-composer install
-bin/magento setup:install \
+composer config allow-plugins true
+composer update
+bin/magento setup:install -n \
    --cleanup-database \
    --backend-frontname=admin \
    --admin-lastname=Admin \
@@ -33,6 +36,8 @@ bin/magento setup:install \
    --db-host=db \
    --elasticsearch-host=elastic \
    --enable-modules=all \
+   --key=magento_super_puper_secret_key32 \
+   --allow-parallel-generation \
    --db-prefix=m2_
 
 #do x-setup lines
