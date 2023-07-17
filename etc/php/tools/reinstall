@@ -35,11 +35,13 @@ bin/magento setup:install -n \
    --db-name=magento \
    --db-host=db \
    --elasticsearch-host=elastic \
+   --opensearch-host=elastic \
    --enable-modules=all \
    --key=magento_super_puper_secret_key32 \
    --allow-parallel-generation \
    --db-prefix=m2_
 
 #do x-setup lines
+# shellcheck disable=SC2207
 IFS=$'\n' setup=($(yq eval .services.*.x-setup /var/www/magento-docker/docker-compose.yml | grep -oP '^(?:\s*\-\s)+(?!null)\K.*'))
 for i in ${setup[*]}; do eval "${i}"; done

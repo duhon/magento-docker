@@ -13,6 +13,7 @@ return [
     'db-name'                      => 'magento_integration_tests',
     'db-user'                      => 'root',
     'db-password'                  => '',
+    'db-prefix'                    => '',
     'backend-frontname'            => 'backend',
     'base-url'                     => 'http://magento.test/',
     'use-secure'                   => '0',
