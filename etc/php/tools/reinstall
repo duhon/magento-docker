@@ -34,8 +34,8 @@ bin/magento setup:install -n \
    --admin-password=123123q \
    --db-name=magento \
    --db-host=db \
-   --elasticsearch-host=elastic \
    --opensearch-host=elastic \
+   --search-engine=opensearch \
    --enable-modules=all \
    --key=magento_super_puper_secret_key32 \
    --allow-parallel-generation \
