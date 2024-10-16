@@ -1,6 +1,8 @@
-ARG MIN_PHP_VERSION=8.2
-ARG BLACKFIRE_PHP_VERSION=82
-ARG NEWRELIC_PHP_VERSION=20190902
+ARG MIN_PHP_VERSION=8.3
+ARG BLACKFIRE_PHP_VERSION=83
+ARG NEWRELIC_PHP_VERSION=20230831
+ARG NEWRELIC_VERSION=11.2.0.15
+ARG YP_VERSION=4.44.3
 
 FROM busybox AS source_blackfire
 ARG BLACKFIRE_PHP_VERSION
@@ -10,9 +12,10 @@ RUN tar xzvf blackfire-probe.tar.gz -C /tmp/ \
 
 FROM busybox AS source_newrelic
 ARG NEWRELIC_PHP_VERSION
-ADD https://download.newrelic.com/php_agent/archive/9.9.0.260/newrelic-php5-9.9.0.260-linux.tar.gz newrelic.tar.gz
+ARG NEWRELIC_VERSION
+ADD https://download.newrelic.com/php_agent/archive/$NEWRELIC_VERSION/newrelic-php5-${NEWRELIC_VERSION}-linux.tar.gz newrelic.tar.gz
 RUN tar xzvf newrelic.tar.gz -C /tmp/ \
-    && mv /tmp/newrelic-php5-9.9.0.260-linux/agent/x64/newrelic-$NEWRELIC_PHP_VERSION.so /newrelic.so
+    && mv /tmp/newrelic-php5-${NEWRELIC_VERSION}-linux/agent/x64/newrelic-$NEWRELIC_PHP_VERSION.so /newrelic.so
 
 FROM alpine/git AS source_git
 RUN git clone -b 'master' --depth=1 https://github.com/NoiseByNorthwest/php-spx.git \
@@ -36,17 +39,18 @@ RUN apt-get update \
     && rm -r /var/lib/apt/lists/* \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) pcntl gd opcache bcmath soap intl zip xsl pdo_mysql sockets spx\
-    && pecl install -f xdebug xhprof apcu msgpack libsodium runkit7 \
+    && pecl install -f xdebug xhprof apcu msgpack runkit7 \
     && mv $(php-config --extension-dir)/*.so /
 
 FROM arm64v8/php:$MIN_PHP_VERSION-fpm
 ARG MIN_PHP_VERSION
+ARG YP_VERSION
 COPY --from=source_blackfire blackfire.so /tmp/ext/
 COPY --from=source_newrelic newrelic.so /tmp/ext/
 COPY --from=source_php_ext *.so /tmp/ext/
 COPY --from=source_php_ext /usr/local/share/misc/php-spx/assets/web-ui /usr/local/share/misc/php-spx/assets/web-ui
 ADD https://github.com/mailhog/mhsendmail/releases/download/v0.2.0/mhsendmail_linux_amd64 /usr/local/bin/mhsendmail
-ADD https://github.com/mikefarah/yq/releases/download/v4.16.2/yq_linux_amd64 /usr/local/bin/yq
+ADD https://github.com/mikefarah/yq/releases/download/v$YP_VERSION/yq_linux_amd64 /usr/local/bin/yq
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/
 COPY --from=blackfire/blackfire /usr/local/bin/blackfire /usr/local/bin/
 
