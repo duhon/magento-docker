@@ -31,8 +31,8 @@ return [
     'search-engine'                => 'opensearch',
     'opensearch-host'              => 'opensearch',
     'opensearch-port'              => '9200',
-    'amqp-host'                    => 'rabbit',
-    'amqp-port'                    => '5672',
-    'amqp-user'                    => 'guest',
-    'amqp-password'                => 'guest',
+//    'amqp-host'                    => 'rabbit',
+//    'amqp-port'                    => '5672',
+//    'amqp-user'                    => 'guest',
+//    'amqp-password'                => 'guest',
 ];

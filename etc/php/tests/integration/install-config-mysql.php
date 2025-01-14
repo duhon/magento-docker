@@ -10,7 +10,7 @@ return [
     'db-name' => 'magento_integration_tests',
     'db-prefix' => '',
 //    'search-engine' => 'elasticsearch7',
-    'elasticsearch-host' => 'elastic',
+//    'elasticsearch-host' => 'elastic',
     'elasticsearch-port' => '9200',
     'backend-frontname' => 'backend',
     'search-engine' => 'opensearch',

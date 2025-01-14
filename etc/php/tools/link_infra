@@ -1,0 +1,4 @@
+#!/bin/bash
+shopt -s extglob
+
+cp -rlf ../magento2-infrastructure/tests/!(.git|vendor|..|.) ./dev/tests

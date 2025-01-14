@@ -19,10 +19,41 @@
     <!-- Test suites definition -->
     <testsuites>
         <testsuite name="Magento GraphQL web API functional tests">
-            <file>testsuite/Magento/WebApiTest.php</file>
-        </testsuite>
-        <testsuite name="Magento GraphQL web API functional tests real suite">
-            <directory>testsuite/Magento/GraphQl</directory>
+            <file>testsuite/Magento/GraphQl/Quote/Customer/AddSimpleProductToCartTest.php</file>
+            <file>testsuite/Magento/GraphQl/Quote/Customer/AddVirtualProductToCartTest.php</file>
+            <file>testsuite/Magento/GraphQl/Quote/Customer/ApplyCouponToCartTest.php</file>
+            <file>testsuite/Magento/GraphQl/Quote/Customer/AssignCustomerToGuestCartTest.php</file>
+            <file>testsuite/Magento/GraphQl/Quote/Customer/CartDiscountTest.php</file>
+            <file>testsuite/Magento/GraphQl/Quote/Customer/CartItemPriceTest.php</file>
+            <file>testsuite/Magento/GraphQl/Quote/Customer/CartTotalsTest.php</file>
+            <file>testsuite/Magento/GraphQl/Quote/Customer/CheckoutEndToEndTest.php</file>
+            <file>testsuite/Magento/GraphQl/Quote/Customer/CreateEmptyCartTest.php</file>
+            <file>testsuite/Magento/GraphQl/Quote/Customer/CreateGuestCartTest.php</file>
+            <file>testsuite/Magento/GraphQl/Quote/Customer/GetAvailablePaymentMethodsTest.php</file>
+            <file>testsuite/Magento/GraphQl/Quote/Customer/GetAvailableShippingMethodsTest.php</file>
+            <file>testsuite/Magento/GraphQl/Quote/Customer/GetCartEmailTest.php</file>
+            <file>testsuite/Magento/GraphQl/Quote/Customer/GetCartIsVirtualTest.php</file>
+            <file>testsuite/Magento/GraphQl/Quote/Customer/GetCartPaginatedItemsTest.php</file>
+            <file>testsuite/Magento/GraphQl/Quote/Customer/GetCartTest.php</file>
+            <file>testsuite/Magento/GraphQl/Quote/Customer/GetCustomerCartTest.php</file>
+            <file>testsuite/Magento/GraphQl/Quote/Customer/GetSelectedPaymentMethodTest.php</file>
+            <file>testsuite/Magento/GraphQl/Quote/Customer/GetSelectedShippingMethodTest.php</file>
+            <file>testsuite/Magento/GraphQl/Quote/Customer/GetSpecifiedBillingAddressTest.php</file>
+            <file>testsuite/Magento/GraphQl/Quote/Customer/GetSpecifiedShippingAddressTest.php</file>
+            <file>testsuite/Magento/GraphQl/Quote/Customer/MergeCartsTest.php</file>
+            <file>testsuite/Magento/GraphQl/Quote/Customer/PlaceOrderTest.php</file>
+            <file>testsuite/Magento/GraphQl/Quote/Customer/RemoveCouponFromCartTest.php</file>
+            <file>testsuite/Magento/GraphQl/Quote/Customer/RemoveItemFromCartTest.php</file>
+            <file>testsuite/Magento/GraphQl/Quote/Customer/SetBillingAddressOnCartTest.php</file>
+            <file>testsuite/Magento/GraphQl/Quote/Customer/SetGuestEmailOnCartTest.php</file>
+            <file>testsuite/Magento/GraphQl/Quote/Customer/SetOfflinePaymentMethodsOnCartTest.php</file>
+            <file>testsuite/Magento/GraphQl/Quote/Customer/SetOfflineShippingMethodsOnCartTest.php</file>
+            <file>testsuite/Magento/GraphQl/Quote/Customer/SetPaymentMethodAndPlaceOrderTest.php</file>
+            <file>testsuite/Magento/GraphQl/Quote/Customer/SetPaymentMethodOnCartTest.php</file>
+            <file>testsuite/Magento/GraphQl/Quote/Customer/SetPurchaseOrderPaymentMethodOnCartTest.php</file>
+            <file>testsuite/Magento/GraphQl/Quote/Customer/SetShippingAddressOnCartTest.php</file>
+            <file>testsuite/Magento/GraphQl/Quote/Customer/SetShippingMethodsOnCartTest.php</file>
+            <file>testsuite/Magento/GraphQl/Quote/Customer/UpdateCartItemsTest.php</file>
         </testsuite>
     </testsuites>
 
