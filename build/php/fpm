@@ -1,8 +1,8 @@
-ARG MIN_PHP_VERSION=8.4
-ARG BLACKFIRE_PHP_VERSION=84
+ARG MIN_PHP_VERSION=8.5
+ARG BLACKFIRE_PHP_VERSION=85
 ARG NEWRELIC_PHP_VERSION=20230831
 ARG NEWRELIC_VERSION=11.5.0.18
-ARG YP_VERSION=4.45.1
+ARG YP_VERSION=4.52.2
 
 FROM busybox AS source_blackfire
 ARG BLACKFIRE_PHP_VERSION
@@ -38,7 +38,7 @@ RUN apt-get update \
         zlib1g-dev \
     && rm -r /var/lib/apt/lists/* \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) pcntl gd opcache bcmath soap intl zip xsl pdo_mysql sockets ftp spx\
+    && docker-php-ext-install -j$(nproc) pcntl gd bcmath soap intl zip xsl pdo_mysql sockets ftp spx\
     && pecl install -f xdebug xhprof apcu msgpack \
     && mv $(php-config --extension-dir)/*.so /
 
@@ -63,14 +63,14 @@ RUN apt-get update \
         openssh-server \
         iputils-ping \
         unzip \
-        libzip4 \
+        libzip-dev \
         libxslt1.1 \
         libpng16-16 \
         libjpeg62-turbo \
         libfreetype6 \
     && rm -r /var/lib/apt/lists/*\
     && mv /tmp/ext/* $(php-config --extension-dir)/ \
-    && docker-php-ext-enable apcu bcmath gd intl msgpack opcache pcntl pdo_mysql soap sockets xsl zip ftp \
+    && docker-php-ext-enable apcu bcmath gd intl msgpack pcntl pdo_mysql soap sockets xsl zip ftp \
     && echo 'alias ll="ls -lA"' >>/root/.bashrc \
     && usermod -a -G root www-data \
     && chmod +x /usr/local/bin/* \
